@@ -27,7 +27,7 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-//        navigateToMainTabBarController()
+        navigateToMainTabBarController()
     }
     
     override func viewDidLoad() {
@@ -47,12 +47,12 @@ final class SplashViewController: UIViewController {
     }
     
     // MARK: - Private Methods
-//    private func navigateToMainTabBarController() {
-//        guard let window = UIApplication.shared.windows.first else {
-//            assertionFailure("Invalid window configuration")
-//            return
-//        }
-//        
-//        window.rootViewController = MainTabBarController()
-//    }
+    private func navigateToMainTabBarController() {
+        guard let window = UIApplication.shared.windows.first else {
+            assertionFailure("Invalid window configuration")
+            return
+        }
+        
+        window.rootViewController = MainTabBarController()
+    }
 }
