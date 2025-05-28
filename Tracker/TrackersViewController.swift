@@ -9,6 +9,9 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     
+    // MARK: - Private Properties
+    private var trackers: [Any] = []
+    
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,6 +19,8 @@ final class TrackersViewController: UIViewController {
         setupTitle()
         setupSearchController()
         setupAddBarButton()
+        
+        updateEmptyState()
     }
     
     // MARK: - Private Methods
@@ -42,6 +47,26 @@ final class TrackersViewController: UIViewController {
         )
         addButton.tintColor = UIColor(resource: .trackerBlack)
         navigationItem.leftBarButtonItem = addButton
+    }
+    
+    private func updateEmptyState() {
+        if trackers.isEmpty {
+            let emptyView = EmptyStateView(
+                image: UIImage(resource: .noTrackers),
+                text: "Что будем отслеживать?"
+            )
+            
+            view.addSubview(emptyView)
+            
+            emptyView.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+        } else {
+            
+        }
     }
     
     @objc private func addButtonTapped() {
