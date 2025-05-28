@@ -9,9 +9,16 @@ import UIKit
 
 final class MainTabBarController: UITabBarController {
     
+    // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupViewControllers()
+        setupTopSeparator()
+    }
+    
+    // MARK: - Private Methods
+    private func setupViewControllers() {
         let trackersViewController = TrackersViewController()
         trackersViewController.tabBarItem = UITabBarItem(
             title: "Трекеры",
@@ -29,5 +36,19 @@ final class MainTabBarController: UITabBarController {
         )
         
         self.viewControllers = [trackersNavigationController, statisticViewController]
+    }
+    
+    private func setupTopSeparator() {
+        let topSeparator = UIView()
+        topSeparator.backgroundColor = .separator
+        topSeparator.translatesAutoresizingMaskIntoConstraints = false
+        tabBar.addSubview(topSeparator)
+        
+        NSLayoutConstraint.activate([
+            topSeparator.leadingAnchor.constraint(equalTo: tabBar.leadingAnchor),
+            topSeparator.trailingAnchor.constraint(equalTo: tabBar.trailingAnchor),
+            topSeparator.topAnchor.constraint(equalTo: tabBar.topAnchor),
+            topSeparator.heightAnchor.constraint(equalToConstant: 1.0)
+        ])
     }
 }
