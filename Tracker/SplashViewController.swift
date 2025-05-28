@@ -33,7 +33,7 @@ final class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(resource: .blue)
+        view.backgroundColor = UIColor(resource: .trackerBlue)
         
         splashImageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(splashImageView)
