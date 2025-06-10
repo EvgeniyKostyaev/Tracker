@@ -23,6 +23,7 @@ final class TrackersViewController: UIViewController {
         setupTitle()
         setupSearchController()
         setupAddBarButton()
+        setupDatePicker()
         
         updateEmptyState()
     }
@@ -51,6 +52,13 @@ final class TrackersViewController: UIViewController {
         )
         addButton.tintColor = UIColor(resource: .trackerBlack)
         navigationItem.leftBarButtonItem = addButton
+    }
+    
+    private func setupDatePicker() {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .date
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
     
     private func updateEmptyState() {
