@@ -12,6 +12,10 @@ final class TrackersViewController: UIViewController {
     // MARK: - Private Properties
     private var trackers: [Any] = []
     
+    private var categories: [TrackerCategory] = []
+    
+    private var completedTrackers: [TrackerRecord] = []
+    
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
