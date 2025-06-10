@@ -57,6 +57,7 @@ final class TrackersViewController: UIViewController {
     private func setupDatePicker() {
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .compact
         
         datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
         
