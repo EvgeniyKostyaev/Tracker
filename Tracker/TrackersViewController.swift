@@ -13,8 +13,8 @@ final class TrackersViewController: UIViewController {
     private var trackers: [Any] = []
     
     private var categories: [TrackerCategory] = []
-    
     private var completedTrackers: [TrackerRecord] = []
+    private var currentDate: Date = Date()
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
@@ -89,10 +89,8 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-        let selectedDate = sender.date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy" // Формат даты
-        let formattedDate = dateFormatter.string(from: selectedDate)
-        print("Выбранная дата: \(formattedDate)")
+        self.currentDate = sender.date
+        
+        // update tracers list
     }
 }
