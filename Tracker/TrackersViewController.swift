@@ -10,7 +10,7 @@ import UIKit
 final class TrackersViewController: UIViewController {
     
     // MARK: - Private Properties
-    private var trackers: [Any] = []
+    private var trackers: [Tracker] = []
     
     private var categories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
