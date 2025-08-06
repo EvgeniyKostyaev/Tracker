@@ -16,6 +16,8 @@ final class TrackersViewController: UIViewController {
     private var completedTrackers: [TrackerRecord] = []
     private var currentDate: Date = Date()
     
+    private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +27,9 @@ final class TrackersViewController: UIViewController {
         setupAddBarButton()
         setupDatePicker()
         
-        updateEmptyState()
+        setupCollectionView()
+        
+//        updateEmptyState()
     }
     
     // MARK: - Private Methods
@@ -64,6 +68,20 @@ final class TrackersViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
     
+    private func setupCollectionView() {
+        collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView)
+        
+        collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+    }
+    
     private func updateEmptyState() {
         if trackers.isEmpty {
             let emptyView = EmptyStateView(
@@ -85,12 +103,62 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc private func addButtonTapped() {
-        print("Кнопка '+' нажата")
+        let newTracker = Tracker(
+            id: 1,
+            title: "Test",
+            colorHex: "Test",
+            emoji: "Test",
+            type: .habit,
+            schedule: nil
+        )
+        
+        trackers.append(newTracker)
+        
+        var lastIndex: Int = 0
+        if (trackers.count > 1) {
+            lastIndex = trackers.count - 1
+        }
+        
+        collectionView.performBatchUpdates {
+            collectionView.insertItems(at: [IndexPath.init(row: lastIndex, section: 0)])
+        }
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
         self.currentDate = sender.date
         
         // update tracers list
+    }
+}
+
+extension TrackersViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return trackers.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.identifier, for: indexPath) as? TrackerCollectionViewCell
+        
+        guard let cell = cell else {
+            return UICollectionViewCell()
+        }
+        
+        cell.backgroundColor = .blue
+        
+        return cell
+    }
+}
+
+extension TrackersViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.bounds.width / 2, height: 148)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
     }
 }
