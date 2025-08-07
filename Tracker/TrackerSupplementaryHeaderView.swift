@@ -15,10 +15,16 @@ final class TrackerSupplementaryHeaderView: UICollectionReusableView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(titleLabel)
-        titleLabel.frame = bounds
-        titleLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        
+        titleLabel.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 28.0).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 28.0).isActive = true
+        titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 19)
     }
 
     required init?(coder: NSCoder) {

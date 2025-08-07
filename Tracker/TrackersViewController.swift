@@ -22,7 +22,7 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let trackerCategory = TrackerCategory(title: "Section test", trackers: [])
+        let trackerCategory = TrackerCategory(title: "Домашний уют", trackers: [])
         categories.append(trackerCategory)
         
         setupTitle()
@@ -178,7 +178,7 @@ extension TrackersViewController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
 
-        header.titleLabel.text = "Секция \(indexPath.section + 1)" // например
+        header.titleLabel.text = categories[indexPath.section].title
 
         return header
     }
@@ -189,8 +189,6 @@ extension TrackersViewController: UICollectionViewDataSource {
         guard let cell else {
             return UICollectionViewCell()
         }
-        
-        cell.backgroundColor = .blue
         
         return cell
     }
