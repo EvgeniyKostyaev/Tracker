@@ -22,6 +22,9 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let trackerCategory = TrackerCategory(title: "Section test", trackers: [])
+        categories.append(trackerCategory)
+        
         setupTitle()
         setupSearchController()
         setupAddBarButton()
@@ -70,6 +73,8 @@ final class TrackersViewController: UIViewController {
     
     private func setupCollectionView() {
         collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
+        collectionView.register(TrackerSupplementaryHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackerSupplementaryHeaderView.identifier)
+        
         collectionView.dataSource = self
         collectionView.delegate = self
         
@@ -112,16 +117,32 @@ final class TrackersViewController: UIViewController {
             schedule: nil
         )
         
-        trackers.append(newTracker)
+        let newRowIndex = categories[0].trackers.count
         
-        var lastIndex: Int = 0
-        if (trackers.count > 1) {
-            lastIndex = trackers.count - 1
-        }
+        categories[0].trackers.append(newTracker)
         
         collectionView.performBatchUpdates {
-            collectionView.insertItems(at: [IndexPath.init(row: lastIndex, section: 0)])
+            collectionView.insertItems(at: [IndexPath.init(row: newRowIndex, section: 0)])
         }
+        
+        //        var lastIndex: Int = 0
+        //        if (trackers.count > 1) {
+        //            lastIndex = trackers.count - 1
+        //        }
+        //
+        //        collectionView.performBatchUpdates {
+        //            collectionView.insertItems(at: [IndexPath.init(row: lastIndex, section: 0)])
+        //        }
+        
+        //        let trackerCategory = TrackerCategory(title: "Section test", trackers: [newTracker])
+        //
+        //        let newSectionIndex = categories.count
+        //
+        //        categories.append(trackerCategory)
+        //
+        //        collectionView.performBatchUpdates {
+        //            collectionView.insertSections(IndexSet(integer: newSectionIndex))
+        //        }
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
@@ -132,14 +153,40 @@ final class TrackersViewController: UIViewController {
 }
 
 extension TrackersViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return categories.count
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return trackers.count
+        return categories[section].trackers.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == UICollectionView.elementKindSectionHeader else {
+            return UICollectionReusableView()
+        }
+
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: TrackerSupplementaryHeaderView.identifier,
+            for: indexPath
+        ) as? TrackerSupplementaryHeaderView
+        
+        guard let header else {
+            return UICollectionReusableView()
+        }
+
+        header.titleLabel.text = "Секция \(indexPath.section + 1)" // например
+
+        return header
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.identifier, for: indexPath) as? TrackerCollectionViewCell
         
-        guard let cell = cell else {
+        guard let cell else {
             return UICollectionViewCell()
         }
         
@@ -150,6 +197,12 @@ extension TrackersViewController: UICollectionViewDataSource {
 }
 
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.bounds.width, height: 44)
+    }
+    
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
