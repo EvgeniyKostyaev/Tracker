@@ -18,10 +18,11 @@ enum TrackerCollectionViewCellTheme {
     static let emojiCircleViewWidthConstraint: CGFloat = 24.0
     static let emojiCircleViewHeightConstraint: CGFloat = 24.0
     
-    static let titleLabelFontSize: CGFloat = 16.0
+    static let titleLabelFontSize: CGFloat = 12.0
     static let titleLabelNumberOfLines: Int = 2
     static let titleLabelLeadingConstraint: CGFloat = 12.0
     static let titleLabelTrailingConstraint: CGFloat = -12.0
+    static let titleLabelBottomConstraint: CGFloat = -12.0
     
     static let daysLabelFontSize: CGFloat = 12.0
     static let daysLabelTopConstraint: CGFloat = 16.0
@@ -34,6 +35,8 @@ enum TrackerCollectionViewCellTheme {
     static let plusButtonWidthConstraint: CGFloat = 34.0
     static let plusButtonHeightConstraint: CGFloat = 34.0
     static let plusButtonTrailingConstraint: CGFloat = -12.0
+    static let plusButtonSymbolConfigurationPointSize: CGFloat = 10.0
+    static let plusButtonImageSystemName: String = "plus"
 }
 
 final class TrackerCollectionViewCell: UICollectionViewCell {
@@ -69,10 +72,10 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Поливать растения"
+        label.text = "Кошка заслонила камеру на созвоне"
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: TrackerCollectionViewCellTheme.titleLabelFontSize, weight: .medium)
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.numberOfLines = TrackerCollectionViewCellTheme.titleLabelNumberOfLines
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -90,13 +93,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     private let plusButton: UIButton = {
         let button = UIButton(type: .system)
         
-        let config = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
-        let plusImage = UIImage(systemName: "plus", withConfiguration: config)
+        let config = UIImage.SymbolConfiguration(pointSize: TrackerCollectionViewCellTheme.plusButtonSymbolConfigurationPointSize, weight: .bold)
+        let plusImage = UIImage(systemName: TrackerCollectionViewCellTheme.plusButtonImageSystemName, withConfiguration: config)
         
         button.setImage(plusImage, for: .normal)
         button.tintColor = .white
         button.backgroundColor = .systemGreen
-        button.layer.cornerRadius = TrackerCollectionViewCellTheme.plusButtonWidthConstraint / 2
+        button.layer.cornerRadius = TrackerCollectionViewCellTheme.plusButtonCornerRadius
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         
@@ -143,10 +146,9 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             emojiLabel.centerXAnchor.constraint(equalTo: emojiCircleView.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: emojiCircleView.centerYAnchor),
             
-            titleLabel.centerXAnchor.constraint(equalTo: cardView.centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: cardView.centerYAnchor),
-            titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: cardView.leadingAnchor, constant: TrackerCollectionViewCellTheme.titleLabelLeadingConstraint),
-            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: cardView.trailingAnchor, constant: TrackerCollectionViewCellTheme.titleLabelTrailingConstraint),
+            titleLabel.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: TrackerCollectionViewCellTheme.titleLabelLeadingConstraint),
+            titleLabel.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: TrackerCollectionViewCellTheme.titleLabelTrailingConstraint),
+            titleLabel.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: TrackerCollectionViewCellTheme.titleLabelBottomConstraint),
             
             daysLabel.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: TrackerCollectionViewCellTheme.daysLabelTopConstraint),
             daysLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: TrackerCollectionViewCellTheme.daysLabelLeadingConstraint),
