@@ -9,24 +9,31 @@ import UIKit
 
 enum TrackerCollectionViewCellTheme {
     static let cardViewCornerRadius: CGFloat = 16.0
+    static let cardViewHeightConstraint: CGFloat = 90.0
+    
     static let emojiCircleViewCornerRadius: CGFloat = 12.0
     static let emojiLabelFontSize: CGFloat = 14.0
-    static let titleLabelFontSize: CGFloat = 16.0
-    static let titleLabelNumberOfLines: Int = 2
-    static let daysLabelFontSize: CGFloat = 14.0
-    static let plusButtonFontSize: CGFloat = 24.0
-    static let plusButtonCornerRadius: CGFloat = 17.0
-    
-    static let cardViewHeightConstraint: CGFloat = 90.0
     static let emojiCircleViewTopConstraint: CGFloat = 12.0
     static let emojiCircleViewLeadingConstraint: CGFloat = 12.0
     static let emojiCircleViewWidthConstraint: CGFloat = 24.0
     static let emojiCircleViewHeightConstraint: CGFloat = 24.0
+    
+    static let titleLabelFontSize: CGFloat = 16.0
+    static let titleLabelNumberOfLines: Int = 2
     static let titleLabelLeadingConstraint: CGFloat = 12.0
     static let titleLabelTrailingConstraint: CGFloat = -12.0
-    static let daysLabelTopConstraint: CGFloat = 8.0
+    
+    static let daysLabelFontSize: CGFloat = 12.0
+    static let daysLabelTopConstraint: CGFloat = 16.0
+    static let daysLabelHeightConstraint: CGFloat = 18.0
+    static let daysLabelLeadingConstraint: CGFloat = 12.0
+    static let daysLabelTrailingConstraint: CGFloat = 12.0
+    
+    static let plusButtonFontSize: CGFloat = 24.0
+    static let plusButtonCornerRadius: CGFloat = 17.0
     static let plusButtonWidthConstraint: CGFloat = 34.0
     static let plusButtonHeightConstraint: CGFloat = 34.0
+    static let plusButtonTrailingConstraint: CGFloat = -12.0
 }
 
 final class TrackerCollectionViewCell: UICollectionViewCell {
@@ -82,12 +89,17 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private let plusButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("+", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        
+        let config = UIImage.SymbolConfiguration(pointSize: 10, weight: .bold)
+        let plusImage = UIImage(systemName: "plus", withConfiguration: config)
+        
+        button.setImage(plusImage, for: .normal)
+        button.tintColor = .white
         button.backgroundColor = .systemGreen
-        button.titleLabel?.font = UIFont.systemFont(ofSize: TrackerCollectionViewCellTheme.plusButtonFontSize, weight: .medium)
-        button.layer.cornerRadius = TrackerCollectionViewCellTheme.plusButtonCornerRadius
+        button.layer.cornerRadius = TrackerCollectionViewCellTheme.plusButtonWidthConstraint / 2
+        button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
+        
         return button
     }()
     
@@ -137,10 +149,12 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: cardView.trailingAnchor, constant: TrackerCollectionViewCellTheme.titleLabelTrailingConstraint),
             
             daysLabel.topAnchor.constraint(equalTo: cardView.bottomAnchor, constant: TrackerCollectionViewCellTheme.daysLabelTopConstraint),
-            daysLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            daysLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: TrackerCollectionViewCellTheme.daysLabelLeadingConstraint),
+            daysLabel.trailingAnchor.constraint(equalTo: plusButton.leadingAnchor, constant: TrackerCollectionViewCellTheme.daysLabelTrailingConstraint),
+            daysLabel.heightAnchor.constraint(equalToConstant: TrackerCollectionViewCellTheme.daysLabelHeightConstraint),
             
             plusButton.centerYAnchor.constraint(equalTo: daysLabel.centerYAnchor),
-            plusButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            plusButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: TrackerCollectionViewCellTheme.plusButtonTrailingConstraint),
             plusButton.widthAnchor.constraint(equalToConstant: TrackerCollectionViewCellTheme.plusButtonWidthConstraint),
             plusButton.heightAnchor.constraint(equalToConstant: TrackerCollectionViewCellTheme.plusButtonHeightConstraint)
         ])

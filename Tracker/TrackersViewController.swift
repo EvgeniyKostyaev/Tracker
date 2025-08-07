@@ -7,6 +7,11 @@
 
 import UIKit
 
+enum TrackersViewControllerTheme {
+    static let trackerSupplementaryHeaderViewHeight: CGFloat = 44.0
+    static let trackerCollectionViewCellHeight: CGFloat = 148.0
+}
+
 final class TrackersViewController: UIViewController {
     
     // MARK: - Private Properties
@@ -198,13 +203,13 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: 44)
+        return CGSize(width: collectionView.bounds.width, height: TrackersViewControllerTheme.trackerSupplementaryHeaderViewHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width / 2, height: 148)
+        return CGSize(width: collectionView.bounds.width / 2, height: TrackersViewControllerTheme.trackerCollectionViewCellHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView,
