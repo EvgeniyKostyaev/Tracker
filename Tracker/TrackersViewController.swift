@@ -204,7 +204,9 @@ extension TrackersViewController: UICollectionViewDataSource {
         
         let tracker = categories[indexPath.section].trackers[indexPath.row]
         
-        cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: 5, isCompleted: false)
+        cell.delegate = self
+        
+        cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: 0, isCompleted: false)
         
         return cell
     }
@@ -238,5 +240,11 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return TrackersViewControllerTheme.collectionViewCellSpacing
+    }
+}
+
+extension TrackersViewController: TrackerCollectionViewCellDelegate {
+    func didTapPlusButton(_ cell: TrackerCollectionViewCell) {
+        print("didTapPlusButton")
     }
 }

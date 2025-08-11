@@ -40,9 +40,15 @@ enum TrackerCollectionViewCellTheme {
     static let plusButtonImageSystemNameCheckmark: String = "checkmark"
 }
 
+protocol TrackerCollectionViewCellDelegate: AnyObject {
+    func didTapPlusButton(_ cell: TrackerCollectionViewCell)
+}
+
 final class TrackerCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Public Properties
+    weak var delegate: TrackerCollectionViewCellDelegate?
+    
     static let identifier = "TrackerCollectionViewCell"
     
     // MARK: - Private Properties
@@ -97,6 +103,10 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
+    private var isCompleted = false
+    private var dayCount = 0
+    private var color: UIColor?
+    
     // MARK: - Overrides Methods
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -107,6 +117,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         cardView.addSubview(titleLabel)
         contentView.addSubview(daysLabel)
         contentView.addSubview(plusButton)
+        plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
         setupConstraints()
     }
     
@@ -114,8 +125,30 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         super.init(coder: coder)
     }
     
+    // MARK: - IB Actions
+    @objc private func plusButtonTapped() {
+        
+        isCompleted.toggle()
+        
+        if isCompleted {
+            dayCount += 1
+        } else {
+            dayCount -= 1
+        }
+
+        daysLabel.text = getDaysRepresentation(dayCount)
+        plusButton.setImage(getPlusButtonImage(isCompleted), for: UIControl.State.normal)
+        plusButton.backgroundColor = color?.withAlphaComponent(isCompleted ? 0.3 : 1.0)
+        
+        delegate?.didTapPlusButton(self)
+    }
+    
     // MARK: - Public methods
     func configure(backgroundColor: UIColor, title: String, emoji: String, dayCount: Int, isCompleted: Bool) {
+        self.dayCount = dayCount
+        self.isCompleted = isCompleted
+        self.color = backgroundColor
+        
         titleLabel.text = title
         emojiLabel.text = emoji
         daysLabel.text = getDaysRepresentation(dayCount)
