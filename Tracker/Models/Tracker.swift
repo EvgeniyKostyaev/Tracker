@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 enum Weekday {
     case monday
@@ -37,7 +38,7 @@ enum TrackerType: String, Codable {
 struct Tracker {
     let id: Int
     let title: String
-    let colorHex: String
+    let color: UIColor
     let emoji: String
     let type: TrackerType
     let schedule: Schedule?

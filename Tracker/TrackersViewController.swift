@@ -122,9 +122,9 @@ final class TrackersViewController: UIViewController {
     @objc private func addButtonTapped() {
         let newTracker = Tracker(
             id: 1,
-            title: "Test",
-            colorHex: "Test",
-            emoji: "Test",
+            title: "Поливать растения",
+            color: .systemGreen,
+            emoji: "❤️",
             type: .habit,
             schedule: nil
         )
@@ -201,6 +201,10 @@ extension TrackersViewController: UICollectionViewDataSource {
         guard let cell else {
             return UICollectionViewCell()
         }
+        
+        let tracker = categories[indexPath.section].trackers[indexPath.row]
+        
+        cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: 5, isCompleted: false)
         
         return cell
     }

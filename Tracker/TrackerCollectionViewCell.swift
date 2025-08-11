@@ -36,7 +36,8 @@ enum TrackerCollectionViewCellTheme {
     static let plusButtonHeightConstraint: CGFloat = 34.0
     static let plusButtonTrailingConstraint: CGFloat = -12.0
     static let plusButtonSymbolConfigurationPointSize: CGFloat = 10.0
-    static let plusButtonImageSystemName: String = "plus"
+    static let plusButtonImageSystemNamePlus: String = "plus"
+    static let plusButtonImageSystemNameCheckmark: String = "checkmark"
 }
 
 final class TrackerCollectionViewCell: UICollectionViewCell {
@@ -47,7 +48,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     // MARK: - Private Properties
     private let cardView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.systemGreen
         view.layer.cornerRadius = TrackerCollectionViewCellTheme.cardViewCornerRadius
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -63,7 +63,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private let emojiLabel: UILabel = {
         let label = UILabel()
-        label.text = "❤️"
         label.textAlignment = .center
         label.font = UIFont.systemFont(ofSize: TrackerCollectionViewCellTheme.emojiLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -72,7 +71,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Кошка заслонила камеру на созвоне"
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: TrackerCollectionViewCellTheme.titleLabelFontSize, weight: .medium)
         label.textAlignment = .left
@@ -83,7 +81,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private let daysLabel: UILabel = {
         let label = UILabel()
-        label.text = "1 день"
         label.font = UIFont.systemFont(ofSize: TrackerCollectionViewCellTheme.daysLabelFontSize)
         label.textColor = .label
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -92,13 +89,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private let plusButton: UIButton = {
         let button = UIButton(type: .system)
-        
-        let config = UIImage.SymbolConfiguration(pointSize: TrackerCollectionViewCellTheme.plusButtonSymbolConfigurationPointSize, weight: .bold)
-        let plusImage = UIImage(systemName: TrackerCollectionViewCellTheme.plusButtonImageSystemName, withConfiguration: config)
-        
-        button.setImage(plusImage, for: .normal)
         button.tintColor = .white
-        button.backgroundColor = .systemGreen
         button.layer.cornerRadius = TrackerCollectionViewCellTheme.plusButtonCornerRadius
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -124,10 +115,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Public methods
-    func configure(title: String, emoji: String, days: String) {
+    func configure(backgroundColor: UIColor, title: String, emoji: String, dayCount: Int, isCompleted: Bool) {
         titleLabel.text = title
         emojiLabel.text = emoji
-        daysLabel.text = days
+        daysLabel.text = getDaysRepresentation(dayCount)
+        plusButton.setImage(getPlusButtonImage(isCompleted), for: UIControl.State.normal)
+        plusButton.backgroundColor = backgroundColor.withAlphaComponent(isCompleted ? 0.3 : 1.0)
+        cardView.backgroundColor = backgroundColor
     }
     
     // MARK: - Private methods
@@ -160,5 +154,23 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
             plusButton.widthAnchor.constraint(equalToConstant: TrackerCollectionViewCellTheme.plusButtonWidthConstraint),
             plusButton.heightAnchor.constraint(equalToConstant: TrackerCollectionViewCellTheme.plusButtonHeightConstraint)
         ])
+    }
+    
+    private func getDaysRepresentation(_ dayCount: Int) -> String {
+        switch dayCount {
+        case 1: return "\(dayCount) день"
+        case 2...4: return "\(dayCount) дня"
+        default: return "\(dayCount) дней"
+        }
+    }
+    
+    private func getPlusButtonImage(_ isCompleted: Bool) -> UIImage? {
+        let config = UIImage.SymbolConfiguration(pointSize: TrackerCollectionViewCellTheme.plusButtonSymbolConfigurationPointSize, weight: .bold)
+        
+        let plusImage = UIImage(systemName: TrackerCollectionViewCellTheme.plusButtonImageSystemNamePlus, withConfiguration: config)
+        
+        let checkImage = UIImage(systemName: TrackerCollectionViewCellTheme.plusButtonImageSystemNameCheckmark, withConfiguration: config)
+        
+        return isCompleted ? checkImage : plusImage
     }
 }
