@@ -8,8 +8,15 @@
 import UIKit
 
 enum TrackersViewControllerTheme {
-    static let trackerSupplementaryHeaderViewHeight: CGFloat = 44.0
-    static let trackerCollectionViewCellHeight: CGFloat = 148.0
+    static let collectionViewHeaderHeight: CGFloat = 44.0
+    static let collectionViewCellHeight: CGFloat = 140.0
+    static let collectionViewCellCount: Int = 2
+    static let collectionViewTopInset: CGFloat = 0.0
+    static let collectionViewBottomInset: CGFloat = 0.0
+    static let collectionViewLeftInset: CGFloat = 16.0
+    static let collectionViewRightInset: CGFloat = 16.0
+    static let collectionViewCellSpacing: CGFloat = 10.0
+    static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
 }
 
 final class TrackersViewController: UIViewController {
@@ -203,18 +210,29 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: TrackersViewControllerTheme.trackerSupplementaryHeaderViewHeight)
+        return CGSize(width: collectionView.bounds.width, height: TrackersViewControllerTheme.collectionViewHeaderHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width / 2, height: TrackersViewControllerTheme.trackerCollectionViewCellHeight)
+        let availableWidth = collectionView.frame.width - TrackersViewControllerTheme.collectionViewPaddingWidth
+        let cellWidth =  availableWidth / CGFloat(TrackersViewControllerTheme.collectionViewCellCount)
+        
+        return CGSize(width: cellWidth,
+                      height: TrackersViewControllerTheme.collectionViewCellHeight)
     }
     
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(
+            top: TrackersViewControllerTheme.collectionViewTopInset,
+            left: TrackersViewControllerTheme.collectionViewLeftInset,
+            bottom: TrackersViewControllerTheme.collectionViewBottomInset,
+            right: TrackersViewControllerTheme.collectionViewRightInset
+        )
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return TrackersViewControllerTheme.collectionViewCellSpacing
     }
 }
