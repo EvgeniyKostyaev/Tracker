@@ -22,13 +22,12 @@ enum TrackersViewControllerTheme {
 final class TrackersViewController: UIViewController {
     
     // MARK: - Private Properties
-    private var trackers: [Tracker] = []
-    
     private var categories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
     private var currentDate: Date = Date()
     
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+    private let emptyView = EmptyStateView(image: UIImage(resource: .noTrackers), text: "Что будем отслеживать?")
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
@@ -40,8 +39,9 @@ final class TrackersViewController: UIViewController {
         setupDatePicker()
         
         setupCollectionView()
+        setupEmptyView()
         
-//        updateUI()
+        updateTrackersUI()
     }
     
     // MARK: - Private Methods
@@ -87,8 +87,8 @@ final class TrackersViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -96,23 +96,23 @@ final class TrackersViewController: UIViewController {
         collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
     }
     
-    private func updateUI() {
-        if trackers.isEmpty {
-            let emptyView = EmptyStateView(
-                image: UIImage(resource: .noTrackers),
-                text: "Что будем отслеживать?"
-            )
-            
-            view.addSubview(emptyView)
-            
-            emptyView.translatesAutoresizingMaskIntoConstraints = false
-            
-            NSLayoutConstraint.activate([
-                emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-            ])
+    private func setupEmptyView() {
+        view.addSubview(emptyView)
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+    
+    private func updateTrackersUI() {
+        if categories.count > 0 {
+            collectionView.isHidden = false
+            emptyView.isHidden = true
         } else {
-            
+            emptyView.isHidden = false
+            collectionView.isHidden = true
         }
     }
     
@@ -136,6 +136,7 @@ final class TrackersViewController: UIViewController {
         } else {
             let newCategory = TrackerCategory(title: categoryTitle, trackers: [])
             categories.append(newCategory)
+            
             sectionIndex = categories.count - 1
             
             collectionView.performBatchUpdates {
@@ -165,6 +166,8 @@ final class TrackersViewController: UIViewController {
         
         
         addTracker(newTracker, toCategory: categoryTitle)
+        
+        updateTrackersUI()
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
