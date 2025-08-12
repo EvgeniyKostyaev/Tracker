@@ -119,6 +119,18 @@ final class TrackersViewController: UIViewController {
         }
     }
     
+    private func getCompletedDaysCount(for tracker: Tracker, from completedTrackers: [TrackerRecord]) -> Int {
+        var completedDays: [TrackerRecord] = []
+        
+        completedTrackers.forEach { trackerRecord in
+            if (trackerRecord.trackerId  == tracker.id) {
+                completedDays.append(trackerRecord)
+            }
+        }
+        
+        return completedDays.count
+    }
+    
     @objc private func addButtonTapped() {
         let newTracker = Tracker(
             id: 1,
@@ -200,10 +212,12 @@ extension TrackersViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        let tracker = categories[indexPath.section].trackers[indexPath.row]
+        var tracker = categories[indexPath.section].trackers[indexPath.row]
         
         cell.delegate = self
         cell.object = indexPath
+        
+        tracker.completedDaysCount = getCompletedDaysCount(for: tracker, from: completedTrackers)
         
         cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: tracker.completedDaysCount, isCompleted: tracker.isCompleted)
         
