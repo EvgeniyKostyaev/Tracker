@@ -34,9 +34,6 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let trackerCategory = TrackerCategory(title: "Домашний уют", trackers: [])
-        categories.append(trackerCategory)
-        
         setupTitle()
         setupSearchController()
         setupAddBarButton()
@@ -44,7 +41,7 @@ final class TrackersViewController: UIViewController {
         
         setupCollectionView()
         
-//        updateEmptyState()
+//        updateUI()
     }
     
     // MARK: - Private Methods
@@ -99,7 +96,7 @@ final class TrackersViewController: UIViewController {
         collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
     }
     
-    private func updateEmptyState() {
+    private func updateUI() {
         if trackers.isEmpty {
             let emptyView = EmptyStateView(
                 image: UIImage(resource: .noTrackers),
@@ -131,7 +128,32 @@ final class TrackersViewController: UIViewController {
         return completedDays.count
     }
     
+    private func addTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
+        var sectionIndex: Int
+        
+        if let existingIndex = categories.firstIndex(where: { $0.title == categoryTitle }) {
+            sectionIndex = existingIndex
+        } else {
+            let newCategory = TrackerCategory(title: categoryTitle, trackers: [])
+            categories.append(newCategory)
+            sectionIndex = categories.count - 1
+            
+            collectionView.performBatchUpdates {
+                collectionView.insertSections(IndexSet(integer: sectionIndex))
+            }
+        }
+        
+        let newRowIndex = categories[sectionIndex].trackers.count
+        categories[sectionIndex].trackers.append(tracker)
+        
+        collectionView.performBatchUpdates {
+            collectionView.insertItems(at: [IndexPath(row: newRowIndex, section: sectionIndex)])
+        }
+    }
+    
     @objc private func addButtonTapped() {
+        let categoryTitle = "Домашний уют"
+        
         let newTracker = Tracker(
             id: 1,
             title: "Поливать растения",
@@ -141,32 +163,8 @@ final class TrackersViewController: UIViewController {
             schedule: nil
         )
         
-        let newRowIndex = categories[0].trackers.count
         
-        categories[0].trackers.append(newTracker)
-        
-        collectionView.performBatchUpdates {
-            collectionView.insertItems(at: [IndexPath.init(row: newRowIndex, section: 0)])
-        }
-        
-        //        var lastIndex: Int = 0
-        //        if (trackers.count > 1) {
-        //            lastIndex = trackers.count - 1
-        //        }
-        //
-        //        collectionView.performBatchUpdates {
-        //            collectionView.insertItems(at: [IndexPath.init(row: lastIndex, section: 0)])
-        //        }
-        
-        //        let trackerCategory = TrackerCategory(title: "Section test", trackers: [newTracker])
-        //
-        //        let newSectionIndex = categories.count
-        //
-        //        categories.append(trackerCategory)
-        //
-        //        collectionView.performBatchUpdates {
-        //            collectionView.insertSections(IndexSet(integer: newSectionIndex))
-        //        }
+        addTracker(newTracker, toCategory: categoryTitle)
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
