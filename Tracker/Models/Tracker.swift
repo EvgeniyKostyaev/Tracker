@@ -42,4 +42,7 @@ struct Tracker {
     let emoji: String
     let type: TrackerType
     let schedule: Schedule?
+    
+    var isCompleted: Bool = false
+    var completedDaysCount: Int = 0
 }

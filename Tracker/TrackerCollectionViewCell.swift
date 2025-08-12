@@ -41,7 +41,7 @@ enum TrackerCollectionViewCellTheme {
 }
 
 protocol TrackerCollectionViewCellDelegate: AnyObject {
-    func didTapPlusButton(_ cell: TrackerCollectionViewCell)
+    func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton object: Any?)
 }
 
 final class TrackerCollectionViewCell: UICollectionViewCell {
@@ -50,6 +50,8 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     weak var delegate: TrackerCollectionViewCellDelegate?
     
     static let identifier = "TrackerCollectionViewCell"
+    
+    var object: Any?
     
     // MARK: - Private Properties
     private let cardView: UIView = {
@@ -103,10 +105,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
-    private var isCompleted = false
-    private var dayCount = 0
-    private var color: UIColor?
-    
     // MARK: - Overrides Methods
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -125,30 +123,8 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         super.init(coder: coder)
     }
     
-    // MARK: - IB Actions
-    @objc private func plusButtonTapped() {
-        
-        isCompleted.toggle()
-        
-        if isCompleted {
-            dayCount += 1
-        } else {
-            dayCount -= 1
-        }
-
-        daysLabel.text = getDaysRepresentation(dayCount)
-        plusButton.setImage(getPlusButtonImage(isCompleted), for: UIControl.State.normal)
-        plusButton.backgroundColor = color?.withAlphaComponent(isCompleted ? 0.3 : 1.0)
-        
-        delegate?.didTapPlusButton(self)
-    }
-    
     // MARK: - Public methods
     func configure(backgroundColor: UIColor, title: String, emoji: String, dayCount: Int, isCompleted: Bool) {
-        self.dayCount = dayCount
-        self.isCompleted = isCompleted
-        self.color = backgroundColor
-        
         titleLabel.text = title
         emojiLabel.text = emoji
         daysLabel.text = getDaysRepresentation(dayCount)
@@ -205,5 +181,9 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         let checkImage = UIImage(systemName: TrackerCollectionViewCellTheme.plusButtonImageSystemNameCheckmark, withConfiguration: config)
         
         return isCompleted ? checkImage : plusImage
+    }
+    
+    @objc private func plusButtonTapped() {
+        delegate?.trackerCell(self, onClickPlusButton: object)
     }
 }

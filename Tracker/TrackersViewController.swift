@@ -196,17 +196,16 @@ extension TrackersViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.identifier, for: indexPath) as? TrackerCollectionViewCell
-        
-        guard let cell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.identifier, for: indexPath) as? TrackerCollectionViewCell else {
             return UICollectionViewCell()
         }
         
         let tracker = categories[indexPath.section].trackers[indexPath.row]
         
         cell.delegate = self
+        cell.object = indexPath
         
-        cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: 0, isCompleted: false)
+        cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: tracker.completedDaysCount, isCompleted: tracker.isCompleted)
         
         return cell
     }
@@ -244,7 +243,11 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension TrackersViewController: TrackerCollectionViewCellDelegate {
-    func didTapPlusButton(_ cell: TrackerCollectionViewCell) {
-        print("didTapPlusButton")
+    func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton object: Any?) {
+        if let indexPath = object as? IndexPath {
+            categories[indexPath.section].trackers[indexPath.row].isCompleted.toggle()
+            
+            collectionView.reloadData()
+        }
     }
 }
