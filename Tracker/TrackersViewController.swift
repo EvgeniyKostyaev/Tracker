@@ -41,10 +41,63 @@ final class TrackersViewController: UIViewController {
         setupCollectionView()
         setupEmptyView()
         
+        temporaryTrackersStub()
         updateTrackersUI()
     }
     
     // MARK: - Private Methods
+    private func temporaryTrackersStub() {
+        let tracker1 = Tracker(
+            id: 1,
+            title: "Сделать уборку",
+            color: .systemGreen,
+            emoji: "❤️",
+            type: .habit,
+            schedule: nil
+        )
+        
+        let tracker2 = Tracker(
+            id: 2,
+            title: "Помыть посуду",
+            color: .systemRed,
+            emoji: "❤️",
+            type: .habit,
+            schedule: nil
+        )
+        
+        let tracker3 = Tracker(
+            id: 3,
+            title: "Подать показания счетчиков",
+            color: .systemBlue,
+            emoji: "❤️",
+            type: .habit,
+            schedule: nil
+        )
+        
+        let tracker4 = Tracker(
+            id: 4,
+            title: "Свидание в слепую",
+            color: .systemOrange,
+            emoji: "❤️",
+            type: .habit,
+            schedule: nil
+        )
+        
+        let tracker5 = Tracker(
+            id: 5,
+            title: "Плавание в бассейне",
+            color: .systemYellow,
+            emoji: "❤️",
+            type: .habit,
+            schedule: nil
+        )
+        
+        let homeCategory = TrackerCategory(title: "Домашний уют", trackers: [tracker1, tracker2, tracker3])
+        let happyCategory = TrackerCategory(title: "Радостные мелочи", trackers: [tracker4, tracker5])
+    
+        categories.append(contentsOf: [homeCategory, happyCategory])
+    }
+    
     private func setupTitle() {
         title = "Трекеры"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -156,14 +209,13 @@ final class TrackersViewController: UIViewController {
         let categoryTitle = "Домашний уют"
         
         let newTracker = Tracker(
-            id: 1,
+            id: 7,
             title: "Поливать растения",
-            color: .systemGreen,
+            color: .systemIndigo,
             emoji: "❤️",
             type: .habit,
             schedule: nil
         )
-        
         
         addTracker(newTracker, toCategory: categoryTitle)
         
