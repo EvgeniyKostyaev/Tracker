@@ -247,6 +247,15 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
         if let indexPath = object as? IndexPath {
             categories[indexPath.section].trackers[indexPath.row].isCompleted.toggle()
             
+            let traker = categories[indexPath.section].trackers[indexPath.row]
+            let trackerRecord = TrackerRecord(trackerId: traker.id, date: currentDate)
+            
+            if (traker.isCompleted) {
+                completedTrackers.append(trackerRecord)
+            } else {
+                completedTrackers.removeAll(where: { $0.trackerId == traker.id && $0.date == currentDate })
+            }
+             
             collectionView.reloadData()
         }
     }
