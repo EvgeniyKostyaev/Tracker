@@ -22,7 +22,10 @@ enum TrackersViewControllerTheme {
 final class TrackersViewController: UIViewController {
     
     // MARK: - Private Properties
-    private var categories: [TrackerCategory] = []
+    private let filterTrackersUseCase = FilterTrackersUseCase()
+    
+    private var sourceTrackerCategories: [TrackerCategory] = []
+    private var trackerCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
     private var currentDate: Date = Date()
     
@@ -62,7 +65,7 @@ final class TrackersViewController: UIViewController {
             color: .systemRed,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(weekdays: [.monday, .thursday, .thursday, .tuesday, .friday])
+            schedule: Schedule(weekdays: [.tuesday, .wednesday, .thursday, .friday])
         )
         
         let tracker3 = Tracker(
@@ -95,7 +98,7 @@ final class TrackersViewController: UIViewController {
         let homeCategory = TrackerCategory(title: "Домашний уют", trackers: [tracker1, tracker2, tracker3])
         let happyCategory = TrackerCategory(title: "Радостные мелочи", trackers: [tracker4, tracker5])
     
-        categories.append(contentsOf: [homeCategory, happyCategory])
+        sourceTrackerCategories.append(contentsOf: [homeCategory, happyCategory])
     }
     
     private func setupTitle() {
@@ -160,11 +163,16 @@ final class TrackersViewController: UIViewController {
     }
     
     private func updateTrackersUI() {
-        if categories.count > 0 {
+        trackerCategories = filterTrackersUseCase.filterTrackerCategoriesList(sourceTrackerCategories, date: currentDate)
+        
+        if trackerCategories.count > 0 {
             collectionView.isHidden = false
+            collectionView.reloadData()
+            
             emptyView.isHidden = true
         } else {
             emptyView.isHidden = false
+            
             collectionView.isHidden = true
         }
     }
@@ -184,21 +192,21 @@ final class TrackersViewController: UIViewController {
     private func addTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
         var sectionIndex: Int
         
-        if let existingIndex = categories.firstIndex(where: { $0.title == categoryTitle }) {
+        if let existingIndex = trackerCategories.firstIndex(where: { $0.title == categoryTitle }) {
             sectionIndex = existingIndex
         } else {
             let newCategory = TrackerCategory(title: categoryTitle, trackers: [])
-            categories.append(newCategory)
+            trackerCategories.append(newCategory)
             
-            sectionIndex = categories.count - 1
+            sectionIndex = trackerCategories.count - 1
             
             collectionView.performBatchUpdates {
                 collectionView.insertSections(IndexSet(integer: sectionIndex))
             }
         }
         
-        let newRowIndex = categories[sectionIndex].trackers.count
-        categories[sectionIndex].trackers.append(tracker)
+        let newRowIndex = trackerCategories[sectionIndex].trackers.count
+        trackerCategories[sectionIndex].trackers.append(tracker)
         
         collectionView.performBatchUpdates {
             collectionView.insertItems(at: [IndexPath(row: newRowIndex, section: sectionIndex)])
@@ -225,17 +233,17 @@ final class TrackersViewController: UIViewController {
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
         self.currentDate = sender.date
         
-        // update tracers list
+        updateTrackersUI()
     }
 }
 
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return categories.count
+        return trackerCategories.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return categories[section].trackers.count
+        return trackerCategories[section].trackers.count
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -255,7 +263,7 @@ extension TrackersViewController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
 
-        header.titleLabel.text = categories[indexPath.section].title
+        header.titleLabel.text = trackerCategories[indexPath.section].title
 
         return header
     }
@@ -265,7 +273,7 @@ extension TrackersViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        var tracker = categories[indexPath.section].trackers[indexPath.row]
+        var tracker = trackerCategories[indexPath.section].trackers[indexPath.row]
         
         cell.delegate = self
         cell.object = indexPath
@@ -312,9 +320,9 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 extension TrackersViewController: TrackerCollectionViewCellDelegate {
     func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton object: Any?) {
         if let indexPath = object as? IndexPath {
-            categories[indexPath.section].trackers[indexPath.row].isCompleted.toggle()
+            trackerCategories[indexPath.section].trackers[indexPath.row].isCompleted.toggle()
             
-            let traker = categories[indexPath.section].trackers[indexPath.row]
+            let traker = trackerCategories[indexPath.section].trackers[indexPath.row]
             let trackerRecord = TrackerRecord(trackerId: traker.id, date: currentDate)
             
             if (traker.isCompleted) {
