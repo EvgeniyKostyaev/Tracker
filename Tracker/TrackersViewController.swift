@@ -56,7 +56,7 @@ final class TrackersViewController: UIViewController {
             color: .systemGreen,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(weekdays: [.saturday, .sunday])
+            schedule: Schedule(weekdays: [.saturday])
         )
         
         let tracker2 = Tracker(
@@ -222,7 +222,7 @@ final class TrackersViewController: UIViewController {
             color: .systemIndigo,
             emoji: "❤️",
             type: .habit,
-            schedule: nil
+            schedule: Schedule(weekdays: [.monday])
         )
         
         addTracker(newTracker, toCategory: categoryTitle)
