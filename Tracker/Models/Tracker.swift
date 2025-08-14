@@ -19,11 +19,11 @@ enum Weekday: Int {
 }
 
 struct Schedule {
-    var weekdays: Set<Weekday>
+    var weekdays: Set<Weekday?>
     var startTime: Date?
     var endTime: Date?
     
-    init(weekdays: Set<Weekday>, startTime: Date? = nil, endTime: Date? = nil) {
+    init(weekdays: Set<Weekday?>, startTime: Date? = nil, endTime: Date? = nil) {
         self.weekdays = weekdays
         self.startTime = startTime
         self.endTime = endTime

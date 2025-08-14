@@ -28,7 +28,7 @@ class FilterTrackersUseCase {
     private func filterTrackersList(_ trackers: [Tracker], date: Date) -> [Tracker] {
         return trackers.filter { tracker in
             let weekday = tracker.schedule?.weekdays.first(where: { (weekday) in
-                return weekday.rawValue == date.dayOfWeek
+                return weekday?.rawValue == date.dayOfWeek
             })
             
             return weekday != nil

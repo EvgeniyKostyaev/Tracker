@@ -167,14 +167,13 @@ final class TrackersViewController: UIViewController {
         
         if trackerCategories.count > 0 {
             collectionView.isHidden = false
-            collectionView.reloadData()
-            
             emptyView.isHidden = true
         } else {
             emptyView.isHidden = false
-            
             collectionView.isHidden = true
         }
+        
+        collectionView.reloadData()
     }
     
     private func getCompletedDaysCount(for tracker: Tracker, from completedTrackers: [TrackerRecord]) -> Int {
@@ -192,25 +191,25 @@ final class TrackersViewController: UIViewController {
     private func addTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
         var sectionIndex: Int
         
-        if let existingIndex = trackerCategories.firstIndex(where: { $0.title == categoryTitle }) {
+        if let existingIndex = sourceTrackerCategories.firstIndex(where: { $0.title == categoryTitle }) {
             sectionIndex = existingIndex
         } else {
             let newCategory = TrackerCategory(title: categoryTitle, trackers: [])
-            trackerCategories.append(newCategory)
+            sourceTrackerCategories.append(newCategory)
             
-            sectionIndex = trackerCategories.count - 1
+            sectionIndex = sourceTrackerCategories.count - 1
             
-            collectionView.performBatchUpdates {
-                collectionView.insertSections(IndexSet(integer: sectionIndex))
-            }
+//            collectionView.performBatchUpdates {
+//                collectionView.insertSections(IndexSet(integer: sectionIndex))
+//            }
         }
         
-        let newRowIndex = trackerCategories[sectionIndex].trackers.count
-        trackerCategories[sectionIndex].trackers.append(tracker)
+//        let newRowIndex = sourceTrackerCategories[sectionIndex].trackers.count
+        sourceTrackerCategories[sectionIndex].trackers.append(tracker)
         
-        collectionView.performBatchUpdates {
-            collectionView.insertItems(at: [IndexPath(row: newRowIndex, section: sectionIndex)])
-        }
+//        collectionView.performBatchUpdates {
+//            collectionView.insertItems(at: [IndexPath(row: newRowIndex, section: sectionIndex)])
+//        }
     }
     
     @objc private func addButtonTapped() {
@@ -222,7 +221,7 @@ final class TrackersViewController: UIViewController {
             color: .systemIndigo,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(weekdays: [.monday])
+            schedule: Schedule(weekdays: [Weekday(rawValue: currentDate.dayOfWeek)])
         )
         
         addTracker(newTracker, toCategory: categoryTitle)
