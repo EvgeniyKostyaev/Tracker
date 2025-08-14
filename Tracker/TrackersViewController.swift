@@ -27,7 +27,7 @@ final class TrackersViewController: UIViewController {
     private var sourceTrackerCategories: [TrackerCategory] = []
     private var trackerCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
-    private var currentDate: Date = Date()
+    private var activeDate: Date = Date()
     
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
     private let emptyView = EmptyStateView(image: UIImage(resource: .noTrackers), text: "Что будем отслеживать?")
@@ -163,7 +163,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func updateTrackersUI() {
-        trackerCategories = filterTrackersUseCase.filterTrackerCategoriesList(sourceTrackerCategories, date: currentDate)
+        trackerCategories = filterTrackersUseCase.filterTrackerCategoriesList(sourceTrackerCategories, date: activeDate)
         
         if trackerCategories.count > 0 {
             collectionView.isHidden = false
@@ -177,15 +177,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func getCompletedDaysCount(for tracker: Tracker, from completedTrackers: [TrackerRecord]) -> Int {
-        var completedDays: [TrackerRecord] = []
-        
-        completedTrackers.forEach { trackerRecord in
-            if (trackerRecord.trackerId  == tracker.id) {
-                completedDays.append(trackerRecord)
-            }
-        }
-        
-        return completedDays.count
+        return completedTrackers.filter({ $0.trackerId == tracker.id }).count
     }
     
     private func addTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
@@ -221,7 +213,7 @@ final class TrackersViewController: UIViewController {
             color: .systemIndigo,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(weekdays: [Weekday(rawValue: currentDate.dayOfWeek)])
+            schedule: Schedule(weekdays: [Weekday(rawValue: activeDate.dayOfWeek)])
         )
         
         addTracker(newTracker, toCategory: categoryTitle)
@@ -230,7 +222,7 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-        self.currentDate = sender.date
+        self.activeDate = sender.date
         
         updateTrackersUI()
     }
@@ -278,6 +270,9 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.object = indexPath
         
         tracker.completedDaysCount = getCompletedDaysCount(for: tracker, from: completedTrackers)
+        tracker.isCompleted = completedTrackers.contains(where: { trackerRecord in
+            return trackerRecord.trackerId == tracker.id && trackerRecord.date == activeDate
+        })
         
         cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: tracker.completedDaysCount, isCompleted: tracker.isCompleted)
         
@@ -322,15 +317,15 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
             trackerCategories[indexPath.section].trackers[indexPath.row].isCompleted.toggle()
             
             let traker = trackerCategories[indexPath.section].trackers[indexPath.row]
-            let trackerRecord = TrackerRecord(trackerId: traker.id, date: currentDate)
+            let trackerRecord = TrackerRecord(trackerId: traker.id, date: activeDate)
             
             if (traker.isCompleted) {
                 completedTrackers.append(trackerRecord)
             } else {
-                completedTrackers.removeAll(where: { $0.trackerId == traker.id && $0.date == currentDate })
+                completedTrackers.removeAll(where: { $0.trackerId == traker.id && $0.date == activeDate })
             }
              
-            collectionView.reloadData()
+            collectionView.reloadItems(at: [indexPath])
         }
     }
 }
