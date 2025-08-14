@@ -314,18 +314,20 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 extension TrackersViewController: TrackerCollectionViewCellDelegate {
     func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton object: Any?) {
         if let indexPath = object as? IndexPath {
-            trackerCategories[indexPath.section].trackers[indexPath.row].isCompleted.toggle()
             
             let traker = trackerCategories[indexPath.section].trackers[indexPath.row]
-            let trackerRecord = TrackerRecord(trackerId: traker.id, date: activeDate)
             
-            if (traker.isCompleted) {
-                completedTrackers.append(trackerRecord)
-            } else {
+            let isCompleted = completedTrackers.contains { trackerRecord in
+                return trackerRecord.trackerId == traker.id && trackerRecord.date == activeDate
+            }
+            
+            if (isCompleted) {
                 completedTrackers.removeAll(where: { $0.trackerId == traker.id && $0.date == activeDate })
+            } else {
+                completedTrackers.append(TrackerRecord(trackerId: traker.id, date: activeDate))
             }
              
-            collectionView.reloadItems(at: [indexPath])
+            collectionView.reloadData()
         }
     }
 }
