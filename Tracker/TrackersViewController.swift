@@ -92,7 +92,7 @@ final class TrackersViewController: UIViewController {
             color: .systemYellow,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(weekdays: [.monday, .thursday, .friday])
+            schedule: Schedule(weekdays: [.monday, .thursday, .friday, .sunday])
         )
         
         let homeCategory = TrackerCategory(title: "Домашний уют", trackers: [tracker1, tracker2, tracker3])
@@ -204,6 +204,12 @@ final class TrackersViewController: UIViewController {
 //        }
     }
     
+    private func isTrackerCompleted(for tracker: Tracker, from completedTrackers: [TrackerRecord]) -> Bool {
+        completedTrackers.contains(where: { trackerRecord in
+            return trackerRecord.trackerId == tracker.id && trackerRecord.date == activeDate
+        })
+    }
+    
     @objc private func addButtonTapped() {
         let categoryTitle = "Домашний уют"
         
@@ -270,9 +276,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.object = indexPath
         
         tracker.completedDaysCount = getCompletedDaysCount(for: tracker, from: completedTrackers)
-        tracker.isCompleted = completedTrackers.contains(where: { trackerRecord in
-            return trackerRecord.trackerId == tracker.id && trackerRecord.date == activeDate
-        })
+        tracker.isCompleted = isTrackerCompleted(for: tracker, from: completedTrackers)
         
         cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: tracker.completedDaysCount, isCompleted: tracker.isCompleted)
         
@@ -315,16 +319,14 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
     func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton object: Any?) {
         if let indexPath = object as? IndexPath {
             
-            let traker = trackerCategories[indexPath.section].trackers[indexPath.row]
+            let tracker = trackerCategories[indexPath.section].trackers[indexPath.row]
             
-            let isCompleted = completedTrackers.contains { trackerRecord in
-                return trackerRecord.trackerId == traker.id && trackerRecord.date == activeDate
-            }
+            let isCompleted = isTrackerCompleted(for: tracker, from: completedTrackers)
             
             if (isCompleted) {
-                completedTrackers.removeAll(where: { $0.trackerId == traker.id && $0.date == activeDate })
+                completedTrackers.removeAll(where: { $0.trackerId == tracker.id && $0.date == activeDate })
             } else {
-                completedTrackers.append(TrackerRecord(trackerId: traker.id, date: activeDate))
+                completedTrackers.append(TrackerRecord(trackerId: tracker.id, date: activeDate))
             }
              
             collectionView.reloadData()
