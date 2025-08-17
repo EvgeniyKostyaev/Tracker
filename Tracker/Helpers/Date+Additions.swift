@@ -22,7 +22,7 @@ extension Date {
     // MARK: - Private methods
     private var iso8601Calendar : Calendar {
         var calendar = Calendar.init(identifier: .iso8601)
-        calendar.timeZone = TimeZone.init(secondsFromGMT: 0) ?? TimeZone.current
+        calendar.timeZone = TimeZone.current
         return calendar
     }
 }
