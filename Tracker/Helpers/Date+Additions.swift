@@ -8,8 +8,21 @@
 import Foundation
 
 extension Date {
+    
+    // MARK: - Public methods
     var dayOfWeek: Int {
-        let weekday = Calendar(identifier: .iso8601).component(.weekday, from: self)
+        let weekday = iso8601Calendar.component(.weekday, from: self)
         return weekday == 1 ? 7 : weekday - 1
+    }
+    
+    func isSameDayAs(_ date: Date) -> Bool{
+        return iso8601Calendar.isDate(self, inSameDayAs: date)
+    }
+    
+    // MARK: - Private methods
+    private var iso8601Calendar : Calendar {
+        var calendar = Calendar.init(identifier: .iso8601)
+        calendar.timeZone = TimeZone.init(secondsFromGMT: 0) ?? TimeZone.current
+        return calendar
     }
 }

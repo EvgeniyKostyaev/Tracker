@@ -206,7 +206,7 @@ final class TrackersViewController: UIViewController {
     
     private func isTrackerCompleted(for tracker: Tracker, from completedTrackers: [TrackerRecord]) -> Bool {
         completedTrackers.contains(where: { trackerRecord in
-            return trackerRecord.trackerId == tracker.id && trackerRecord.date == activeDate
+            return trackerRecord.trackerId == tracker.id && trackerRecord.date.isSameDayAs(activeDate)
         })
     }
     
@@ -323,8 +323,10 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
             
             let isCompleted = isTrackerCompleted(for: tracker, from: completedTrackers)
             
+            print("TEST_activeDate: \(activeDate)")
+            
             if (isCompleted) {
-                completedTrackers.removeAll(where: { $0.trackerId == tracker.id && $0.date == activeDate })
+                completedTrackers.removeAll(where: { $0.trackerId == tracker.id && $0.date.isSameDayAs(activeDate) })
             } else {
                 completedTrackers.append(TrackerRecord(trackerId: tracker.id, date: activeDate))
             }
