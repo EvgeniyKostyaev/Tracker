@@ -78,25 +78,28 @@ final class CreatingTrackerViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func habitButtonTaped() {
-//        let habitViewController = HabitViewController()
-//        presentAsSheet(habitViewController)
+        let habitViewController = HabitViewController()
+        presentAsSheet(habitViewController)
+        
+//        dismiss(animated: true)
     }
     
     @objc private func irregularEventButtonTaped() {
-//        let irregularEventViewController = IrregularEventViewController()
-//        presentAsSheet(irregularEventViewController)
+        let irregularEventViewController = IrregularEventViewController()
+        presentAsSheet(irregularEventViewController)
+        
+//        dismiss(animated: true)
     }
     
     private func presentAsSheet(_ vc: UIViewController) {
-        let nav = UINavigationController(rootViewController: vc)
-        nav.modalPresentationStyle = .pageSheet
+        let navigationController = UINavigationController(rootViewController: vc)
+        navigationController.modalPresentationStyle = .pageSheet
         
-        if let sheet = nav.sheetPresentationController {
-            sheet.detents = [.medium(), .large()]
-            sheet.prefersGrabberVisible = true
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.large()]
             sheet.preferredCornerRadius = CreatingTrackerViewControllerTeme.sheetPresentationCornerRadius
         }
         
-        present(nav, animated: true)
+        present(navigationController, animated: true)
     }
 }
