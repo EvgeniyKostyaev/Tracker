@@ -210,21 +210,35 @@ final class TrackersViewController: UIViewController {
         })
     }
     
+    private func presentCreatingTrackerAsSheet() {
+        let navigationController = UINavigationController(rootViewController: CreatingTrackerViewController())
+        navigationController.modalPresentationStyle = .pageSheet
+        
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.preferredCornerRadius = 16
+        }
+        
+        present(navigationController, animated: true)
+    }
+    
     @objc private func addButtonTapped() {
-        let categoryTitle = "Домашний уют"
+//        let categoryTitle = "Домашний уют"
+//        
+//        let newTracker = Tracker(
+//            id: 7,
+//            title: "Поливать растения",
+//            color: .systemIndigo,
+//            emoji: "❤️",
+//            type: .habit,
+//            schedule: Schedule(weekdays: [Weekday(rawValue: activeDate.dayOfWeek)])
+//        )
+//        
+//        addTracker(newTracker, toCategory: categoryTitle)
+//        
+//        updateTrackersUI()
         
-        let newTracker = Tracker(
-            id: 7,
-            title: "Поливать растения",
-            color: .systemIndigo,
-            emoji: "❤️",
-            type: .habit,
-            schedule: Schedule(weekdays: [Weekday(rawValue: activeDate.dayOfWeek)])
-        )
-        
-        addTracker(newTracker, toCategory: categoryTitle)
-        
-        updateTrackersUI()
+        presentCreatingTrackerAsSheet()
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
