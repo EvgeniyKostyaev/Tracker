@@ -56,6 +56,13 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
         return label
     }()
     
+    private let separator: UIView = {
+            let view = UIView()
+            view.backgroundColor = UIColor(white: 0.9, alpha: 1)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            return view
+        }()
+    
     private lazy var categoryButton: UIButton = {
         let button = makeOptionButton(title: "Категория")
         button.layer.cornerRadius = 12
@@ -68,6 +75,24 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
         button.layer.cornerRadius = 12
         button.addTarget(self, action: #selector(scheduleTapped), for: .touchUpInside)
         return button
+    }()
+    
+    private let categoryDescriptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "—"
+        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let scheduleDescriptionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Пн, Ср, Пт"
+        label.textColor = .gray
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private lazy var cancelButton: UIButton = {
@@ -103,6 +128,7 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
         nameTextField.delegate = self
         
         setupLayout()
+        setupOptionButtonsState()
         setupTapGesture()
     }
     
@@ -157,16 +183,12 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
         view.addSubview(nameTextField)
         view.addSubview(warningLabel)
         
-        switch (trackerType) {
-        case .habit:
-            view.addSubview(categoryButton)
-            view.addSubview(scheduleButton)
-            
-            categoryButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-            scheduleButton.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        case .irregular:
-            view.addSubview(categoryButton)
-        }
+        view.addSubview(categoryButton)
+        view.addSubview(separator)
+        view.addSubview(scheduleButton)
+        
+        categoryButton.addSubview(categoryDescriptionLabel)
+        scheduleButton.addSubview(scheduleDescriptionLabel)
         
         view.addSubview(cancelButton)
         view.addSubview(createButton)
@@ -184,17 +206,27 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
             categoryButton.topAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: 24),
             categoryButton.leadingAnchor.constraint(equalTo: nameTextField.leadingAnchor),
             categoryButton.trailingAnchor.constraint(equalTo: nameTextField.trailingAnchor),
-            categoryButton.heightAnchor.constraint(equalToConstant: 75)
+            categoryButton.heightAnchor.constraint(equalToConstant: 75),
+            
+            separator.topAnchor.constraint(equalTo: categoryButton.bottomAnchor),
+            separator.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor, constant: 16),
+            separator.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: -16),
+            separator.heightAnchor.constraint(equalToConstant: 1),
+            
+            scheduleButton.topAnchor.constraint(equalTo: separator.bottomAnchor),
+            scheduleButton.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor),
+            scheduleButton.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor),
+            scheduleButton.heightAnchor.constraint(equalToConstant: 75)
         ])
         
-        if trackerType == .habit {
-            NSLayoutConstraint.activate([
-                scheduleButton.topAnchor.constraint(equalTo: categoryButton.bottomAnchor),
-                scheduleButton.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor),
-                scheduleButton.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor),
-                scheduleButton.heightAnchor.constraint(equalTo: categoryButton.heightAnchor)
-            ])
-        }
+        NSLayoutConstraint.activate([
+            categoryDescriptionLabel.centerYAnchor.constraint(equalTo: categoryButton.centerYAnchor),
+            categoryDescriptionLabel.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: -16),
+            
+            scheduleDescriptionLabel.centerYAnchor.constraint(equalTo: scheduleButton.centerYAnchor),
+            scheduleDescriptionLabel.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: -16)
+        ])
+        
         
         NSLayoutConstraint.activate([
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -207,6 +239,17 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
             createButton.heightAnchor.constraint(equalTo: cancelButton.heightAnchor),
             createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor)
         ])
+    }
+    
+    private func setupOptionButtonsState() {
+        switch (trackerType) {
+        case .habit:
+            categoryButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            scheduleButton.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        case .irregular:
+            separator.isHidden = true
+            scheduleButton.isHidden = true
+        }
     }
     
     private func setupTapGesture() {
