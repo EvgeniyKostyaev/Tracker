@@ -17,6 +17,8 @@ enum TrackersViewControllerTheme {
     static let collectionViewRightInset: CGFloat = 16.0
     static let collectionViewCellSpacing: CGFloat = 10.0
     static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+    
+    static let sheetPresentationCornerRadius: CGFloat = 16.0
 }
 
 final class TrackersViewController: UIViewController {
@@ -45,6 +47,32 @@ final class TrackersViewController: UIViewController {
         setupEmptyView()
         
         temporaryTrackersStub()
+        updateTrackersUI()
+    }
+    
+    // MARK: - Action methods
+    @objc private func addButtonTapped() {
+//        let categoryTitle = "Домашний уют"
+//
+//        let newTracker = Tracker(
+//            id: 7,
+//            title: "Поливать растения",
+//            color: .systemIndigo,
+//            emoji: "❤️",
+//            type: .habit,
+//            schedule: Schedule(weekdays: [Weekday(rawValue: activeDate.dayOfWeek)])
+//        )
+//
+//        addTracker(newTracker, toCategory: categoryTitle)
+//
+//        updateTrackersUI()
+        
+        presentCreatingTrackerAsSheet()
+    }
+    
+    @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
+        self.activeDate = sender.date
+        
         updateTrackersUI()
     }
     
@@ -216,35 +244,10 @@ final class TrackersViewController: UIViewController {
         
         if let sheet = navigationController.sheetPresentationController {
             sheet.detents = [.large()]
-            sheet.preferredCornerRadius = 16
+            sheet.preferredCornerRadius = TrackersViewControllerTheme.sheetPresentationCornerRadius
         }
         
         present(navigationController, animated: true)
-    }
-    
-    @objc private func addButtonTapped() {
-//        let categoryTitle = "Домашний уют"
-//        
-//        let newTracker = Tracker(
-//            id: 7,
-//            title: "Поливать растения",
-//            color: .systemIndigo,
-//            emoji: "❤️",
-//            type: .habit,
-//            schedule: Schedule(weekdays: [Weekday(rawValue: activeDate.dayOfWeek)])
-//        )
-//        
-//        addTracker(newTracker, toCategory: categoryTitle)
-//        
-//        updateTrackersUI()
-        
-        presentCreatingTrackerAsSheet()
-    }
-    
-    @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
-        self.activeDate = sender.date
-        
-        updateTrackersUI()
     }
 }
 
@@ -336,8 +339,6 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
             let tracker = trackerCategories[indexPath.section].trackers[indexPath.row]
             
             let isCompleted = isTrackerCompleted(for: tracker, from: completedTrackers)
-            
-            print("TEST_activeDate: \(activeDate)")
             
             if (isCompleted) {
                 completedTrackers.removeAll(where: { $0.trackerId == tracker.id && $0.date.isSameDayAs(activeDate) })

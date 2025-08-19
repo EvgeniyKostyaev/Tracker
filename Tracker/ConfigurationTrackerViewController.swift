@@ -1,5 +1,5 @@
 //
-//  BaseTrackerFormViewController.swift
+//  ConfigurationTrackerViewController.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 19.08.2025.
@@ -7,32 +7,46 @@
 
 import UIKit
 
-class BaseTrackerFormViewController: UIViewController {
+enum ConfigurationTrackerViewControllerTheme {
+    static let habitTitle: String = "Новая привычка"
+    static let irregularTitle: String = "Новое нерегулярное событие"
     
-    // MARK: - Callback
+    static let textFieldPlaceholder: String = "Введите название трекера"
+    static let textFieldCornerRadius: CGFloat = 12.0
+    
+    static let actionButtonsCornerRadius: CGFloat = 12.0
+    
+    static let cancelButtonTitle: String = "Отменить"
+    static let cancellButtonBorderWidth: CGFloat = 1.0
+    static let createButtonTitle: String = "Создать"
+}
+
+final class ConfigurationTrackerViewController: UIViewController {
+    
+    // MARK: - Public properties
     var onCreate: ((Tracker) -> Void)?
     
-    // MARK: - UI
+    var trackerType: TrackerType = .habit
+    
     let nameTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Введите название трекера"
+        textField.placeholder = ConfigurationTrackerViewControllerTheme.textFieldPlaceholder
         textField.backgroundColor = UIColor(white: 0.95, alpha: 1)
-        textField.layer.cornerRadius = 12
+        textField.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.textFieldCornerRadius
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 0))
         textField.leftViewMode = .always
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
     
-    private var rowButtons: [UIButton] = []
-    
+    // MARK: - Private properties
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Отменить", for: .normal)
+        button.setTitle(ConfigurationTrackerViewControllerTheme.cancelButtonTitle, for: .normal)
         button.setTitleColor(.red, for: .normal)
-        button.layer.borderWidth = 1
+        button.layer.borderWidth = ConfigurationTrackerViewControllerTheme.cancellButtonBorderWidth
         button.layer.borderColor = UIColor.red.cgColor
-        button.layer.cornerRadius = 12
+        button.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.actionButtonsCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         return button
@@ -40,41 +54,48 @@ class BaseTrackerFormViewController: UIViewController {
     
     private lazy var createButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Создать", for: .normal)
+        button.setTitle(ConfigurationTrackerViewControllerTheme.createButtonTitle, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .lightGray
-        button.layer.cornerRadius = 12
+        button.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.actionButtonsCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(createTapped), for: .touchUpInside)
         return button
     }()
     
-    // MARK: - Lifecycle
+    // MARK: - Overrides methods
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        title = getTitle()
         setupLayout()
     }
     
-    // MARK: - Public API
-    func configureRows(with titles: [String]) {
-        rowButtons.forEach { $0.removeFromSuperview() }
-        rowButtons = titles.map { makeRowButton(title: $0) }
-        
-        var previous: UIView = nameTextField
-        for button in rowButtons {
-            view.addSubview(button)
-            NSLayoutConstraint.activate([
-                button.topAnchor.constraint(equalTo: previous.bottomAnchor, constant: 16),
-                button.leadingAnchor.constraint(equalTo: nameTextField.leadingAnchor),
-                button.trailingAnchor.constraint(equalTo: nameTextField.trailingAnchor),
-                button.heightAnchor.constraint(equalToConstant: 60)
-            ])
-            previous = button
+    // MARK: - Actions
+    @objc private func cancelTapped() {
+        dismiss(animated: true)
+    }
+    
+    @objc private func createTapped() {
+//        let tracker = Tracker(
+//            name: nameTextField.text ?? "",
+//            category: "Категория",
+//            schedule: nil
+//        )
+//        onCreate?(tracker)
+        dismiss(animated: true)
+    }
+    
+    // MARK: - Public methods
+    
+    // MARK: - Private methods
+    private func getTitle() -> String {
+        switch (trackerType) {
+        case .habit: return ConfigurationTrackerViewControllerTheme.habitTitle
+        case .irregular: return ConfigurationTrackerViewControllerTheme.irregularTitle
         }
     }
     
-    // MARK: - Layout
     private func setupLayout() {
         view.addSubview(nameTextField)
         view.addSubview(cancelButton)
@@ -96,38 +117,5 @@ class BaseTrackerFormViewController: UIViewController {
             createButton.heightAnchor.constraint(equalTo: cancelButton.heightAnchor),
             createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor)
         ])
-    }
-    
-    private func makeRowButton(title: String) -> UIButton {
-        let button = UIButton(type: .system)
-        button.setTitle(title, for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.contentHorizontalAlignment = .left
-        button.backgroundColor = UIColor(white: 0.95, alpha: 1)
-        button.layer.cornerRadius = 12
-        
-        let chevron = UIImage(systemName: "chevron.right")?.withRenderingMode(.alwaysTemplate)
-        button.setImage(chevron, for: .normal)
-        button.tintColor = .gray
-        button.semanticContentAttribute = .forceRightToLeft
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: -8)
-        
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }
-    
-    // MARK: - Actions
-    @objc private func cancelTapped() {
-        dismiss(animated: true)
-    }
-    
-    @objc private func createTapped() {
-//        let tracker = Tracker(
-//            name: nameTextField.text ?? "",
-//            category: "Категория",
-//            schedule: nil            
-//        )
-//        onCreate?(tracker)
-        dismiss(animated: true)
     }
 }

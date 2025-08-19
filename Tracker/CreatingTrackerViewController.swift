@@ -26,6 +26,7 @@ enum CreatingTrackerViewControllerTeme {
 
 final class CreatingTrackerViewController: UIViewController {
     
+    // MARK: - Private properties
     private let habitButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(CreatingTrackerViewControllerTeme.habitButtonTitle, for: .normal)
@@ -48,6 +49,7 @@ final class CreatingTrackerViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Overrides methods
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -59,6 +61,16 @@ final class CreatingTrackerViewController: UIViewController {
         irregularEventButton.addTarget(self, action: #selector(irregularEventButtonTaped), for: .touchUpInside)
     }
     
+    // MARK: - Actions
+    @objc private func habitButtonTaped() {
+        presentConfigurationTrackerAsSheet(trackerType: .habit)
+    }
+    
+    @objc private func irregularEventButtonTaped() {
+        presentConfigurationTrackerAsSheet(trackerType: .irregular)
+    }
+    
+    // MARK: - Private methods
     private func setupLayout() {
         let stack = UIStackView(arrangedSubviews: [habitButton, irregularEventButton])
         stack.axis = .vertical
@@ -76,23 +88,10 @@ final class CreatingTrackerViewController: UIViewController {
         ])
     }
     
-    // MARK: - Actions
-    @objc private func habitButtonTaped() {
-        let habitViewController = HabitViewController()
-        presentAsSheet(habitViewController)
-        
-//        dismiss(animated: true)
-    }
-    
-    @objc private func irregularEventButtonTaped() {
-        let irregularEventViewController = IrregularEventViewController()
-        presentAsSheet(irregularEventViewController)
-        
-//        dismiss(animated: true)
-    }
-    
-    private func presentAsSheet(_ vc: UIViewController) {
-        let navigationController = UINavigationController(rootViewController: vc)
+    private func presentConfigurationTrackerAsSheet(trackerType: TrackerType) {
+        let configurationTrackerViewController = ConfigurationTrackerViewController()
+        configurationTrackerViewController.trackerType = trackerType
+        let navigationController = UINavigationController(rootViewController: configurationTrackerViewController)
         navigationController.modalPresentationStyle = .pageSheet
         
         if let sheet = navigationController.sheetPresentationController {
