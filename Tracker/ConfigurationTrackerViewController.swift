@@ -39,6 +39,7 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
         textField.font = .systemFont(ofSize: 17)
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 0))
         textField.leftViewMode = .always
+        textField.clearButtonMode = .whileEditing
         textField.returnKeyType = .go
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
@@ -58,7 +59,6 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
     private lazy var categoryButton: UIButton = {
         let button = makeOptionButton(title: "Категория")
         button.layer.cornerRadius = 12
-        button.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         button.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
         return button
     }()
@@ -66,7 +66,6 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
     private lazy var scheduleButton: UIButton = {
         let button = makeOptionButton(title: "Расписание")
         button.layer.cornerRadius = 12
-        button.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         button.addTarget(self, action: #selector(scheduleTapped), for: .touchUpInside)
         return button
     }()
@@ -157,10 +156,18 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
     private func setupLayout() {
         view.addSubview(nameTextField)
         view.addSubview(warningLabel)
-        view.addSubview(categoryButton)
-        if trackerType == .habit {
+        
+        switch (trackerType) {
+        case .habit:
+            view.addSubview(categoryButton)
             view.addSubview(scheduleButton)
+            
+            categoryButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            scheduleButton.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        case .irregular:
+            view.addSubview(categoryButton)
         }
+        
         view.addSubview(cancelButton)
         view.addSubview(createButton)
         
@@ -168,7 +175,7 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
             nameTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
             nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            nameTextField.heightAnchor.constraint(equalToConstant: 60),
+            nameTextField.heightAnchor.constraint(equalToConstant: 75),
             
             warningLabel.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 8),
             warningLabel.leadingAnchor.constraint(equalTo: nameTextField.leadingAnchor),
@@ -177,7 +184,7 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
             categoryButton.topAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: 24),
             categoryButton.leadingAnchor.constraint(equalTo: nameTextField.leadingAnchor),
             categoryButton.trailingAnchor.constraint(equalTo: nameTextField.trailingAnchor),
-            categoryButton.heightAnchor.constraint(equalToConstant: 60)
+            categoryButton.heightAnchor.constraint(equalToConstant: 75)
         ])
         
         if trackerType == .habit {
@@ -225,6 +232,12 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
         } else {
             warningLabel.isHidden = true
         }
+        
+        return true
+    }
+    
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        warningLabel.isHidden = true
         
         return true
     }
