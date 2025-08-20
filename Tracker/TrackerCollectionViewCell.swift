@@ -95,12 +95,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    private let plusButton: UIButton = {
+    private lazy var plusButton: UIButton = {
         let button = UIButton(type: .system)
         button.tintColor = .white
         button.layer.cornerRadius = TrackerCollectionViewCellTheme.plusButtonCornerRadius
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
         
         return button
     }()
@@ -109,21 +110,14 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        contentView.addSubview(cardView)
-        cardView.addSubview(emojiCircleView)
-        emojiCircleView.addSubview(emojiLabel)
-        cardView.addSubview(titleLabel)
-        contentView.addSubview(daysLabel)
-        contentView.addSubview(plusButton)
-        plusButton.addTarget(self, action: #selector(plusButtonTapped), for: .touchUpInside)
-        setupConstraints()
+        setupLayout()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
-    // MARK: - Public methods
+    // MARK: - Public Methods
     func configure(backgroundColor: UIColor, title: String, emoji: String, dayCount: Int, isCompleted: Bool) {
         titleLabel.text = title
         emojiLabel.text = emoji
@@ -133,8 +127,15 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         cardView.backgroundColor = backgroundColor
     }
     
-    // MARK: - Private methods
-    private func setupConstraints() {
+    // MARK: - Private Methods
+    private func setupLayout() {
+        contentView.addSubview(cardView)
+        cardView.addSubview(emojiCircleView)
+        emojiCircleView.addSubview(emojiLabel)
+        cardView.addSubview(titleLabel)
+        contentView.addSubview(daysLabel)
+        contentView.addSubview(plusButton)
+        
         NSLayoutConstraint.activate([
             cardView.topAnchor.constraint(equalTo: contentView.topAnchor),
             cardView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),

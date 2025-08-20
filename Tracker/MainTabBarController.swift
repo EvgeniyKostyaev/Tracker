@@ -7,6 +7,11 @@
 
 import UIKit
 
+enum MainTabBarControllerTheme {
+    static let trackersTabBarItemTitle: String = "Трекеры"
+    static let statisticTabBarItemTitle: String = "Статистика"
+}
+
 final class MainTabBarController: UITabBarController {
     
     // MARK: - Overrides Methods
@@ -21,7 +26,7 @@ final class MainTabBarController: UITabBarController {
     private func setupViewControllers() {
         let trackersViewController = TrackersViewController()
         trackersViewController.tabBarItem = UITabBarItem(
-            title: "Трекеры",
+            title: MainTabBarControllerTheme.trackersTabBarItemTitle,
             image: UIImage(resource: .tabTrackers),
             selectedImage: nil
         )
@@ -30,7 +35,7 @@ final class MainTabBarController: UITabBarController {
         
         let statisticViewController = StatisticViewController()
         statisticViewController.tabBarItem = UITabBarItem(
-            title: "Статистика",
+            title: MainTabBarControllerTheme.statisticTabBarItemTitle,
             image: UIImage(resource: .tabStatistic),
             selectedImage: nil
         )

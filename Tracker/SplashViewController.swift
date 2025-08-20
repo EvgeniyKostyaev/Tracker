@@ -15,10 +15,11 @@ enum SplashViewControllerTheme {
 final class SplashViewController: UIViewController {
 
     // MARK: - Private Properties
-    private let splashImageView = {
+    private let splashImageView: UIImageView = {
         let splashImageView = UIImageView()
         
-        splashImageView.image = UIImage(named: "launch_screen")
+        splashImageView.image = UIImage.init(resource: .launchScreen)
+        splashImageView.translatesAutoresizingMaskIntoConstraints = false
         
         return splashImageView
     }()
@@ -35,7 +36,11 @@ final class SplashViewController: UIViewController {
         
         view.backgroundColor = UIColor(resource: .trackerBlue)
         
-        splashImageView.translatesAutoresizingMaskIntoConstraints = false
+        setupLayout()
+    }
+    
+    // MARK: - Private Methods
+    private func setupLayout() {
         view.addSubview(splashImageView)
         
         NSLayoutConstraint.activate([
@@ -46,7 +51,6 @@ final class SplashViewController: UIViewController {
         ])
     }
     
-    // MARK: - Private Methods
     private func navigateToMainTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Invalid window configuration")

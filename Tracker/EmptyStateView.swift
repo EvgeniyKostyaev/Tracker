@@ -17,7 +17,7 @@ enum EmptyStateViewTheme {
 
 final class EmptyStateView: UIView {
     
-    // MARK: - Initializers
+    // MARK: - Initializers methods
     init(image: UIImage?, text: String) {
         super.init(frame: .zero)
         setupView(image: image, text: text)

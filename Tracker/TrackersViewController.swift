@@ -8,6 +8,10 @@
 import UIKit
 
 enum TrackersViewControllerTheme {
+    static let title: String = "Трекеры"
+    static let searchPlaceholder: String = "Поиск"
+    static let emptySatateTitle: String = "Что будем отслеживать?"
+    
     static let collectionViewHeaderHeight: CGFloat = 44.0
     static let collectionViewCellHeight: CGFloat = 140.0
     static let collectionViewCellCount: Int = 2
@@ -31,8 +35,26 @@ final class TrackersViewController: UIViewController {
     private var completedTrackers: [TrackerRecord] = []
     private var activeDate: Date = Date()
     
-    private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-    private let emptyView = EmptyStateView(image: UIImage(resource: .noTrackers), text: "Что будем отслеживать?")
+    private lazy var collectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        
+        collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
+        collectionView.register(TrackerSupplementaryHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackerSupplementaryHeaderView.identifier)
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return collectionView
+    }()
+    
+    private lazy var emptyView: EmptyStateView = {
+        let emptyView = EmptyStateView(image: UIImage(resource: .noTrackers), text: TrackersViewControllerTheme.emptySatateTitle)
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return emptyView
+    }()
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
@@ -43,14 +65,13 @@ final class TrackersViewController: UIViewController {
         setupAddBarButton()
         setupDatePicker()
         
-        setupCollectionView()
-        setupEmptyView()
+        setupLayout()
         
         temporaryTrackersStub()
         updateTrackersUI()
     }
     
-    // MARK: - Action methods
+    // MARK: - Action Methods
     @objc private func addButtonTapped() {
 //        let categoryTitle = "Домашний уют"
 //
@@ -120,7 +141,7 @@ final class TrackersViewController: UIViewController {
             color: .systemYellow,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(weekdays: [.monday, .thursday, .friday, .sunday])
+            schedule: Schedule(weekdays: [.monday, .thursday, .friday])
         )
         
         let homeCategory = TrackerCategory(title: "Домашний уют", trackers: [tracker1, tracker2, tracker3])
@@ -130,14 +151,14 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupTitle() {
-        title = "Трекеры"
+        title = TrackersViewControllerTheme.title
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
     }
     
     private func setupSearchController() {
         let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchBar.placeholder = "Поиск"
+        searchController.searchBar.placeholder = TrackersViewControllerTheme.searchPlaceholder
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         navigationItem.searchController = searchController
@@ -164,27 +185,16 @@ final class TrackersViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
     
-    private func setupCollectionView() {
-        collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
-        collectionView.register(TrackerSupplementaryHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackerSupplementaryHeaderView.identifier)
-        
-        collectionView.dataSource = self
-        collectionView.delegate = self
-        
+    private func setupLayout() {
         view.addSubview(collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-    }
-    
-    private func setupEmptyView() {
         view.addSubview(emptyView)
-        emptyView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
             emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
@@ -251,7 +261,7 @@ final class TrackersViewController: UIViewController {
     }
 }
 
-// MARK: - UICollectionViewDataSource methods
+// MARK: - UICollectionViewDataSource Methods
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return trackerCategories.count
@@ -302,7 +312,7 @@ extension TrackersViewController: UICollectionViewDataSource {
     }
 }
 
-// MARK: - UICollectionViewDelegateFlowLayout methods
+// MARK: - UICollectionViewDelegateFlowLayout Methods
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -334,7 +344,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-// MARK: - TrackerCollectionViewCellDelegate methods
+// MARK: - TrackerCollectionViewCellDelegate Methods
 extension TrackersViewController: TrackerCollectionViewCellDelegate {
     func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton object: Any?) {
         if let indexPath = object as? IndexPath {
