@@ -24,15 +24,16 @@ enum ConfigurationTrackerViewControllerTheme {
     static let warningText: String = "Ограничение 38 символов"
 }
 
-final class ConfigurationTrackerViewController: UIViewController, UITextFieldDelegate {
+final class ConfigurationTrackerViewController: UIViewController {
     
     // MARK: - Public properties
     var onCreate: ((Tracker) -> Void)?
     var trackerType: TrackerType = .habit
     
-    // MARK: - UI
-    let nameTextField: UITextField = {
+    // MARK: - Private properties
+    private lazy var nameTextField: UITextField = {
         let textField = UITextField()
+        textField.delegate = self
         textField.placeholder = ConfigurationTrackerViewControllerTheme.textFieldPlaceholder
         textField.backgroundColor = UIColor(white: 0.95, alpha: 1)
         textField.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.textFieldCornerRadius
@@ -45,7 +46,7 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
         return textField
     }()
     
-    private lazy var warningLabel: UILabel = {
+    private let warningLabel: UILabel = {
         let label = UILabel()
         label.text = ConfigurationTrackerViewControllerTheme.warningText
         label.font = .systemFont(ofSize: 17)
@@ -57,21 +58,33 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
     }()
     
     private let separator: UIView = {
-            let view = UIView()
-            view.backgroundColor = UIColor(white: 0.9, alpha: 1)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            return view
-        }()
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0.9, alpha: 1)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private lazy var categoryButton: UIButton = {
-        let button = makeOptionButton(title: "Категория")
+        let button = UIButton(type: .system)
+        button.setTitle("Категория", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        button.contentHorizontalAlignment = .left
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 12
         button.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
         return button
     }()
     
     private lazy var scheduleButton: UIButton = {
-        let button = makeOptionButton(title: "Расписание")
+        let button = UIButton(type: .system)
+        button.setTitle("Расписание", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        button.contentHorizontalAlignment = .left
+        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0)
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 12
         button.addTarget(self, action: #selector(scheduleTapped), for: .touchUpInside)
         return button
@@ -119,20 +132,18 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
         return button
     }()
     
-    // MARK: - Overrides
+    // MARK: - Overrides methods
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = getTitle()
-        
-        nameTextField.delegate = self
         
         setupLayout()
         setupOptionButtonsState()
         setupTapGesture()
     }
     
-    // MARK: - Actions
+    // MARK: - Action methods
     @objc private func cancelTapped() {
         dismiss(animated: true)
     }
@@ -149,17 +160,6 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
         // TODO: push/present Schedule screen
     }
     
-    // MARK: - Public methods
-    func enableCreateButton() {
-        createButton.isEnabled = true
-        createButton.backgroundColor = .black
-    }
-    
-    func disableCreateButton() {
-        createButton.isEnabled = false
-        createButton.backgroundColor = .lightGray
-    }
-    
     // MARK: - Private methods
     private func getTitle() -> String {
         switch trackerType {
@@ -168,15 +168,14 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
         }
     }
     
-    private func makeOptionButton(title: String) -> UIButton {
-        let button = UIButton(type: .system)
-        button.setTitle(title, for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = UIColor(white: 0.95, alpha: 1)
-        button.contentHorizontalAlignment = .left
-        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private func enableCreateButton() {
+        createButton.isEnabled = true
+        createButton.backgroundColor = .black
+    }
+    
+    private func disableCreateButton() {
+        createButton.isEnabled = false
+        createButton.backgroundColor = .lightGray
     }
     
     private func setupLayout() {
@@ -216,19 +215,14 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
             scheduleButton.topAnchor.constraint(equalTo: separator.bottomAnchor),
             scheduleButton.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor),
             scheduleButton.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor),
-            scheduleButton.heightAnchor.constraint(equalToConstant: 75)
-        ])
-        
-        NSLayoutConstraint.activate([
+            scheduleButton.heightAnchor.constraint(equalToConstant: 75),
+            
             categoryDescriptionLabel.centerYAnchor.constraint(equalTo: categoryButton.centerYAnchor),
             categoryDescriptionLabel.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: -16),
             
             scheduleDescriptionLabel.centerYAnchor.constraint(equalTo: scheduleButton.centerYAnchor),
-            scheduleDescriptionLabel.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: -16)
-        ])
-        
-        
-        NSLayoutConstraint.activate([
+            scheduleDescriptionLabel.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: -16),
+            
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
@@ -261,8 +255,10 @@ final class ConfigurationTrackerViewController: UIViewController, UITextFieldDel
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
-    
-    // MARK: - UITextFieldDelegate
+}
+
+// MARK: - UITextFieldDelegate methods
+extension ConfigurationTrackerViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let currentText = textField.text,
               let textRange = Range(range, in: currentText) else { return true }

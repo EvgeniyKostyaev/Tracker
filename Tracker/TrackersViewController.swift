@@ -251,6 +251,7 @@ final class TrackersViewController: UIViewController {
     }
 }
 
+// MARK: - UICollectionViewDataSource methods
 extension TrackersViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return trackerCategories.count
@@ -301,6 +302,7 @@ extension TrackersViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UICollectionViewDelegateFlowLayout methods
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -332,6 +334,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+// MARK: - TrackerCollectionViewCellDelegate methods
 extension TrackersViewController: TrackerCollectionViewCellDelegate {
     func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton object: Any?) {
         if let indexPath = object as? IndexPath {

@@ -27,7 +27,7 @@ enum CreatingTrackerViewControllerTeme {
 final class CreatingTrackerViewController: UIViewController {
     
     // MARK: - Private properties
-    private let habitButton: UIButton = {
+    private lazy var habitButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(CreatingTrackerViewControllerTeme.habitButtonTitle, for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -35,10 +35,11 @@ final class CreatingTrackerViewController: UIViewController {
         button.titleLabel?.font = UIFont.systemFont(ofSize: CreatingTrackerViewControllerTeme.actionButtonFontSise, weight: .medium)
         button.layer.cornerRadius = CreatingTrackerViewControllerTeme.actionButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(habitButtonTaped), for: .touchUpInside)
         return button
     }()
     
-    private let irregularEventButton: UIButton = {
+    private lazy var irregularEventButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(CreatingTrackerViewControllerTeme.irregularEventButtonTitle, for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -46,7 +47,16 @@ final class CreatingTrackerViewController: UIViewController {
         button.titleLabel?.font = UIFont.systemFont(ofSize: CreatingTrackerViewControllerTeme.actionButtonFontSise, weight: .medium)
         button.layer.cornerRadius = CreatingTrackerViewControllerTeme.actionButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(irregularEventButtonTaped), for: .touchUpInside)
         return button
+    }()
+    
+    private lazy var optionButtonsStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [habitButton, irregularEventButton])
+        stack.axis = .vertical
+        stack.spacing = CreatingTrackerViewControllerTeme.stackViewSpacing
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
     }()
     
     // MARK: - Overrides methods
@@ -56,9 +66,6 @@ final class CreatingTrackerViewController: UIViewController {
         title = CreatingTrackerViewControllerTeme.title
         
         setupLayout()
-        
-        habitButton.addTarget(self, action: #selector(habitButtonTaped), for: .touchUpInside)
-        irregularEventButton.addTarget(self, action: #selector(irregularEventButtonTaped), for: .touchUpInside)
     }
     
     // MARK: - Actions
@@ -72,17 +79,12 @@ final class CreatingTrackerViewController: UIViewController {
     
     // MARK: - Private methods
     private func setupLayout() {
-        let stack = UIStackView(arrangedSubviews: [habitButton, irregularEventButton])
-        stack.axis = .vertical
-        stack.spacing = CreatingTrackerViewControllerTeme.stackViewSpacing
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(stack)
+        view.addSubview(optionButtonsStack)
         
         NSLayoutConstraint.activate([
-            stack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CreatingTrackerViewControllerTeme.stackLeadingConstraint),
-            stack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CreatingTrackerViewControllerTeme.stackTrailingConstraint),
-            stack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            optionButtonsStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CreatingTrackerViewControllerTeme.stackLeadingConstraint),
+            optionButtonsStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CreatingTrackerViewControllerTeme.stackTrailingConstraint),
+            optionButtonsStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             habitButton.heightAnchor.constraint(equalToConstant: CreatingTrackerViewControllerTeme.actionButtonHeightConstraint),
             irregularEventButton.heightAnchor.constraint(equalToConstant: CreatingTrackerViewControllerTeme.actionButtonHeightConstraint)
         ])
