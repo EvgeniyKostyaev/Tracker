@@ -105,7 +105,7 @@ final class TrackersViewController: UIViewController {
             color: .systemGreen,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(weekdays: [.saturday])
+            schedule: Schedule(daysWeeks: [.saturday])
         )
         
         let tracker2 = Tracker(
@@ -114,7 +114,7 @@ final class TrackersViewController: UIViewController {
             color: .systemRed,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(weekdays: [.tuesday, .wednesday, .thursday, .friday])
+            schedule: Schedule(daysWeeks: [.tuesday, .wednesday, .thursday, .friday])
         )
         
         let tracker3 = Tracker(
@@ -141,7 +141,7 @@ final class TrackersViewController: UIViewController {
             color: .systemYellow,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(weekdays: [.monday, .thursday, .friday])
+            schedule: Schedule(daysWeeks: [.monday, .thursday, .friday])
         )
         
         let homeCategory = TrackerCategory(title: "Домашний уют", trackers: [tracker1, tracker2, tracker3])

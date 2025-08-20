@@ -27,11 +27,11 @@ class FilterTrackersUseCase {
     // MARK: - Private methods
     private func filterTrackersList(_ trackers: [Tracker], date: Date) -> [Tracker] {
         return trackers.filter { tracker in
-            let weekday = tracker.schedule?.weekdays.first(where: { (weekday) in
-                return weekday?.rawValue == date.dayOfWeek
+            let dayWeeks = tracker.schedule?.daysWeeks.first(where: { (dayWeeks) in
+                return dayWeeks?.rawValue == date.dayOfWeek
             })
             
-            return weekday != nil
+            return dayWeeks != nil
         }
     }
 }

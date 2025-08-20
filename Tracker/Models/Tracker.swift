@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-enum Weekday: Int {
+enum DayWeeks: Int {
     case monday = 1
     case tuesday = 2
     case wednesday = 3
@@ -18,13 +18,27 @@ enum Weekday: Int {
     case sunday = 7
 }
 
+extension DayWeeks {
+    var representation: String {
+        switch self {
+        case .monday: return "Пн"
+        case .tuesday: return "Вт"
+        case .wednesday: return "Ср"
+        case .thursday: return "Чт"
+        case .friday: return "Пт"
+        case .saturday: return "Сб"
+        case .sunday: return "Вс"
+        }
+    }
+}
+
 struct Schedule {
-    var weekdays: Set<Weekday?>
+    var daysWeeks: [DayWeeks?]
     var startTime: Date?
     var endTime: Date?
     
-    init(weekdays: Set<Weekday?>, startTime: Date? = nil, endTime: Date? = nil) {
-        self.weekdays = weekdays
+    init(daysWeeks: [DayWeeks?], startTime: Date? = nil, endTime: Date? = nil) {
+        self.daysWeeks = daysWeeks
         self.startTime = startTime
         self.endTime = endTime
     }

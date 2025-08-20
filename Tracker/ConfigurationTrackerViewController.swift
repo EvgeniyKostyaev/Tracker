@@ -56,6 +56,8 @@ enum ConfigurationTrackerViewControllerTheme {
     static let cancelButtonWidthConstraintMultiplier: CGFloat = 0.44
     
     static let createButtonTrailingConstraint: CGFloat = -20.0
+    
+    static let everyDayRepresentation: String = "Каждый день"
 }
 
 final class ConfigurationTrackerViewController: UIViewController {
@@ -65,6 +67,9 @@ final class ConfigurationTrackerViewController: UIViewController {
     var trackerType: TrackerType = .habit
     
     // MARK: - Private properties
+    private var categoryRepresentation = "Важное" // this is stub for now
+    private var daysWeeks: [DayWeeks] = [.monday, .tuesday, .wednesday]
+    
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
         textField.delegate = self
@@ -124,18 +129,18 @@ final class ConfigurationTrackerViewController: UIViewController {
         return button
     }()
     
-    private let categoryDescriptionLabel: UILabel = {
+    private lazy var categoryDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "—"
+        label.text = getCategoryRepresentation()
         label.textColor = .gray
         label.font = UIFont.systemFont(ofSize: ConfigurationTrackerViewControllerTheme.configurationDescriptionLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let scheduleDescriptionLabel: UILabel = {
+    private lazy var scheduleDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "Пн, Ср, Пт"
+        label.text = getDaysWeekRepresentation()
         label.textColor = .gray
         label.font = UIFont.systemFont(ofSize: ConfigurationTrackerViewControllerTheme.configurationDescriptionLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -200,6 +205,25 @@ final class ConfigurationTrackerViewController: UIViewController {
         case .habit: return ConfigurationTrackerViewControllerTheme.habitTitle
         case .irregular: return ConfigurationTrackerViewControllerTheme.irregularTitle
         }
+    }
+    
+    private func getCategoryRepresentation() -> String {
+        return categoryRepresentation
+    }
+    
+    private func getDaysWeekRepresentation() -> String {
+        var daysWeekRepresentation = String()
+        
+        if (daysWeeks.count == 7) {
+            daysWeekRepresentation = ConfigurationTrackerViewControllerTheme.everyDayRepresentation
+        } else {
+            daysWeeks.enumerated().forEach { (index, dayWeeks) in
+                let dayWeeksRepresentation = (index == daysWeeks.count - 1) ? dayWeeks.representation : dayWeeks.representation + ", "
+                daysWeekRepresentation.append(dayWeeksRepresentation)
+            }
+        }
+        
+        return daysWeekRepresentation
     }
     
     private func enableCreateButton() {
