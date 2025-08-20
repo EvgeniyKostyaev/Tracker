@@ -48,7 +48,8 @@ enum ConfigurationTrackerViewControllerTheme {
     static let separatorTrailingConstraint: CGFloat = -16.0
     static let separatorHeightConstraint: CGFloat = 1.0
     
-    static let configurationDescriptionLabelTrailingConstraint: CGFloat = -16.0
+    static let configurationDescriptionLabelTrailingConstraint: CGFloat = -36.0
+    static let configurationDisclosureIndicatorTrailingConstraint: CGFloat = -16.0
     
     static let cancelButtonLeadingConstraint: CGFloat = 20.0
     static let cancelButtonBottomConstraint: CGFloat = -16.0
@@ -103,6 +104,21 @@ final class ConfigurationTrackerViewController: UIViewController {
         return view
     }()
     
+
+    private let categoryDisclosureIndicator: UIImageView = {
+        let indicator = UIImageView(image: UIImage(systemName: "chevron.right"))
+        indicator.tintColor = .lightGray
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+    
+    private let scheduleDisclosureIndicator: UIImageView = {
+        let indicator = UIImageView(image: UIImage(systemName: "chevron.right"))
+        indicator.tintColor = .lightGray
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        return indicator
+    }()
+
     private lazy var categoryButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(ConfigurationTrackerViewControllerTheme.categoryButtonTitle, for: .normal)
@@ -247,6 +263,9 @@ final class ConfigurationTrackerViewController: UIViewController {
         categoryButton.addSubview(categoryDescriptionLabel)
         scheduleButton.addSubview(scheduleDescriptionLabel)
         
+        categoryButton.addSubview(categoryDisclosureIndicator)
+        scheduleButton.addSubview(scheduleDisclosureIndicator)
+        
         view.addSubview(cancelButton)
         view.addSubview(createButton)
         
@@ -280,6 +299,12 @@ final class ConfigurationTrackerViewController: UIViewController {
             
             scheduleDescriptionLabel.centerYAnchor.constraint(equalTo: scheduleButton.centerYAnchor),
             scheduleDescriptionLabel.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.configurationDescriptionLabelTrailingConstraint),
+            
+            categoryDisclosureIndicator.centerYAnchor.constraint(equalTo: categoryButton.centerYAnchor),
+            categoryDisclosureIndicator.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.configurationDisclosureIndicatorTrailingConstraint),
+            
+            scheduleDisclosureIndicator.centerYAnchor.constraint(equalTo: scheduleButton.centerYAnchor),
+            scheduleDisclosureIndicator.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.configurationDisclosureIndicatorTrailingConstraint),
             
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.cancelButtonLeadingConstraint),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.cancelButtonBottomConstraint),
