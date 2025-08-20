@@ -139,7 +139,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         title = getTitle()
         
         setupLayout()
-        setupOptionButtonsState()
+        setupConfigurationButtonsState()
         setupTapGesture()
     }
     
@@ -153,11 +153,11 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func categoryTapped() {
-        // TODO: push/present Category screen
+        
     }
     
     @objc private func scheduleTapped() {
-        // TODO: push/present Schedule screen
+        
     }
     
     // MARK: - Private methods
@@ -183,8 +183,8 @@ final class ConfigurationTrackerViewController: UIViewController {
         view.addSubview(warningLabel)
         
         view.addSubview(categoryButton)
-        view.addSubview(separator)
         view.addSubview(scheduleButton)
+        view.addSubview(separator)
         
         categoryButton.addSubview(categoryDescriptionLabel)
         scheduleButton.addSubview(scheduleDescriptionLabel)
@@ -212,7 +212,7 @@ final class ConfigurationTrackerViewController: UIViewController {
             separator.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: -16),
             separator.heightAnchor.constraint(equalToConstant: 1),
             
-            scheduleButton.topAnchor.constraint(equalTo: separator.bottomAnchor),
+            scheduleButton.topAnchor.constraint(equalTo: categoryButton.bottomAnchor),
             scheduleButton.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor),
             scheduleButton.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor),
             scheduleButton.heightAnchor.constraint(equalToConstant: 75),
@@ -223,19 +223,19 @@ final class ConfigurationTrackerViewController: UIViewController {
             scheduleDescriptionLabel.centerYAnchor.constraint(equalTo: scheduleButton.centerYAnchor),
             scheduleDescriptionLabel.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: -16),
             
-            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
             cancelButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.44),
             
-            createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             createButton.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor),
             createButton.heightAnchor.constraint(equalTo: cancelButton.heightAnchor),
             createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor)
         ])
     }
     
-    private func setupOptionButtonsState() {
+    private func setupConfigurationButtonsState() {
         switch (trackerType) {
         case .habit:
             categoryButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
