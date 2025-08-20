@@ -59,6 +59,8 @@ enum ConfigurationTrackerViewControllerTheme {
     static let createButtonTrailingConstraint: CGFloat = -20.0
     
     static let everyDayRepresentation: String = "Каждый день"
+    
+    static let sheetPresentationCornerRadius: CGFloat = 16.0
 }
 
 final class ConfigurationTrackerViewController: UIViewController {
@@ -212,7 +214,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func scheduleTapped() {
-        
+        presentConfigurationScheduleAsSheet(daysWeeks: daysWeeks)
     }
     
     // MARK: - Private methods
@@ -337,6 +339,20 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     @objc private func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    private func presentConfigurationScheduleAsSheet(daysWeeks: [DayWeeks]) {
+        let configurationScheduleViewController = ConfigurationScheduleViewController()
+        configurationScheduleViewController.daysWeeks = daysWeeks
+        let navigationController = UINavigationController(rootViewController: configurationScheduleViewController)
+        navigationController.modalPresentationStyle = .pageSheet
+        
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.preferredCornerRadius = ConfigurationTrackerViewControllerTheme.sheetPresentationCornerRadius
+        }
+        
+        present(navigationController, animated: true)
     }
 }
 
