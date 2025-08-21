@@ -26,7 +26,7 @@ final class ConfigurationScheduleViewController: UIViewController {
     
     private lazy var containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(white: 0.95, alpha: 1)
         view.layer.cornerRadius = 16
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -35,13 +35,15 @@ final class ConfigurationScheduleViewController: UIViewController {
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
+        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.1))
+        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.1))
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(DayCell.self, forCellReuseIdentifier: DayCell.identifier)
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        tableView.tableFooterView = UIView()
         tableView.backgroundColor = .clear
         tableView.allowsSelection = false
-        tableView.isScrollEnabled = false
+        tableView.isScrollEnabled = true
+        tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
     
@@ -56,10 +58,21 @@ final class ConfigurationScheduleViewController: UIViewController {
         return button
     }()
     
+    private let navigationBarAppearance: UINavigationBarAppearance = {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.backgroundColor = .white
+        appearance.shadowColor = .clear
+        return appearance
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGroupedBackground
+        view.backgroundColor = .white
         title = "Расписание"
+        
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
         
         tableView.dataSource = self
         
@@ -71,13 +84,14 @@ final class ConfigurationScheduleViewController: UIViewController {
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            containerView.heightAnchor.constraint(equalToConstant: 525),
             
             tableView.topAnchor.constraint(equalTo: containerView.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
-            doneButton.topAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 24),
+            doneButton.topAnchor.constraint(greaterThanOrEqualTo: containerView.bottomAnchor, constant: 16),
             doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             doneButton.heightAnchor.constraint(equalToConstant: 60),
@@ -99,6 +113,14 @@ extension ConfigurationScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DayCell.identifier, for: indexPath) as! DayCell
         cell.configure(with: days[indexPath.row])
+        cell.backgroundColor = .clear
+        
+        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
+        } else {
+            cell.separatorInset = .zero
+        }
+        
         return cell
     }
 }
@@ -117,6 +139,7 @@ final class DayCell: UITableViewCell {
     
     private let daySwitch: UISwitch = {
         let sw = UISwitch()
+        sw.onTintColor = .trackerBlue
         sw.translatesAutoresizingMaskIntoConstraints = false
         return sw
     }()
