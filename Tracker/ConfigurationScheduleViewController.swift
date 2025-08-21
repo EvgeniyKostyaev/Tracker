@@ -5,24 +5,17 @@
 //  Created by Evgeniy Kostyaev on 21.08.2025.
 //
 
-import Foundation
 import UIKit
 
 final class ConfigurationScheduleViewController: UIViewController {
     
     // MARK: - Public Properties
-    var daysWeeks: [DayWeeks] = []
+    var activeDaysWeeks: [DayWeeks] = []
+    
+    var onSave: (([DayWeeks]) -> Void)?
     
     // MARK: - Private Properties
-    private let days = [
-        "Понедельник",
-        "Вторник",
-        "Среда",
-        "Четверг",
-        "Пятница",
-        "Суббота",
-        "Воскресенье"
-    ]
+    private let daysWeeks: [DayWeeks] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
     
     private lazy var containerView: UIView = {
         let view = UIView()
@@ -100,6 +93,7 @@ final class ConfigurationScheduleViewController: UIViewController {
     }
     
     @objc private func doneTapped() {
+        onSave?(activeDaysWeeks)
         dismiss(animated: true)
     }
 }
@@ -107,13 +101,26 @@ final class ConfigurationScheduleViewController: UIViewController {
 // MARK: - UITableViewDataSource
 extension ConfigurationScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return days.count
+        return daysWeeks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DayCell.identifier, for: indexPath) as! DayCell
-        cell.configure(with: days[indexPath.row])
-        cell.backgroundColor = .clear
+        
+        let day = daysWeeks[indexPath.row]
+        let isActive = activeDaysWeeks.contains(day)
+        cell.configure(with: day, isOn: isActive)
+        
+        cell.onSwitchChanged = { [weak self] isOn in
+            guard let self = self else { return }
+            if isOn {
+                if !self.activeDaysWeeks.contains(day) {
+                    self.activeDaysWeeks.append(day)
+                }
+            } else {
+                self.activeDaysWeeks.removeAll { $0 == day }
+            }
+        }
         
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
@@ -121,12 +128,16 @@ extension ConfigurationScheduleViewController: UITableViewDataSource {
             cell.separatorInset = .zero
         }
         
+        cell.backgroundColor = .clear
+        
         return cell
     }
 }
 
 // MARK: - Custom Cell
 final class DayCell: UITableViewCell {
+    
+    var onSwitchChanged: ((Bool) -> Void)?
     
     static let identifier = "DayCell"
     
@@ -137,11 +148,12 @@ final class DayCell: UITableViewCell {
         return label
     }()
     
-    private let daySwitch: UISwitch = {
-        let sw = UISwitch()
-        sw.onTintColor = .trackerBlue
-        sw.translatesAutoresizingMaskIntoConstraints = false
-        return sw
+    private lazy var daySwitch: UISwitch = {
+        let daySwitch = UISwitch()
+        daySwitch.onTintColor = .trackerBlue
+        daySwitch.translatesAutoresizingMaskIntoConstraints = false
+        daySwitch.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
+        return daySwitch
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -165,7 +177,12 @@ final class DayCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(with text: String) {
-        dayLabel.text = text
+    @objc private func switchChanged(_ sender: UISwitch) {
+        onSwitchChanged?(sender.isOn)
+    }
+    
+    func configure(with dayWeeks: DayWeeks, isOn: Bool) {
+        dayLabel.text = dayWeeks.fullRepresentation
+        daySwitch.isOn = isOn
     }
 }

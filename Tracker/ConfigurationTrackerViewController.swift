@@ -71,7 +71,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     // MARK: - Private properties
     private var categoryRepresentation = "Важное" // this is stub for now
-    private var daysWeeks: [DayWeeks] = [.monday, .tuesday, .wednesday]
+    private var activeDaysWeeks: [DayWeeks] = []
     
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
@@ -158,7 +158,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var scheduleDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = getDaysWeekRepresentation()
+        label.text = getActiveDaysWeeksRepresentation()
         label.textColor = .gray
         label.font = UIFont.systemFont(ofSize: ConfigurationTrackerViewControllerTheme.configurationDescriptionLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -214,7 +214,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func scheduleTapped() {
-        presentConfigurationScheduleAsSheet(daysWeeks: daysWeeks)
+        presentConfigurationScheduleAsSheet(activeDaysWeeks: activeDaysWeeks)
     }
     
     // MARK: - Private methods
@@ -229,19 +229,19 @@ final class ConfigurationTrackerViewController: UIViewController {
         return categoryRepresentation
     }
     
-    private func getDaysWeekRepresentation() -> String {
-        var daysWeekRepresentation = String()
+    private func getActiveDaysWeeksRepresentation() -> String {
+        var activeDaysWeeksRepresentation = String()
         
-        if (daysWeeks.count == 7) {
-            daysWeekRepresentation = ConfigurationTrackerViewControllerTheme.everyDayRepresentation
+        if (activeDaysWeeks.count == 7) {
+            activeDaysWeeksRepresentation = ConfigurationTrackerViewControllerTheme.everyDayRepresentation
         } else {
-            daysWeeks.enumerated().forEach { (index, dayWeeks) in
-                let dayWeeksRepresentation = (index == daysWeeks.count - 1) ? dayWeeks.representation : dayWeeks.representation + ", "
-                daysWeekRepresentation.append(dayWeeksRepresentation)
+            activeDaysWeeks.enumerated().forEach { (index, activeDayWeeks) in
+                let activeDayWeeksRepresentation = (index == activeDaysWeeks.count - 1) ? activeDayWeeks.shortRepresentation : activeDayWeeks.shortRepresentation + ", "
+                activeDaysWeeksRepresentation.append(activeDayWeeksRepresentation)
             }
         }
         
-        return daysWeekRepresentation
+        return activeDaysWeeksRepresentation
     }
     
     private func enableCreateButton() {
@@ -341,9 +341,15 @@ final class ConfigurationTrackerViewController: UIViewController {
         view.endEditing(true)
     }
     
-    private func presentConfigurationScheduleAsSheet(daysWeeks: [DayWeeks]) {
+    private func presentConfigurationScheduleAsSheet(activeDaysWeeks: [DayWeeks]) {
         let configurationScheduleViewController = ConfigurationScheduleViewController()
-        configurationScheduleViewController.daysWeeks = daysWeeks
+        configurationScheduleViewController.activeDaysWeeks = activeDaysWeeks
+        
+        configurationScheduleViewController.onSave = { [weak self] newActiveDays in
+            self?.activeDaysWeeks = newActiveDays
+            self?.scheduleDescriptionLabel.text = self?.getActiveDaysWeeksRepresentation()
+        }
+        
         let navigationController = UINavigationController(rootViewController: configurationScheduleViewController)
         navigationController.modalPresentationStyle = .pageSheet
         

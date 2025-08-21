@@ -19,7 +19,7 @@ enum DayWeeks: Int {
 }
 
 extension DayWeeks {
-    var representation: String {
+    var shortRepresentation: String {
         switch self {
         case .monday: return "Пн"
         case .tuesday: return "Вт"
@@ -28,6 +28,18 @@ extension DayWeeks {
         case .friday: return "Пт"
         case .saturday: return "Сб"
         case .sunday: return "Вс"
+        }
+    }
+    
+    var fullRepresentation: String {
+        switch self {
+        case .monday: return "Понедельник"
+        case .tuesday: return "Вторник"
+        case .wednesday: return "Среда"
+        case .thursday: return "Четверг"
+        case .friday: return "Пятница"
+        case .saturday: return "Суббота"
+        case .sunday: return "Воскресенье"
         }
     }
 }
