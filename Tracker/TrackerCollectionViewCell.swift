@@ -118,12 +118,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     // MARK: - Public Methods
-    func configure(backgroundColor: UIColor, title: String, emoji: String, dayCount: Int, isCompleted: Bool) {
+    func configure(backgroundColor: UIColor, title: String, emoji: String, dayCount: Int, isCompleted: Bool, isAvailable: Bool) {
         titleLabel.text = title
         emojiLabel.text = emoji
         daysLabel.text = getDaysRepresentation(dayCount)
         plusButton.setImage(getPlusButtonImage(isCompleted), for: UIControl.State.normal)
-        plusButton.backgroundColor = backgroundColor.withAlphaComponent(isCompleted ? 0.3 : 1.0)
+        plusButton.backgroundColor = backgroundColor.withAlphaComponent(isCompleted || !isAvailable ? 0.3 : 1.0)
+        plusButton.isEnabled = isAvailable
         cardView.backgroundColor = backgroundColor
     }
     

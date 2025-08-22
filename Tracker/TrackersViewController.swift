@@ -213,18 +213,9 @@ final class TrackersViewController: UIViewController {
             sourceTrackerCategories.append(newCategory)
             
             sectionIndex = sourceTrackerCategories.count - 1
-            
-//            collectionView.performBatchUpdates {
-//                collectionView.insertSections(IndexSet(integer: sectionIndex))
-//            }
         }
         
-//        let newRowIndex = sourceTrackerCategories[sectionIndex].trackers.count
         sourceTrackerCategories[sectionIndex].trackers.append(tracker)
-        
-//        collectionView.performBatchUpdates {
-//            collectionView.insertItems(at: [IndexPath(row: newRowIndex, section: sectionIndex)])
-//        }
     }
     
     private func isTrackerCompleted(for tracker: Tracker, from completedTrackers: [TrackerRecord]) -> Bool {
@@ -299,8 +290,9 @@ extension TrackersViewController: UICollectionViewDataSource {
         
         tracker.completedDaysCount = getCompletedDaysCount(for: tracker, from: completedTrackers)
         tracker.isCompleted = isTrackerCompleted(for: tracker, from: completedTrackers)
+        tracker.isAvailable = activeDate <= Date()
         
-        cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: tracker.completedDaysCount, isCompleted: tracker.isCompleted)
+        cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: tracker.completedDaysCount, isCompleted: tracker.isCompleted, isAvailable: tracker.isAvailable)
         
         return cell
     }

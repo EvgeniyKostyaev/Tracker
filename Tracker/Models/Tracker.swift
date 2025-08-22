@@ -68,5 +68,6 @@ struct Tracker {
     let schedule: Schedule?
     
     var isCompleted: Bool = false
+    var isAvailable: Bool = false
     var completedDaysCount: Int = 0
 }
