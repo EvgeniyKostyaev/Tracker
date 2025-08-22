@@ -70,8 +70,9 @@ final class ConfigurationTrackerViewController: UIViewController {
     var trackerType: TrackerType = .habit
     
     // MARK: - Private properties
-    private var categoryRepresentation = "Важное" // this is stub for now
-    private var activeDaysWeeks: [DayWeeks] = []
+    private var nameTracker = String()
+    private var categoryTracker = "Важное" // this is stub for now
+    private var activeDaysWeeksTracker: [DayWeeks] = []
     
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
@@ -198,6 +199,8 @@ final class ConfigurationTrackerViewController: UIViewController {
         setupLayout()
         setupConfigurationButtonsState()
         setupTapGesture()
+        
+        updateCreateButtonState()
     }
     
     // MARK: - Action methods
@@ -214,7 +217,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func scheduleTapped() {
-        presentConfigurationScheduleAsSheet(activeDaysWeeks: activeDaysWeeks)
+        presentConfigurationScheduleAsSheet(activeDaysWeeks: activeDaysWeeksTracker)
     }
     
     // MARK: - Private methods
@@ -226,32 +229,22 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     private func getCategoryRepresentation() -> String {
-        return categoryRepresentation
+        return categoryTracker
     }
     
     private func getActiveDaysWeeksRepresentation() -> String {
         var activeDaysWeeksRepresentation = String()
         
-        if (activeDaysWeeks.count == 7) {
+        if (activeDaysWeeksTracker.count == 7) {
             activeDaysWeeksRepresentation = ConfigurationTrackerViewControllerTheme.everyDayRepresentation
         } else {
-            activeDaysWeeks.enumerated().forEach { (index, activeDayWeeks) in
-                let activeDayWeeksRepresentation = (index == activeDaysWeeks.count - 1) ? activeDayWeeks.shortRepresentation : activeDayWeeks.shortRepresentation + ", "
+            activeDaysWeeksTracker.enumerated().forEach { (index, activeDayWeeks) in
+                let activeDayWeeksRepresentation = (index == activeDaysWeeksTracker.count - 1) ? activeDayWeeks.shortRepresentation : activeDayWeeks.shortRepresentation + ", "
                 activeDaysWeeksRepresentation.append(activeDayWeeksRepresentation)
             }
         }
         
         return activeDaysWeeksRepresentation
-    }
-    
-    private func enableCreateButton() {
-        createButton.isEnabled = true
-        createButton.backgroundColor = .black
-    }
-    
-    private func disableCreateButton() {
-        createButton.isEnabled = false
-        createButton.backgroundColor = .lightGray
     }
     
     private func setupLayout() {
@@ -346,8 +339,10 @@ final class ConfigurationTrackerViewController: UIViewController {
         configurationScheduleViewController.activeDaysWeeks = activeDaysWeeks
         
         configurationScheduleViewController.onSave = { [weak self] newActiveDays in
-            self?.activeDaysWeeks = newActiveDays
+            self?.activeDaysWeeksTracker = newActiveDays
             self?.scheduleDescriptionLabel.text = self?.getActiveDaysWeeksRepresentation()
+            
+            self?.updateCreateButtonState()
         }
         
         let navigationController = UINavigationController(rootViewController: configurationScheduleViewController)
@@ -359,6 +354,33 @@ final class ConfigurationTrackerViewController: UIViewController {
         }
         
         present(navigationController, animated: true)
+    }
+    
+    private func updateCreateButtonState() {
+        if (isValidateConfiguration()) {
+            enableCreateButton()
+        } else {
+            disableCreateButton()
+        }
+    }
+    
+    private func isValidateConfiguration() -> Bool {
+        switch (trackerType) {
+        case .habit:
+            return !nameTracker.isEmpty && !categoryTracker.isEmpty && !activeDaysWeeksTracker.isEmpty
+        case .irregular:
+            return !nameTracker.isEmpty && !categoryTracker.isEmpty
+        }
+    }
+    
+    private func enableCreateButton() {
+        createButton.isEnabled = true
+        createButton.backgroundColor = .black
+    }
+    
+    private func disableCreateButton() {
+        createButton.isEnabled = false
+        createButton.backgroundColor = .lightGray
     }
 }
 
@@ -376,6 +398,10 @@ extension ConfigurationTrackerViewController: UITextFieldDelegate {
         } else {
             warningLabel.isHidden = true
         }
+        
+        nameTracker = updatedText
+        
+        updateCreateButtonState()
         
         return true
     }
