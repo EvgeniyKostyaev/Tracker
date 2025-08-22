@@ -10,9 +10,9 @@ import UIKit
 final class ConfigurationScheduleViewController: UIViewController {
     
     // MARK: - Public Properties
-    var activeDaysWeeks: [DayWeeks] = []
-    
     var onSave: (([DayWeeks]) -> Void)?
+    
+    var activeDaysWeeks: [DayWeeks] = []
     
     // MARK: - Private Properties
     private let daysWeeks: [DayWeeks] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
@@ -31,7 +31,7 @@ final class ConfigurationScheduleViewController: UIViewController {
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.1))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.1))
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(DayCell.self, forCellReuseIdentifier: DayCell.identifier)
+        tableView.register(ConfigurationScheduleTableViewCell.self, forCellReuseIdentifier: ConfigurationScheduleTableViewCell.identifier)
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         tableView.backgroundColor = .clear
         tableView.allowsSelection = false
@@ -59,6 +59,8 @@ final class ConfigurationScheduleViewController: UIViewController {
         return appearance
     }()
     
+    
+    // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -92,6 +94,7 @@ final class ConfigurationScheduleViewController: UIViewController {
         ])
     }
     
+    // MARK: - Private Methods
     @objc private func doneTapped() {
         activeDaysWeeks.sort { $0.rawValue < $1.rawValue }
         onSave?(activeDaysWeeks)
@@ -106,7 +109,7 @@ extension ConfigurationScheduleViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: DayCell.identifier, for: indexPath) as! DayCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ConfigurationScheduleTableViewCell.identifier, for: indexPath) as! ConfigurationScheduleTableViewCell
         
         let day = daysWeeks[indexPath.row]
         let isActive = activeDaysWeeks.contains(day)
@@ -132,58 +135,5 @@ extension ConfigurationScheduleViewController: UITableViewDataSource {
         cell.backgroundColor = .clear
         
         return cell
-    }
-}
-
-// MARK: - Custom Cell
-final class DayCell: UITableViewCell {
-    
-    var onSwitchChanged: ((Bool) -> Void)?
-    
-    static let identifier = "DayCell"
-    
-    private let dayLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 17)
-        return label
-    }()
-    
-    private lazy var daySwitch: UISwitch = {
-        let daySwitch = UISwitch()
-        daySwitch.onTintColor = .trackerBlue
-        daySwitch.translatesAutoresizingMaskIntoConstraints = false
-        daySwitch.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
-        return daySwitch
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        contentView.addSubview(dayLabel)
-        contentView.addSubview(daySwitch)
-        
-        NSLayoutConstraint.activate([
-            dayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            dayLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            daySwitch.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            daySwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            contentView.heightAnchor.constraint(equalToConstant: 75)
-        ])
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    @objc private func switchChanged(_ sender: UISwitch) {
-        onSwitchChanged?(sender.isOn)
-    }
-    
-    func configure(with dayWeeks: DayWeeks, isOn: Bool) {
-        dayLabel.text = dayWeeks.fullRepresentation
-        daySwitch.isOn = isOn
     }
 }
