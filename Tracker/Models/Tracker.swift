@@ -45,14 +45,12 @@ extension DayWeeks {
 }
 
 struct Schedule {
-    var daysWeeks: [DayWeeks?]
-    var startTime: Date?
-    var endTime: Date?
+    var daysWeeks: [DayWeeks?]?
+    var date: Date?
     
-    init(daysWeeks: [DayWeeks?], startTime: Date? = nil, endTime: Date? = nil) {
+    init(daysWeeks: [DayWeeks?]?, date: Date?) {
         self.daysWeeks = daysWeeks
-        self.startTime = startTime
-        self.endTime = endTime
+        self.date = date
     }
 }
 

@@ -27,11 +27,21 @@ class FilterTrackersUseCase {
     // MARK: - Private methods
     private func filterTrackersList(_ trackers: [Tracker], date: Date) -> [Tracker] {
         return trackers.filter { tracker in
-            let dayWeeks = tracker.schedule?.daysWeeks.first(where: { (dayWeeks) in
-                return dayWeeks?.rawValue == date.dayOfWeek
-            })
             
-            return dayWeeks != nil
+            switch (tracker.type) {
+            case .habit:
+                let dayWeeks = tracker.schedule?.daysWeeks?.first(where: { (dayWeeks) in
+                    return dayWeeks?.rawValue == date.dayOfWeek
+                })
+                
+                return dayWeeks != nil
+            case .irregular:
+                if let dayWeeks = tracker.schedule?.date {
+                    return dayWeeks.isSameDayAs(date)
+                }
+                
+                return false
+            }
         }
     }
 }

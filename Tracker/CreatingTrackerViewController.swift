@@ -28,6 +28,7 @@ final class CreatingTrackerViewController: UIViewController {
     
     // MARK: - Public properties
     var onCreate: ((Tracker, String) -> Void)?
+    var activeDate: Date = Date()
     
     // MARK: - Private properties
     private lazy var habitButton: UIButton = {
@@ -96,6 +97,7 @@ final class CreatingTrackerViewController: UIViewController {
     private func presentConfigurationTrackerAsSheet(trackerType: TrackerType) {
         let configurationTrackerViewController = ConfigurationTrackerViewController()
         configurationTrackerViewController.trackerType = trackerType
+        configurationTrackerViewController.activeDate = activeDate
         
         configurationTrackerViewController.onCreate = { [weak self] (newTracker, trackerCategory) in
             self?.onCreate?(newTracker, trackerCategory)

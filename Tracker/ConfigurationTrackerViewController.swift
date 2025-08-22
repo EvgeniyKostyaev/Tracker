@@ -68,6 +68,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     // MARK: - Public properties
     var onCreate: ((Tracker, String) -> Void)?
     var trackerType: TrackerType = .habit
+    var activeDate: Date = Date()
     
     // MARK: - Private properties
     private var trackerName = String()
@@ -386,13 +387,23 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     private func getNewTracker() -> Tracker {
+        
+        let schedule: Schedule
+        
+        switch trackerType {
+        case .habit:
+            schedule = Schedule(daysWeeks: trackerActiveDaysWeeks, date: nil)
+        case .irregular:
+            schedule = Schedule(daysWeeks: nil, date: activeDate)
+        }
+        
         let tracker = Tracker(
             id: Int.random(in: 0..<1000000),
             title: trackerName,
             color: .systemIndigo,
             emoji: "❤️",
             type: trackerType,
-            schedule: Schedule(daysWeeks: trackerActiveDaysWeeks))
+            schedule: schedule)
         
         return tracker
     }

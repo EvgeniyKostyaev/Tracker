@@ -90,7 +90,7 @@ final class TrackersViewController: UIViewController {
             color: .systemGreen,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(daysWeeks: [.saturday])
+            schedule: Schedule(daysWeeks: [.saturday], date: nil)
         )
         
         let tracker2 = Tracker(
@@ -99,7 +99,7 @@ final class TrackersViewController: UIViewController {
             color: .systemRed,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(daysWeeks: [.tuesday, .wednesday, .thursday, .friday])
+            schedule: Schedule(daysWeeks: [.tuesday, .wednesday, .thursday, .friday], date: nil)
         )
         
         let tracker3 = Tracker(
@@ -126,7 +126,7 @@ final class TrackersViewController: UIViewController {
             color: .systemYellow,
             emoji: "❤️",
             type: .habit,
-            schedule: Schedule(daysWeeks: [.monday, .thursday, .friday])
+            schedule: Schedule(daysWeeks: [.monday, .thursday, .friday], date: nil)
         )
         
         let homeCategory = TrackerCategory(title: "Домашний уют", trackers: [tracker1, tracker2, tracker3])
@@ -235,6 +235,7 @@ final class TrackersViewController: UIViewController {
     
     private func presentCreatingTrackerAsSheet() {
         let creatingTrackerViewController = CreatingTrackerViewController()
+        creatingTrackerViewController.activeDate = activeDate
         creatingTrackerViewController.onCreate = { [weak self] (newTracker, trackerCategory) in
             self?.addTracker(newTracker, toCategory: trackerCategory)
             self?.updateTrackersUI()
