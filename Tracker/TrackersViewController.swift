@@ -215,7 +215,11 @@ final class TrackersViewController: UIViewController {
             sectionIndex = sourceTrackerCategories.count - 1
         }
         
-        sourceTrackerCategories[sectionIndex].trackers.append(tracker)
+        let oldTrackerCategory = sourceTrackerCategories[sectionIndex]
+        
+        let updatedTrackerCategory = TrackerCategory(title: oldTrackerCategory.title, trackers: oldTrackerCategory.trackers + [tracker])
+        
+        sourceTrackerCategories[sectionIndex] = updatedTrackerCategory
     }
     
     private func isTrackerCompleted(for tracker: Tracker, from completedTrackers: [TrackerRecord]) -> Bool {

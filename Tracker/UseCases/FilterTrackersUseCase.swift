@@ -14,10 +14,9 @@ class FilterTrackersUseCase {
         var trackerCategoriesList: [TrackerCategory] = []
         
         trackerCategories.forEach { trackerCategory in
-            var newTrackerCategory = trackerCategory
-            newTrackerCategory.trackers = filterTrackersList(trackerCategory.trackers, date: date)
-            if (!newTrackerCategory.trackers.isEmpty) {
-                trackerCategoriesList.append(newTrackerCategory)
+            let filteredTrackers = filterTrackersList(trackerCategory.trackers, date: date)
+            if (!filteredTrackers.isEmpty) {
+                trackerCategoriesList.append(TrackerCategory(title: trackerCategory.title, trackers: filteredTrackers))
             }
         }
         
