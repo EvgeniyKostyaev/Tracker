@@ -66,13 +66,13 @@ enum ConfigurationTrackerViewControllerTheme {
 final class ConfigurationTrackerViewController: UIViewController {
     
     // MARK: - Public properties
-    var onCreate: ((Tracker) -> Void)?
+    var onCreate: ((Tracker, String) -> Void)?
     var trackerType: TrackerType = .habit
     
     // MARK: - Private properties
-    private var nameTracker = String()
-    private var categoryTracker = "Важное" // this is stub for now
-    private var activeDaysWeeksTracker: [DayWeeks] = []
+    private var trackerName = String()
+    private var trackerCategory = "Важное" // this is stub for now
+    private var trackerActiveDaysWeeks: [DayWeeks] = []
     
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
@@ -209,6 +209,8 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func createTapped() {
+        onCreate?(getNewTracker(), trackerCategory)
+        
         dismiss(animated: true)
     }
     
@@ -217,7 +219,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func scheduleTapped() {
-        presentConfigurationScheduleAsSheet(activeDaysWeeks: activeDaysWeeksTracker)
+        presentConfigurationScheduleAsSheet(activeDaysWeeks: trackerActiveDaysWeeks)
     }
     
     // MARK: - Private methods
@@ -229,17 +231,17 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     private func getCategoryRepresentation() -> String {
-        return categoryTracker
+        return trackerCategory
     }
     
     private func getActiveDaysWeeksRepresentation() -> String {
         var activeDaysWeeksRepresentation = String()
         
-        if (activeDaysWeeksTracker.count == 7) {
+        if (trackerActiveDaysWeeks.count == 7) {
             activeDaysWeeksRepresentation = ConfigurationTrackerViewControllerTheme.everyDayRepresentation
         } else {
-            activeDaysWeeksTracker.enumerated().forEach { (index, activeDayWeeks) in
-                let activeDayWeeksRepresentation = (index == activeDaysWeeksTracker.count - 1) ? activeDayWeeks.shortRepresentation : activeDayWeeks.shortRepresentation + ", "
+            trackerActiveDaysWeeks.enumerated().forEach { (index, activeDayWeeks) in
+                let activeDayWeeksRepresentation = (index == trackerActiveDaysWeeks.count - 1) ? activeDayWeeks.shortRepresentation : activeDayWeeks.shortRepresentation + ", "
                 activeDaysWeeksRepresentation.append(activeDayWeeksRepresentation)
             }
         }
@@ -339,7 +341,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         configurationScheduleViewController.activeDaysWeeks = activeDaysWeeks
         
         configurationScheduleViewController.onSave = { [weak self] newActiveDays in
-            self?.activeDaysWeeksTracker = newActiveDays
+            self?.trackerActiveDaysWeeks = newActiveDays
             self?.scheduleDescriptionLabel.text = self?.getActiveDaysWeeksRepresentation()
             
             self?.updateCreateButtonState()
@@ -367,9 +369,9 @@ final class ConfigurationTrackerViewController: UIViewController {
     private func isValidateConfiguration() -> Bool {
         switch (trackerType) {
         case .habit:
-            return !nameTracker.isEmpty && !categoryTracker.isEmpty && !activeDaysWeeksTracker.isEmpty
+            return !trackerName.isEmpty && !trackerCategory.isEmpty && !trackerActiveDaysWeeks.isEmpty
         case .irregular:
-            return !nameTracker.isEmpty && !categoryTracker.isEmpty
+            return !trackerName.isEmpty && !trackerCategory.isEmpty
         }
     }
     
@@ -381,6 +383,18 @@ final class ConfigurationTrackerViewController: UIViewController {
     private func disableCreateButton() {
         createButton.isEnabled = false
         createButton.backgroundColor = .lightGray
+    }
+    
+    private func getNewTracker() -> Tracker {
+        let tracker = Tracker(
+            id: Int.random(in: 0..<1000000),
+            title: trackerName,
+            color: .systemIndigo,
+            emoji: "❤️",
+            type: trackerType,
+            schedule: Schedule(daysWeeks: trackerActiveDaysWeeks))
+        
+        return tracker
     }
 }
 
@@ -399,7 +413,7 @@ extension ConfigurationTrackerViewController: UITextFieldDelegate {
             warningLabel.isHidden = true
         }
         
-        nameTracker = updatedText
+        trackerName = updatedText.trimmingCharacters(in: .whitespaces)
         
         updateCreateButtonState()
         

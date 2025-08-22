@@ -73,21 +73,6 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Action Methods
     @objc private func addButtonTapped() {
-//        let categoryTitle = "Домашний уют"
-//
-//        let newTracker = Tracker(
-//            id: 7,
-//            title: "Поливать растения",
-//            color: .systemIndigo,
-//            emoji: "❤️",
-//            type: .habit,
-//            schedule: Schedule(weekdays: [Weekday(rawValue: activeDate.dayOfWeek)])
-//        )
-//
-//        addTracker(newTracker, toCategory: categoryTitle)
-//
-//        updateTrackersUI()
-        
         presentCreatingTrackerAsSheet()
     }
     
@@ -249,7 +234,15 @@ final class TrackersViewController: UIViewController {
     }
     
     private func presentCreatingTrackerAsSheet() {
-        let navigationController = UINavigationController(rootViewController: CreatingTrackerViewController())
+        let creatingTrackerViewController = CreatingTrackerViewController()
+        creatingTrackerViewController.onCreate = { [weak self] (newTracker, trackerCategory) in
+            self?.addTracker(newTracker, toCategory: trackerCategory)
+            self?.updateTrackersUI()
+            
+            self?.dismiss(animated: true)
+        }
+        
+        let navigationController = UINavigationController(rootViewController: creatingTrackerViewController)
         navigationController.modalPresentationStyle = .pageSheet
         
         if let sheet = navigationController.sheetPresentationController {

@@ -26,6 +26,9 @@ enum CreatingTrackerViewControllerTeme {
 
 final class CreatingTrackerViewController: UIViewController {
     
+    // MARK: - Public properties
+    var onCreate: ((Tracker, String) -> Void)?
+    
     // MARK: - Private properties
     private lazy var habitButton: UIButton = {
         let button = UIButton(type: .system)
@@ -93,6 +96,13 @@ final class CreatingTrackerViewController: UIViewController {
     private func presentConfigurationTrackerAsSheet(trackerType: TrackerType) {
         let configurationTrackerViewController = ConfigurationTrackerViewController()
         configurationTrackerViewController.trackerType = trackerType
+        
+        configurationTrackerViewController.onCreate = { [weak self] (newTracker, trackerCategory) in
+            self?.onCreate?(newTracker, trackerCategory)
+            
+            self?.dismiss(animated: true)
+        }
+        
         let navigationController = UINavigationController(rootViewController: configurationTrackerViewController)
         navigationController.modalPresentationStyle = .pageSheet
         
