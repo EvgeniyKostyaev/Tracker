@@ -283,16 +283,16 @@ extension TrackersViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        var tracker = trackerCategories[indexPath.section].trackers[indexPath.row]
+        let tracker = trackerCategories[indexPath.section].trackers[indexPath.row]
         
         cell.delegate = self
         cell.object = indexPath
         
-        tracker.completedDaysCount = getCompletedDaysCount(for: tracker, from: completedTrackers)
-        tracker.isCompleted = isTrackerCompleted(for: tracker, from: completedTrackers)
-        tracker.isAvailable = activeDate <= Date()
+        let completedDaysCount = tracker.completedDaysCount(from: completedTrackers)
+        let isCompleted = tracker.isCompleted(on: activeDate, from: completedTrackers)
+        let isAvailable = tracker.isAvailable(on: activeDate)
         
-        cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: tracker.completedDaysCount, isCompleted: tracker.isCompleted, isAvailable: tracker.isAvailable)
+        cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: completedDaysCount, isCompleted: isCompleted, isAvailable: isAvailable)
         
         return cell
     }

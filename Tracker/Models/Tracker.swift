@@ -67,7 +67,17 @@ struct Tracker {
     let type: TrackerType
     let schedule: Schedule?
     
-    var isCompleted: Bool = false
-    var isAvailable: Bool = false
-    var completedDaysCount: Int = 0
+    func completedDaysCount(from completedTrackers: [TrackerRecord]) -> Int {
+        completedTrackers.filter({ $0.trackerId == id }).count
+    }
+    
+    func isCompleted(on date: Date, from completedTrackers: [TrackerRecord]) -> Bool {
+        completedTrackers.contains(where: { trackerRecord in
+            return trackerRecord.trackerId == id && trackerRecord.date.isSameDayAs(date)
+        })
+    }
+    
+    func isAvailable(on activeDate: Date) -> Bool {
+        activeDate <= Date()
+    }
 }
