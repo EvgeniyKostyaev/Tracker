@@ -7,6 +7,13 @@
 
 import UIKit
 
+enum ConfigurationScheduleTableViewCellTheme {
+    static let dayLabelFontSize: CGFloat = 17.0
+    static let dayLabelLeadingConstraint: CGFloat = 16.0
+    static let daySwitchTrailingConstraint: CGFloat = -16.0
+    static let contentViewHeightConstraint: CGFloat = 75.0
+}
+
 final class ConfigurationScheduleTableViewCell: UITableViewCell {
     
     // MARK: - Public Properties
@@ -18,7 +25,7 @@ final class ConfigurationScheduleTableViewCell: UITableViewCell {
     private let dayLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 17)
+        label.font = UIFont.systemFont(ofSize: ConfigurationScheduleTableViewCellTheme.dayLabelFontSize)
         return label
     }()
     
@@ -34,18 +41,7 @@ final class ConfigurationScheduleTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentView.addSubview(dayLabel)
-        contentView.addSubview(daySwitch)
-        
-        NSLayoutConstraint.activate([
-            dayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            dayLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            daySwitch.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            daySwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            contentView.heightAnchor.constraint(equalToConstant: 75)
-        ])
+        setupLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -59,6 +55,21 @@ final class ConfigurationScheduleTableViewCell: UITableViewCell {
     }
     
     // MARK: - Private Methods
+    private func setupLayout() {
+        contentView.addSubview(dayLabel)
+        contentView.addSubview(daySwitch)
+        
+        NSLayoutConstraint.activate([
+            dayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: ConfigurationScheduleTableViewCellTheme.dayLabelLeadingConstraint),
+            dayLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            daySwitch.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: ConfigurationScheduleTableViewCellTheme.daySwitchTrailingConstraint),
+            daySwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            contentView.heightAnchor.constraint(equalToConstant: ConfigurationScheduleTableViewCellTheme.contentViewHeightConstraint)
+        ])
+    }
+    
     @objc private func switchChanged(_ sender: UISwitch) {
         onSwitchChanged?(sender.isOn)
     }

@@ -7,6 +7,23 @@
 
 import UIKit
 
+enum ConfigurationScheduleViewControllerTheme {
+    static let title: String = "Расписание"
+    static let containerViewCornerRadius: CGFloat = 16.0
+    static let tableViewSeparatorInset: CGFloat = 16.0
+    static let doneButtonTitle: String = "Готово"
+    static let doneButtonCornerRadius: CGFloat = 16.0
+    static let containerViewTopConstraint: CGFloat = 16.0
+    static let containerViewLeadingConstraint: CGFloat = 16.0
+    static let containerViewTrailingConstraint: CGFloat = -16.0
+    static let containerViewHeightConstraint: CGFloat = 525.0
+    static let doneButtonTopConstraint: CGFloat = 16.0
+    static let doneButtonLeadingConstraint: CGFloat = 20.0
+    static let doneButtonTrailingConstraint: CGFloat = -20.0
+    static let doneButtonHeightConstraint: CGFloat = 60.0
+    static let doneButtonBottomConstraint: CGFloat = -16.0
+}
+
 final class ConfigurationScheduleViewController: UIViewController {
     
     // MARK: - Public Properties
@@ -20,7 +37,7 @@ final class ConfigurationScheduleViewController: UIViewController {
     private lazy var containerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 0.95, alpha: 1)
-        view.layer.cornerRadius = 16
+        view.layer.cornerRadius = ConfigurationScheduleViewControllerTheme.containerViewCornerRadius
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -31,8 +48,16 @@ final class ConfigurationScheduleViewController: UIViewController {
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.1))
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.1))
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(ConfigurationScheduleTableViewCell.self, forCellReuseIdentifier: ConfigurationScheduleTableViewCell.identifier)
-        tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        tableView.register(
+            ConfigurationScheduleTableViewCell.self,
+            forCellReuseIdentifier: ConfigurationScheduleTableViewCell.identifier
+        )
+        tableView.separatorInset = UIEdgeInsets(
+            top: 0,
+            left: ConfigurationScheduleViewControllerTheme.tableViewSeparatorInset,
+            bottom: 0,
+            right: ConfigurationScheduleViewControllerTheme.tableViewSeparatorInset
+        )
         tableView.backgroundColor = .clear
         tableView.allowsSelection = false
         tableView.isScrollEnabled = true
@@ -42,10 +67,10 @@ final class ConfigurationScheduleViewController: UIViewController {
     
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Готово", for: .normal)
+        button.setTitle(ConfigurationScheduleViewControllerTheme.doneButtonTitle, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
-        button.layer.cornerRadius = 16
+        button.layer.cornerRadius = ConfigurationScheduleViewControllerTheme.doneButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(doneTapped), for: .touchUpInside)
         return button
@@ -64,37 +89,41 @@ final class ConfigurationScheduleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "Расписание"
+        title = ConfigurationScheduleViewControllerTheme.title
         
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
         
         tableView.dataSource = self
         
+        setupLayout()
+    }
+    
+    // MARK: - Private Methods
+    private func setupLayout() {
         view.addSubview(containerView)
         containerView.addSubview(tableView)
         view.addSubview(doneButton)
         
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            containerView.heightAnchor.constraint(equalToConstant: 525),
+            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: ConfigurationScheduleViewControllerTheme.containerViewTopConstraint),
+            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationScheduleViewControllerTheme.containerViewLeadingConstraint),
+            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: ConfigurationScheduleViewControllerTheme.containerViewTrailingConstraint),
+            containerView.heightAnchor.constraint(equalToConstant: ConfigurationScheduleViewControllerTheme.containerViewHeightConstraint),
             
             tableView.topAnchor.constraint(equalTo: containerView.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             
-            doneButton.topAnchor.constraint(greaterThanOrEqualTo: containerView.bottomAnchor, constant: 16),
-            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            doneButton.heightAnchor.constraint(equalToConstant: 60),
-            doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+            doneButton.topAnchor.constraint(greaterThanOrEqualTo: containerView.bottomAnchor, constant: ConfigurationScheduleViewControllerTheme.doneButtonTopConstraint),
+            doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationScheduleViewControllerTheme.doneButtonLeadingConstraint),
+            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: ConfigurationScheduleViewControllerTheme.doneButtonTrailingConstraint),
+            doneButton.heightAnchor.constraint(equalToConstant: ConfigurationScheduleViewControllerTheme.doneButtonHeightConstraint),
+            doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: ConfigurationScheduleViewControllerTheme.doneButtonBottomConstraint)
         ])
     }
     
-    // MARK: - Private Methods
     @objc private func doneTapped() {
         activeDaysWeeks.sort { $0.rawValue < $1.rawValue }
         onSave?(activeDaysWeeks)

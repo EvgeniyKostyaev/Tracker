@@ -61,6 +61,8 @@ enum ConfigurationTrackerViewControllerTheme {
     static let everyDayRepresentation: String = "Каждый день"
     
     static let sheetPresentationCornerRadius: CGFloat = 16.0
+    
+    static let allDaysOfWeekCount: Int = 7
 }
 
 final class ConfigurationTrackerViewController: UIViewController {
@@ -238,7 +240,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private func getActiveDaysWeeksRepresentation() -> String {
         var activeDaysWeeksRepresentation = String()
         
-        if (trackerActiveDaysWeeks.count == 7) {
+        if (trackerActiveDaysWeeks.count == ConfigurationTrackerViewControllerTheme.allDaysOfWeekCount) {
             activeDaysWeeksRepresentation = ConfigurationTrackerViewControllerTheme.everyDayRepresentation
         } else {
             trackerActiveDaysWeeks.enumerated().forEach { (index, activeDayWeeks) in
