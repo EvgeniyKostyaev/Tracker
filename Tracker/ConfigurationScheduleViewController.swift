@@ -93,6 +93,7 @@ final class ConfigurationScheduleViewController: UIViewController {
     }
     
     @objc private func doneTapped() {
+        activeDaysWeeks.sort { $0.rawValue < $1.rawValue }
         onSave?(activeDaysWeeks)
         dismiss(animated: true)
     }
