@@ -45,13 +45,8 @@ extension DayWeeks {
 }
 
 struct Schedule {
-    var daysWeeks: [DayWeeks?]?
-    var date: Date?
-    
-    init(daysWeeks: [DayWeeks?]?, date: Date?) {
-        self.daysWeeks = daysWeeks
-        self.date = date
-    }
+    let daysWeeks: [DayWeeks?]?
+    let date: Date?
 }
 
 enum TrackerType: String, Codable {
