@@ -17,10 +17,40 @@ enum EmptyStateViewTheme {
 
 final class EmptyStateView: UIView {
     
+    // MARK: - Private Properties
+    private let imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.tintColor = .lightGray
+        return imageView
+    }()
+    
+    private let label: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: EmptyStateViewTheme.fontSizeLabel, weight: .medium)
+        label.numberOfLines = EmptyStateViewTheme.numberOfLinesLabel
+        return label
+    }()
+    
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [imageView, label])
+        stackView.axis = .vertical
+        stackView.spacing = EmptyStateViewTheme.spacingStackView
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     // MARK: - Initializers methods
     init(image: UIImage?, text: String) {
         super.init(frame: .zero)
-        setupView(image: image, text: text)
+       
+        imageView.image = image
+        label.text = text
+        
+        setupLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -28,26 +58,8 @@ final class EmptyStateView: UIView {
     }
     
     // MARK: - Private Methods
-    private func setupView(image: UIImage?, text: String) {
-        let imageView = UIImageView()
-        imageView.image = image
-        imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .lightGray
-        
-        let label = UILabel()
-        label.text = text
-        label.textAlignment = .center
-        label.textColor = .black
-        label.font = UIFont.systemFont(ofSize: EmptyStateViewTheme.fontSizeLabel, weight: .medium)
-        label.numberOfLines = EmptyStateViewTheme.numberOfLinesLabel
-        
-        let stackView = UIStackView(arrangedSubviews: [imageView, label])
-        stackView.axis = .vertical
-        stackView.spacing = EmptyStateViewTheme.spacingStackView
-        stackView.alignment = .center
-        
+    private func setupLayout() {
         addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor),

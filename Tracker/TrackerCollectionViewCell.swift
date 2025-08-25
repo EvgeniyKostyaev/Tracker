@@ -41,7 +41,7 @@ enum TrackerCollectionViewCellTheme {
 }
 
 protocol TrackerCollectionViewCellDelegate: AnyObject {
-    func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton object: Any?)
+    func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton indexPath: IndexPath?)
 }
 
 final class TrackerCollectionViewCell: UICollectionViewCell {
@@ -51,7 +51,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "TrackerCollectionViewCell"
     
-    var object: Any?
+    var indexPath: IndexPath?
     
     // MARK: - Private Properties
     private let cardView: UIView = {
@@ -186,6 +186,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     @objc private func plusButtonTapped() {
-        delegate?.trackerCell(self, onClickPlusButton: object)
+        delegate?.trackerCell(self, onClickPlusButton: indexPath)
     }
 }

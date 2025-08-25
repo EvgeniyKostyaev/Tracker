@@ -12,17 +12,19 @@ enum TrackersViewControllerTheme {
     static let searchPlaceholder: String = "Поиск"
     static let emptySatateTitle: String = "Что будем отслеживать?"
     
-    static let collectionViewHeaderHeight: CGFloat = 44.0
-    static let collectionViewCellHeight: CGFloat = 140.0
-    static let collectionViewCellCount: Int = 2
-    static let collectionViewTopInset: CGFloat = 0.0
-    static let collectionViewBottomInset: CGFloat = 0.0
-    static let collectionViewLeftInset: CGFloat = 16.0
-    static let collectionViewRightInset: CGFloat = 16.0
-    static let collectionViewCellSpacing: CGFloat = 10.0
-    static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
-    
     static let sheetPresentationCornerRadius: CGFloat = 16.0
+    
+    enum CollectionView {
+        static let collectionViewHeaderHeight: CGFloat = 44.0
+        static let collectionViewCellHeight: CGFloat = 140.0
+        static let collectionViewCellCount: Int = 2
+        static let collectionViewTopInset: CGFloat = 0.0
+        static let collectionViewBottomInset: CGFloat = 0.0
+        static let collectionViewLeftInset: CGFloat = 16.0
+        static let collectionViewRightInset: CGFloat = 16.0
+        static let collectionViewCellSpacing: CGFloat = 10.0
+        static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+    }
 }
 
 final class TrackersViewController: UIViewController {
@@ -290,7 +292,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         let tracker = trackerCategories[indexPath.section].trackers[indexPath.row]
         
         cell.delegate = self
-        cell.object = indexPath
+        cell.indexPath = indexPath
         
         let completedDaysCount = tracker.completedDaysCount(from: completedTrackers)
         let isCompleted = tracker.isCompleted(on: activeDate, from: completedTrackers)
@@ -307,49 +309,48 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: TrackersViewControllerTheme.collectionViewHeaderHeight)
+        return CGSize(width: collectionView.bounds.width, height: TrackersViewControllerTheme.CollectionView.collectionViewHeaderHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let availableWidth = collectionView.frame.width - TrackersViewControllerTheme.collectionViewPaddingWidth
-        let cellWidth =  availableWidth / CGFloat(TrackersViewControllerTheme.collectionViewCellCount)
+        let availableWidth = collectionView.frame.width - TrackersViewControllerTheme.CollectionView.collectionViewPaddingWidth
+        let cellWidth =  availableWidth / CGFloat(TrackersViewControllerTheme.CollectionView.collectionViewCellCount)
         
         return CGSize(width: cellWidth,
-                      height: TrackersViewControllerTheme.collectionViewCellHeight)
+                      height: TrackersViewControllerTheme.CollectionView.collectionViewCellHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(
-            top: TrackersViewControllerTheme.collectionViewTopInset,
-            left: TrackersViewControllerTheme.collectionViewLeftInset,
-            bottom: TrackersViewControllerTheme.collectionViewBottomInset,
-            right: TrackersViewControllerTheme.collectionViewRightInset
+            top: TrackersViewControllerTheme.CollectionView.collectionViewTopInset,
+            left: TrackersViewControllerTheme.CollectionView.collectionViewLeftInset,
+            bottom: TrackersViewControllerTheme.CollectionView.collectionViewBottomInset,
+            right: TrackersViewControllerTheme.CollectionView.collectionViewRightInset
         )
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return TrackersViewControllerTheme.collectionViewCellSpacing
+        return TrackersViewControllerTheme.CollectionView.collectionViewCellSpacing
     }
 }
 
 // MARK: - TrackerCollectionViewCellDelegate Methods
 extension TrackersViewController: TrackerCollectionViewCellDelegate {
-    func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton object: Any?) {
-        if let indexPath = object as? IndexPath {
+    func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton indexPath: IndexPath?) {
+        guard let indexPath else { return }
             
-            let tracker = trackerCategories[indexPath.section].trackers[indexPath.row]
-            
-            let isCompleted = isTrackerCompleted(for: tracker, from: completedTrackers)
-            
-            if (isCompleted) {
-                completedTrackers.removeAll(where: { $0.trackerId == tracker.id && $0.date.isSameDayAs(activeDate) })
-            } else {
-                completedTrackers.append(TrackerRecord(trackerId: tracker.id, date: activeDate))
-            }
-             
-            collectionView.reloadData()
+        let tracker = trackerCategories[indexPath.section].trackers[indexPath.row]
+        
+        let isCompleted = isTrackerCompleted(for: tracker, from: completedTrackers)
+        
+        if (isCompleted) {
+            completedTrackers.removeAll(where: { $0.trackerId == tracker.id && $0.date.isSameDayAs(activeDate) })
+        } else {
+            completedTrackers.append(TrackerRecord(trackerId: tracker.id, date: activeDate))
         }
+         
+        collectionView.reloadData()
     }
 }
