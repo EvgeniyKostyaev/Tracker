@@ -486,6 +486,10 @@ extension ConfigurationTrackerViewController: UITextFieldDelegate {
     func textFieldShouldClear(_ textField: UITextField) -> Bool {
         warningLabel.isHidden = true
         
+        trackerName = String()
+        
+        updateCreateButtonState()
+        
         return true
     }
     
