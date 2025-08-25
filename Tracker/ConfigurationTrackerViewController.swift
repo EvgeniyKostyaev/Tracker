@@ -27,11 +27,18 @@ enum ConfigurationTrackerViewControllerTheme {
     
     static let allDaysOfWeekCount: Int = 7
     
-    enum StackView {
+    enum StackViewConfiguration {
         static let stackViewSpacing: CGFloat = 8.0
         static let stackViewTopConstraint: CGFloat = 24.0
         static let stackViewLeadingConstraint: CGFloat = 16.0
         static let stackViewTrailingConstraint: CGFloat = -16.0
+        
+        static let stackViewScheduleSpacing: CGFloat = 2.0
+        
+        static let stackViewConfigurationTopConstraint: CGFloat = 16.0
+        static let stackViewConfigurationLeadingConstraint: CGFloat = 16.0
+        static let stackViewConfigurationTrailingConstraint: CGFloat = -16.0
+        static let stackViewConfigurationBottomConstraint: CGFloat = -16.0
     }
     
     enum NameTextField {
@@ -49,7 +56,8 @@ enum ConfigurationTrackerViewControllerTheme {
         
         static let configurationButtonsCornerRadius: CGFloat = 16.0
         static let configurationButtonsleftInset: CGFloat = 12.0
-        static let configurationDescriptionLabelFontSize: CGFloat = 14.0
+        static let configurationTitleLabelFontSize: CGFloat = 17.0
+        static let configurationDescriptionLabelFontSize: CGFloat = 17.0
         static let configurationButtonsHeightConstraint: CGFloat = 75.0
         
         static let cancellButtonBorderWidth: CGFloat = 1.0
@@ -108,7 +116,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [nameTextField, warningLabel])
         stackView.axis = .vertical
-        stackView.spacing = ConfigurationTrackerViewControllerTheme.StackView.stackViewSpacing
+        stackView.spacing = ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewSpacing
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -135,28 +143,20 @@ final class ConfigurationTrackerViewController: UIViewController {
 
     private lazy var categoryButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(ConfigurationTrackerViewControllerTheme.categoryButtonTitle, for: .normal)
-        button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .trackerLightGray
-        button.contentHorizontalAlignment = .left
-        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsleftInset, bottom: 0, right: 0)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsCornerRadius
         button.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
         return button
     }()
     
-    private lazy var scheduleButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle(ConfigurationTrackerViewControllerTheme.scheduleButtonTitle, for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = .trackerLightGray
-        button.contentHorizontalAlignment = .left
-        button.titleEdgeInsets = UIEdgeInsets(top: 0, left: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsleftInset, bottom: 0, right: 0)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsCornerRadius
-        button.addTarget(self, action: #selector(scheduleTapped), for: .touchUpInside)
-        return button
+    private lazy var categoryTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = ConfigurationTrackerViewControllerTheme.categoryButtonTitle
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationTitleLabelFontSize)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private lazy var categoryDescriptionLabel: UILabel = {
@@ -168,6 +168,35 @@ final class ConfigurationTrackerViewController: UIViewController {
         return label
     }()
     
+    private lazy var stackViewCategoryButton: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [categoryTitleLabel, categoryDescriptionLabel])
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .leading
+        stackView.spacing = ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewScheduleSpacing
+        stackView.isUserInteractionEnabled = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var scheduleButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.backgroundColor = .trackerLightGray
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsCornerRadius
+        button.addTarget(self, action: #selector(scheduleTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var scheduleTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = ConfigurationTrackerViewControllerTheme.scheduleButtonTitle
+        label.textColor = .black
+        label.font = UIFont.systemFont(ofSize: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationTitleLabelFontSize)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private lazy var scheduleDescriptionLabel: UILabel = {
         let label = UILabel()
         label.text = getActiveDaysWeeksRepresentation()
@@ -175,6 +204,17 @@ final class ConfigurationTrackerViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationDescriptionLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private lazy var stackViewScheduleButton: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [scheduleTitleLabel, scheduleDescriptionLabel])
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .leading
+        stackView.spacing = ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewScheduleSpacing
+        stackView.isUserInteractionEnabled = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
     
     private lazy var cancelButton: UIButton = {
@@ -267,8 +307,8 @@ final class ConfigurationTrackerViewController: UIViewController {
         view.addSubview(scheduleButton)
         view.addSubview(separator)
         
-        categoryButton.addSubview(categoryDescriptionLabel)
-        scheduleButton.addSubview(scheduleDescriptionLabel)
+        categoryButton.addSubview(stackViewCategoryButton)
+        scheduleButton.addSubview(stackViewScheduleButton)
         
         categoryButton.addSubview(categoryDisclosureIndicator)
         scheduleButton.addSubview(scheduleDisclosureIndicator)
@@ -277,9 +317,9 @@ final class ConfigurationTrackerViewController: UIViewController {
         view.addSubview(createButton)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: ConfigurationTrackerViewControllerTheme.StackView.stackViewTopConstraint),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackView.stackViewLeadingConstraint),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackView.stackViewTrailingConstraint),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewTopConstraint),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewLeadingConstraint),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewTrailingConstraint),
             
             nameTextField.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldHeightConstraint),
             nameTextField.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
@@ -300,11 +340,15 @@ final class ConfigurationTrackerViewController: UIViewController {
             scheduleButton.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor),
             scheduleButton.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsHeightConstraint),
             
-            categoryDescriptionLabel.centerYAnchor.constraint(equalTo: categoryButton.centerYAnchor),
-            categoryDescriptionLabel.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.configurationDescriptionLabelTrailingConstraint),
+            stackViewCategoryButton.topAnchor.constraint(equalTo: categoryButton.topAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationTopConstraint),
+            stackViewCategoryButton.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationLeadingConstraint),
+            stackViewCategoryButton.trailingAnchor.constraint(equalTo: categoryDisclosureIndicator.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationTrailingConstraint),
+            stackViewCategoryButton.bottomAnchor.constraint(equalTo: categoryButton.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationBottomConstraint),
             
-            scheduleDescriptionLabel.centerYAnchor.constraint(equalTo: scheduleButton.centerYAnchor),
-            scheduleDescriptionLabel.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.configurationDescriptionLabelTrailingConstraint),
+            stackViewScheduleButton.topAnchor.constraint(equalTo: scheduleButton.topAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationTopConstraint),
+            stackViewScheduleButton.leadingAnchor.constraint(equalTo: scheduleButton.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationLeadingConstraint),
+            stackViewScheduleButton.trailingAnchor.constraint(equalTo: scheduleDisclosureIndicator.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationTrailingConstraint),
+            stackViewScheduleButton.bottomAnchor.constraint(equalTo: scheduleButton.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationBottomConstraint),
             
             categoryDisclosureIndicator.centerYAnchor.constraint(equalTo: categoryButton.centerYAnchor),
             categoryDisclosureIndicator.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.configurationDisclosureIndicatorTrailingConstraint),
