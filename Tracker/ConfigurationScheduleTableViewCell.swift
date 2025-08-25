@@ -24,8 +24,8 @@ final class ConfigurationScheduleTableViewCell: UITableViewCell {
     // MARK: - Private Properties
     private let dayLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: ConfigurationScheduleTableViewCellTheme.dayLabelFontSize)
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     

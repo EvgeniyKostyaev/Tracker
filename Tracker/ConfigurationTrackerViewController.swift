@@ -18,6 +18,8 @@ enum ConfigurationTrackerViewControllerTheme {
     static let warningText: String = "Ограничение 38 символов"
     static let everyDayRepresentation: String = "Каждый день"
     
+    static let warningLabelFontSize: CGFloat = 17.0
+    
     static let configurationDescriptionLabelTrailingConstraint: CGFloat = -36.0
     static let configurationDisclosureIndicatorTrailingConstraint: CGFloat = -16.0
     
@@ -25,21 +27,27 @@ enum ConfigurationTrackerViewControllerTheme {
     
     static let allDaysOfWeekCount: Int = 7
     
+    enum StackView {
+        static let stackViewSpacing: CGFloat = 8.0
+        static let stackViewTopConstraint: CGFloat = 24.0
+        static let stackViewLeadingConstraint: CGFloat = 16.0
+        static let stackViewTrailingConstraint: CGFloat = -16.0
+    }
+    
     enum NameTextField {
-        static let nameTextFieldCornerRadius: CGFloat = 12.0
+        static let nameTextFieldCornerRadius: CGFloat = 16.0
         static let nameTextFieldLimit: Int = 38
         static let nameTextFieldLeftFrame: CGRect = CGRect(x: 0, y: 0, width: 12, height: 0)
         static let nameTextFieldFontSize: CGFloat = 17.0
-        static let nameTextFieldTopConstraint: CGFloat = 24.0
-        static let nameTextFieldLeadingConstraint: CGFloat = 16.0
-        static let nameTextFieldTrailingConstraint: CGFloat = -16.0
         static let nameTextFieldHeightConstraint: CGFloat = 75.0
     }
     
     enum ActionButtons {
-        static let actionButtonsCornerRadius: CGFloat = 12.0
+        static let actionButtonsCornerRadius: CGFloat = 16.0
         
-        static let configurationButtonsCornerRadius: CGFloat = 12.0
+        static let categoryButtonTopConstraint: CGFloat = 24.0
+        
+        static let configurationButtonsCornerRadius: CGFloat = 16.0
         static let configurationButtonsleftInset: CGFloat = 12.0
         static let configurationDescriptionLabelFontSize: CGFloat = 14.0
         static let configurationButtonsHeightConstraint: CGFloat = 75.0
@@ -50,8 +58,6 @@ enum ConfigurationTrackerViewControllerTheme {
         static let cancelButtonHeightConstraint: CGFloat = 60.0
         static let cancelButtonWidthConstraintMultiplier: CGFloat = 0.44
         
-        static let categoryButtonTopConstraint: CGFloat = 24.0
-        
         static let createButtonTrailingConstraint: CGFloat = -20.0
     }
     
@@ -59,11 +65,6 @@ enum ConfigurationTrackerViewControllerTheme {
         static let separatorLeadingConstraint: CGFloat = 16.0
         static let separatorTrailingConstraint: CGFloat = -16.0
         static let separatorHeightConstraint: CGFloat = 1.0
-    }
-    
-    enum WarningLabel {
-        static let warningLabelFontSize: CGFloat = 17.0
-        static let warningLabelTopConstraint: CGFloat = 8.0
     }
 }
 
@@ -83,7 +84,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         let textField = UITextField()
         textField.delegate = self
         textField.placeholder = ConfigurationTrackerViewControllerTheme.textFieldPlaceholder
-        textField.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        textField.backgroundColor = .trackerLightGray
         textField.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldCornerRadius
         textField.font = .systemFont(ofSize: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldFontSize)
         textField.leftView = UIView(frame: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldLeftFrame)
@@ -97,12 +98,20 @@ final class ConfigurationTrackerViewController: UIViewController {
     private let warningLabel: UILabel = {
         let label = UILabel()
         label.text = ConfigurationTrackerViewControllerTheme.warningText
-        label.font = .systemFont(ofSize: ConfigurationTrackerViewControllerTheme.WarningLabel.warningLabelFontSize)
+        label.font = .systemFont(ofSize: ConfigurationTrackerViewControllerTheme.warningLabelFontSize)
         label.textAlignment = .center
-        label.textColor = .red
+        label.textColor = .trackerRed
         label.isHidden = true
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    private lazy var stackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [nameTextField, warningLabel])
+        stackView.axis = .vertical
+        stackView.spacing = ConfigurationTrackerViewControllerTheme.StackView.stackViewSpacing
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
     
     private let separator: UIView = {
@@ -111,18 +120,15 @@ final class ConfigurationTrackerViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
 
     private let categoryDisclosureIndicator: UIImageView = {
-        let indicator = UIImageView(image: UIImage(systemName: "chevron.right"))
-        indicator.tintColor = .lightGray
+        let indicator = UIImageView.init(image: .chevron)
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
     
     private let scheduleDisclosureIndicator: UIImageView = {
-        let indicator = UIImageView(image: UIImage(systemName: "chevron.right"))
-        indicator.tintColor = .lightGray
+        let indicator = UIImageView.init(image: .chevron)
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
@@ -131,7 +137,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(ConfigurationTrackerViewControllerTheme.categoryButtonTitle, for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        button.backgroundColor = .trackerLightGray
         button.contentHorizontalAlignment = .left
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsleftInset, bottom: 0, right: 0)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -144,7 +150,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(ConfigurationTrackerViewControllerTheme.scheduleButtonTitle, for: .normal)
         button.setTitleColor(.black, for: .normal)
-        button.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        button.backgroundColor = .trackerLightGray
         button.contentHorizontalAlignment = .left
         button.titleEdgeInsets = UIEdgeInsets(top: 0, left: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsleftInset, bottom: 0, right: 0)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -156,7 +162,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var categoryDescriptionLabel: UILabel = {
         let label = UILabel()
         label.text = getCategoryRepresentation()
-        label.textColor = .gray
+        label.textColor = .trackerGray
         label.font = UIFont.systemFont(ofSize: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationDescriptionLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -165,7 +171,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var scheduleDescriptionLabel: UILabel = {
         let label = UILabel()
         label.text = getActiveDaysWeeksRepresentation()
-        label.textColor = .gray
+        label.textColor = .trackerGray
         label.font = UIFont.systemFont(ofSize: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationDescriptionLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -174,7 +180,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(ConfigurationTrackerViewControllerTheme.cancelButtonTitle, for: .normal)
-        button.setTitleColor(.red, for: .normal)
+        button.setTitleColor(.trackerRed, for: .normal)
         button.layer.borderWidth = ConfigurationTrackerViewControllerTheme.ActionButtons.cancellButtonBorderWidth
         button.layer.borderColor = UIColor.red.cgColor
         button.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.ActionButtons.actionButtonsCornerRadius
@@ -187,7 +193,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(ConfigurationTrackerViewControllerTheme.createButtonTitle, for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .lightGray
+        button.backgroundColor = .trackerGray
         button.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.ActionButtons.actionButtonsCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(createTapped), for: .touchUpInside)
@@ -255,8 +261,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     private func setupLayout() {
-        view.addSubview(nameTextField)
-        view.addSubview(warningLabel)
+        view.addSubview(stackView)
         
         view.addSubview(categoryButton)
         view.addSubview(scheduleButton)
@@ -272,18 +277,17 @@ final class ConfigurationTrackerViewController: UIViewController {
         view.addSubview(createButton)
         
         NSLayoutConstraint.activate([
-            nameTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldTopConstraint),
-            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldLeadingConstraint),
-            nameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldTrailingConstraint),
-            nameTextField.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldHeightConstraint),
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: ConfigurationTrackerViewControllerTheme.StackView.stackViewTopConstraint),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackView.stackViewLeadingConstraint),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackView.stackViewTrailingConstraint),
             
-            warningLabel.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.WarningLabel.warningLabelTopConstraint),
-            warningLabel.leadingAnchor.constraint(equalTo: nameTextField.leadingAnchor),
-            warningLabel.trailingAnchor.constraint(equalTo: nameTextField.trailingAnchor),
+            nameTextField.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldHeightConstraint),
+            nameTextField.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            nameTextField.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             
             categoryButton.topAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.ActionButtons.categoryButtonTopConstraint),
-            categoryButton.leadingAnchor.constraint(equalTo: nameTextField.leadingAnchor),
-            categoryButton.trailingAnchor.constraint(equalTo: nameTextField.trailingAnchor),
+            categoryButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            categoryButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             categoryButton.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsHeightConstraint),
             
             separator.topAnchor.constraint(equalTo: categoryButton.bottomAnchor),
@@ -387,7 +391,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private func disableCreateButton() {
         createButton.isEnabled = false
-        createButton.backgroundColor = .lightGray
+        createButton.backgroundColor = .trackerGray
     }
     
     private func getNewTracker() -> Tracker {

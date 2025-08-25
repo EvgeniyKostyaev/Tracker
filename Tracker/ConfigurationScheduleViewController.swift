@@ -43,7 +43,7 @@ final class ConfigurationScheduleViewController: UIViewController {
     
     private lazy var containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        view.backgroundColor = .trackerLightGray
         view.layer.cornerRadius = ConfigurationScheduleViewControllerTheme.containerViewCornerRadius
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
