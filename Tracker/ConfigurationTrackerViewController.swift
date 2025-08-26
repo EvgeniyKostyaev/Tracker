@@ -81,7 +81,7 @@ enum ConfigurationTrackerViewControllerTheme {
         static let collectionViewHeaderHeight: CGFloat = 44.0
         static let collectionViewCellHeight: CGFloat = 52.0
         static let collectionViewCellCount: Int = 6
-        static let collectionViewTopInset: CGFloat = 20.0
+        static let collectionViewTopInset: CGFloat = 10.0
         static let collectionViewBottomInset: CGFloat = 0.0
         static let collectionViewLeftInset: CGFloat = 16.0
         static let collectionViewRightInset: CGFloat = 16.0
