@@ -14,7 +14,6 @@ final class ConfigurationEmojiCollectionViewCell: UICollectionViewCell {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 32.0)
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -25,6 +24,8 @@ final class ConfigurationEmojiCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        layer.cornerRadius = 16.0
+        
         setupLayout()
     }
     
@@ -34,7 +35,7 @@ final class ConfigurationEmojiCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Private Methods
     private func setupLayout() {
-        addSubview(titleLabel)
+        contentView.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),

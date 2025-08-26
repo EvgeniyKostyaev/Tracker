@@ -27,6 +27,8 @@ enum ConfigurationTrackerViewControllerTheme {
     
     static let allDaysOfWeekCount: Int = 7
     
+    static let alphaComponent: CGFloat = 0.3
+    
     enum StackViewConfiguration {
         static let stackViewSpacing: CGFloat = 8.0
         static let stackViewTopConstraint: CGFloat = 24.0
@@ -77,13 +79,13 @@ enum ConfigurationTrackerViewControllerTheme {
     
     enum CollectionView {
         static let collectionViewHeaderHeight: CGFloat = 44.0
-        static let collectionViewCellHeight: CGFloat = 44.0
+        static let collectionViewCellHeight: CGFloat = 52.0
         static let collectionViewCellCount: Int = 6
-        static let collectionViewTopInset: CGFloat = 40.0
+        static let collectionViewTopInset: CGFloat = 20.0
         static let collectionViewBottomInset: CGFloat = 0.0
-        static let collectionViewLeftInset: CGFloat = 48.0
-        static let collectionViewRightInset: CGFloat = 0.0
-        static let collectionViewCellSpacing: CGFloat = 0.0
+        static let collectionViewLeftInset: CGFloat = 16.0
+        static let collectionViewRightInset: CGFloat = 16.0
+        static let collectionViewCellSpacing: CGFloat = 10.0
         static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
     }
 }
@@ -99,6 +101,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private var trackerName = String()
     private var trackerCategory = "Важное" // this is stub for now
     private var trackerActiveDaysWeeks: [DayWeeks] = []
+    private var trackerEmoji = String()
     
     private let emojies = [ "🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"]
     
@@ -106,7 +109,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         let textField = UITextField()
         textField.delegate = self
         textField.placeholder = ConfigurationTrackerViewControllerTheme.textFieldPlaceholder
-        textField.backgroundColor = .trackerLightGray
+        textField.backgroundColor = .trackerLightGray.withAlphaComponent(ConfigurationTrackerViewControllerTheme.alphaComponent)
         textField.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldCornerRadius
         textField.font = .systemFont(ofSize: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldFontSize)
         textField.leftView = UIView(frame: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldLeftFrame)
@@ -157,7 +160,7 @@ final class ConfigurationTrackerViewController: UIViewController {
 
     private lazy var categoryButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = .trackerLightGray
+        button.backgroundColor = .trackerLightGray.withAlphaComponent(ConfigurationTrackerViewControllerTheme.alphaComponent)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsCornerRadius
         button.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
@@ -195,7 +198,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var scheduleButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = .trackerLightGray
+        button.backgroundColor = .trackerLightGray.withAlphaComponent(ConfigurationTrackerViewControllerTheme.alphaComponent)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsCornerRadius
         button.addTarget(self, action: #selector(scheduleTapped), for: .touchUpInside)
@@ -457,9 +460,9 @@ final class ConfigurationTrackerViewController: UIViewController {
     private func isValidateConfiguration() -> Bool {
         switch (trackerType) {
         case .habit:
-            return !trackerName.isEmpty && !trackerCategory.isEmpty && !trackerActiveDaysWeeks.isEmpty
+            return !trackerName.isEmpty && !trackerCategory.isEmpty && !trackerActiveDaysWeeks.isEmpty && !trackerEmoji.isEmpty
         case .irregular:
-            return !trackerName.isEmpty && !trackerCategory.isEmpty
+            return !trackerName.isEmpty && !trackerCategory.isEmpty && !trackerEmoji.isEmpty
         }
     }
     
@@ -488,7 +491,7 @@ final class ConfigurationTrackerViewController: UIViewController {
             id: Int.random(in: 0..<1000000),
             title: trackerName,
             color: .systemIndigo,
-            emoji: "❤️",
+            emoji: trackerEmoji,
             type: trackerType,
             schedule: schedule)
         
@@ -609,5 +612,25 @@ extension ConfigurationTrackerViewController: UICollectionViewDelegateFlowLayout
 
 // MARK: - UICollectionViewDelegate Methods
 extension ConfigurationTrackerViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationEmojiCollectionViewCell
+        
+        
+        if (trackerEmoji == emojies[indexPath.item]) {
+            cell?.backgroundColor = .clear
+            
+            trackerEmoji = String()
+        } else {
+            cell?.backgroundColor = .trackerLightGray
+            
+            trackerEmoji = emojies[indexPath.item]
+        }
+        
+        updateCreateButtonState()
+    }
     
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationEmojiCollectionViewCell
+        cell?.backgroundColor = .clear
+    }
 }

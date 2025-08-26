@@ -14,6 +14,8 @@ enum ConfigurationScheduleViewControllerTheme {
     static let containerViewCornerRadius: CGFloat = 16.0
     static let tableViewSeparatorInset: CGFloat = 16.0
     
+    static let alphaComponent: CGFloat = 0.3
+    
     enum DoneButton {
         static let doneButtonCornerRadius: CGFloat = 16.0
         static let doneButtonTopConstraint: CGFloat = 16.0
@@ -43,7 +45,7 @@ final class ConfigurationScheduleViewController: UIViewController {
     
     private lazy var containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .trackerLightGray
+        view.backgroundColor = .trackerLightGray.withAlphaComponent(ConfigurationScheduleViewControllerTheme.alphaComponent)
         view.layer.cornerRadius = ConfigurationScheduleViewControllerTheme.containerViewCornerRadius
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
