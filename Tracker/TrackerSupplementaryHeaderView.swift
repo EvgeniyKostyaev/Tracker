@@ -18,7 +18,7 @@ final class TrackerSupplementaryHeaderView: UICollectionReusableView {
     // MARK: - Public Properties
     static let identifier = "TrackerSupplementaryHeaderView"
     
-    private let titleLabel: UILabel = {
+    let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: TrackerSupplementaryHeaderViewTheme.fontSize)
         label.translatesAutoresizingMaskIntoConstraints = false

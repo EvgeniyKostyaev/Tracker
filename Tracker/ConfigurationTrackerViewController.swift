@@ -74,6 +74,18 @@ enum ConfigurationTrackerViewControllerTheme {
         static let separatorTrailingConstraint: CGFloat = -16.0
         static let separatorHeightConstraint: CGFloat = 1.0
     }
+    
+    enum CollectionView {
+        static let collectionViewHeaderHeight: CGFloat = 44.0
+        static let collectionViewCellHeight: CGFloat = 44.0
+        static let collectionViewCellCount: Int = 6
+        static let collectionViewTopInset: CGFloat = 40.0
+        static let collectionViewBottomInset: CGFloat = 0.0
+        static let collectionViewLeftInset: CGFloat = 48.0
+        static let collectionViewRightInset: CGFloat = 0.0
+        static let collectionViewCellSpacing: CGFloat = 0.0
+        static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+    }
 }
 
 final class ConfigurationTrackerViewController: UIViewController {
@@ -87,6 +99,8 @@ final class ConfigurationTrackerViewController: UIViewController {
     private var trackerName = String()
     private var trackerCategory = "Важное" // this is stub for now
     private var trackerActiveDaysWeeks: [DayWeeks] = []
+    
+    private let emojies = [ "🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"]
     
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
@@ -217,6 +231,20 @@ final class ConfigurationTrackerViewController: UIViewController {
         return stackView
     }()
     
+    private lazy var emojiCollectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        
+        collectionView.register(ConfigurationEmojiCollectionViewCell.self, forCellWithReuseIdentifier: ConfigurationEmojiCollectionViewCell.identifier)
+        collectionView.register(TrackerSupplementaryHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackerSupplementaryHeaderView.identifier)
+        
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return collectionView
+    }()
+    
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(ConfigurationTrackerViewControllerTheme.cancelButtonTitle, for: .normal)
@@ -313,6 +341,8 @@ final class ConfigurationTrackerViewController: UIViewController {
         categoryButton.addSubview(categoryDisclosureIndicator)
         scheduleButton.addSubview(scheduleDisclosureIndicator)
         
+        view.addSubview(emojiCollectionView)
+        
         view.addSubview(cancelButton)
         view.addSubview(createButton)
         
@@ -355,6 +385,11 @@ final class ConfigurationTrackerViewController: UIViewController {
             
             scheduleDisclosureIndicator.centerYAnchor.constraint(equalTo: scheduleButton.centerYAnchor),
             scheduleDisclosureIndicator.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.configurationDisclosureIndicatorTrailingConstraint),
+            
+            emojiCollectionView.topAnchor.constraint(equalTo: scheduleButton.bottomAnchor, constant: 20.0),
+            emojiCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            emojiCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            emojiCollectionView.heightAnchor.constraint(equalToConstant: 400.0),
             
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.ActionButtons.cancelButtonLeadingConstraint),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.ActionButtons.cancelButtonBottomConstraint),
@@ -497,4 +532,82 @@ extension ConfigurationTrackerViewController: UITextFieldDelegate {
         dismissKeyboard()
         return true
     }
+}
+
+// MARK: - UICollectionViewDataSource Methods
+extension ConfigurationTrackerViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return emojies.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == UICollectionView.elementKindSectionHeader else {
+            return UICollectionReusableView()
+        }
+
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: TrackerSupplementaryHeaderView.identifier,
+            for: indexPath
+        ) as? TrackerSupplementaryHeaderView
+        
+        guard let header else {
+            return UICollectionReusableView()
+        }
+
+        header.titleLabel.text = "Emoji"
+
+        return header
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ConfigurationEmojiCollectionViewCell.identifier, for: indexPath) as? ConfigurationEmojiCollectionViewCell
+        
+        guard let cell = cell else {
+            return UICollectionViewCell()
+        }
+        
+        cell.titleLabel.text = emojies[indexPath.row]
+        
+        return cell
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout Methods
+extension ConfigurationTrackerViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.bounds.width, height: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewHeaderHeight)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let availableWidth = collectionView.frame.width - ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewPaddingWidth
+        let cellWidth =  availableWidth / CGFloat(ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewCellCount)
+        
+        return CGSize(width: cellWidth,
+                      height: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewCellHeight)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(
+            top: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewTopInset,
+            left: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewLeftInset,
+            bottom: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewBottomInset,
+            right: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewRightInset
+        )
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewCellSpacing
+    }
+}
+
+// MARK: - UICollectionViewDelegate Methods
+extension ConfigurationTrackerViewController: UICollectionViewDelegate {
+    
 }
