@@ -17,6 +17,7 @@ enum ConfigurationTrackerViewControllerTheme {
     static let createButtonTitle: String = "Создать"
     static let warningText: String = "Ограничение 38 символов"
     static let everyDayRepresentation: String = "Каждый день"
+    static let collectionViewHeaderTitle: String = "Emoji"
     
     static let warningLabelFontSize: CGFloat = 17.0
     
@@ -87,6 +88,9 @@ enum ConfigurationTrackerViewControllerTheme {
         static let collectionViewRightInset: CGFloat = 16.0
         static let collectionViewCellSpacing: CGFloat = 10.0
         static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+        
+        static let collectionViewTopConstraint: CGFloat = 20.0
+        static let collectionViewHeightConstraint: CGFloat = 400.0
     }
 }
 
@@ -103,7 +107,11 @@ final class ConfigurationTrackerViewController: UIViewController {
     private var trackerActiveDaysWeeks: [DayWeeks] = []
     private var trackerEmoji = String()
     
-    private let emojies = [ "🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"]
+    private let emojies = [
+        "🙂", "😻", "🌺", "🐶", "❤️", "😱",
+        "😇", "😡", "🥶", "🤔", "🙌", "🍔",
+        "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
+    ]
     
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
@@ -141,7 +149,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private let separator: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(white: 0.9, alpha: 1)
+        view.backgroundColor = .trackerLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -389,10 +397,10 @@ final class ConfigurationTrackerViewController: UIViewController {
             scheduleDisclosureIndicator.centerYAnchor.constraint(equalTo: scheduleButton.centerYAnchor),
             scheduleDisclosureIndicator.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.configurationDisclosureIndicatorTrailingConstraint),
             
-            emojiCollectionView.topAnchor.constraint(equalTo: scheduleButton.bottomAnchor, constant: 20.0),
+            emojiCollectionView.topAnchor.constraint(equalTo: scheduleButton.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewTopConstraint),
             emojiCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emojiCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            emojiCollectionView.heightAnchor.constraint(equalToConstant: 400.0),
+            emojiCollectionView.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewHeightConstraint),
             
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.ActionButtons.cancelButtonLeadingConstraint),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.ActionButtons.cancelButtonBottomConstraint),
@@ -560,7 +568,7 @@ extension ConfigurationTrackerViewController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
 
-        header.titleLabel.text = "Emoji"
+        header.titleLabel.text = ConfigurationTrackerViewControllerTheme.collectionViewHeaderTitle
 
         return header
     }

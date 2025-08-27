@@ -61,12 +61,6 @@ final class ConfigurationScheduleViewController: UIViewController {
             ConfigurationScheduleTableViewCell.self,
             forCellReuseIdentifier: ConfigurationScheduleTableViewCell.identifier
         )
-        tableView.separatorInset = UIEdgeInsets(
-            top: 0,
-            left: ConfigurationScheduleViewControllerTheme.tableViewSeparatorInset,
-            bottom: 0,
-            right: ConfigurationScheduleViewControllerTheme.tableViewSeparatorInset
-        )
         tableView.backgroundColor = .clear
         tableView.allowsSelection = false
         tableView.isScrollEnabled = true
@@ -167,7 +161,12 @@ extension ConfigurationScheduleViewController: UITableViewDataSource {
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
         } else {
-            cell.separatorInset = .zero
+            cell.separatorInset = UIEdgeInsets(
+                top: 0,
+                left: ConfigurationScheduleViewControllerTheme.tableViewSeparatorInset,
+                bottom: 0,
+                right: ConfigurationScheduleViewControllerTheme.tableViewSeparatorInset
+            )
         }
         
         cell.backgroundColor = .clear
