@@ -30,7 +30,7 @@ enum ConfigurationTrackerViewControllerTheme {
     
     static let alphaComponent: CGFloat = 0.3
     
-    enum StackViewConfiguration {
+    enum ConfigurationStackView {
         static let stackViewSpacing: CGFloat = 8.0
         static let stackViewTopConstraint: CGFloat = 24.0
         static let stackViewLeadingConstraint: CGFloat = 16.0
@@ -138,10 +138,10 @@ final class ConfigurationTrackerViewController: UIViewController {
         return label
     }()
     
-    private lazy var stackView: UIStackView = {
+    private lazy var nameStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [nameTextField, warningLabel])
         stackView.axis = .vertical
-        stackView.spacing = ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewSpacing
+        stackView.spacing = ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewSpacing
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -193,12 +193,12 @@ final class ConfigurationTrackerViewController: UIViewController {
         return label
     }()
     
-    private lazy var stackViewCategoryButton: UIStackView = {
+    private lazy var categoryButtonStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [categoryTitleLabel, categoryDescriptionLabel])
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .leading
-        stackView.spacing = ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewScheduleSpacing
+        stackView.spacing = ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewScheduleSpacing
         stackView.isUserInteractionEnabled = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -231,13 +231,22 @@ final class ConfigurationTrackerViewController: UIViewController {
         return label
     }()
     
-    private lazy var stackViewScheduleButton: UIStackView = {
+    private lazy var scheduleButtonStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [scheduleTitleLabel, scheduleDescriptionLabel])
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .leading
-        stackView.spacing = ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewScheduleSpacing
+        stackView.spacing = ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewScheduleSpacing
         stackView.isUserInteractionEnabled = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var configurationStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [categoryButton, separator, scheduleButton])
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -340,14 +349,12 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     private func setupLayout() {
-        view.addSubview(stackView)
+        view.addSubview(nameStackView)
         
-        view.addSubview(categoryButton)
-        view.addSubview(scheduleButton)
-        view.addSubview(separator)
+        view.addSubview(configurationStackView)
         
-        categoryButton.addSubview(stackViewCategoryButton)
-        scheduleButton.addSubview(stackViewScheduleButton)
+        categoryButton.addSubview(categoryButtonStackView)
+        scheduleButton.addSubview(scheduleButtonStackView)
         
         categoryButton.addSubview(categoryDisclosureIndicator)
         scheduleButton.addSubview(scheduleDisclosureIndicator)
@@ -358,38 +365,35 @@ final class ConfigurationTrackerViewController: UIViewController {
         view.addSubview(createButton)
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewTopConstraint),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewLeadingConstraint),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewTrailingConstraint),
+            nameStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewTopConstraint),
+            nameStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewLeadingConstraint),
+            nameStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewTrailingConstraint),
             
             nameTextField.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldHeightConstraint),
-            nameTextField.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            nameTextField.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            nameTextField.leadingAnchor.constraint(equalTo: nameStackView.leadingAnchor),
+            nameTextField.trailingAnchor.constraint(equalTo: nameStackView.trailingAnchor),
             
-            categoryButton.topAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.ActionButtons.categoryButtonTopConstraint),
-            categoryButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            categoryButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            configurationStackView.topAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.ActionButtons.categoryButtonTopConstraint),
+            configurationStackView.leadingAnchor.constraint(equalTo: nameStackView.leadingAnchor),
+            configurationStackView.trailingAnchor.constraint(equalTo: nameStackView.trailingAnchor),
+            
             categoryButton.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsHeightConstraint),
             
-            separator.topAnchor.constraint(equalTo: categoryButton.bottomAnchor),
             separator.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.Separator.separatorLeadingConstraint),
             separator.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.Separator.separatorTrailingConstraint),
             separator.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.Separator.separatorHeightConstraint),
             
-            scheduleButton.topAnchor.constraint(equalTo: categoryButton.bottomAnchor),
-            scheduleButton.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor),
-            scheduleButton.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor),
             scheduleButton.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.ActionButtons.configurationButtonsHeightConstraint),
             
-            stackViewCategoryButton.topAnchor.constraint(equalTo: categoryButton.topAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationTopConstraint),
-            stackViewCategoryButton.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationLeadingConstraint),
-            stackViewCategoryButton.trailingAnchor.constraint(equalTo: categoryDisclosureIndicator.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationTrailingConstraint),
-            stackViewCategoryButton.bottomAnchor.constraint(equalTo: categoryButton.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationBottomConstraint),
+            categoryButtonStackView.topAnchor.constraint(equalTo: categoryButton.topAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewConfigurationTopConstraint),
+            categoryButtonStackView.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewConfigurationLeadingConstraint),
+            categoryButtonStackView.trailingAnchor.constraint(equalTo: categoryDisclosureIndicator.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewConfigurationTrailingConstraint),
+            categoryButtonStackView.bottomAnchor.constraint(equalTo: categoryButton.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewConfigurationBottomConstraint),
             
-            stackViewScheduleButton.topAnchor.constraint(equalTo: scheduleButton.topAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationTopConstraint),
-            stackViewScheduleButton.leadingAnchor.constraint(equalTo: scheduleButton.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationLeadingConstraint),
-            stackViewScheduleButton.trailingAnchor.constraint(equalTo: scheduleDisclosureIndicator.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationTrailingConstraint),
-            stackViewScheduleButton.bottomAnchor.constraint(equalTo: scheduleButton.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.StackViewConfiguration.stackViewConfigurationBottomConstraint),
+            scheduleButtonStackView.topAnchor.constraint(equalTo: scheduleButton.topAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewConfigurationTopConstraint),
+            scheduleButtonStackView.leadingAnchor.constraint(equalTo: scheduleButton.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewConfigurationLeadingConstraint),
+            scheduleButtonStackView.trailingAnchor.constraint(equalTo: scheduleDisclosureIndicator.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewConfigurationTrailingConstraint),
+            scheduleButtonStackView.bottomAnchor.constraint(equalTo: scheduleButton.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewConfigurationBottomConstraint),
             
             categoryDisclosureIndicator.centerYAnchor.constraint(equalTo: categoryButton.centerYAnchor),
             categoryDisclosureIndicator.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.configurationDisclosureIndicatorTrailingConstraint),
@@ -397,7 +401,7 @@ final class ConfigurationTrackerViewController: UIViewController {
             scheduleDisclosureIndicator.centerYAnchor.constraint(equalTo: scheduleButton.centerYAnchor),
             scheduleDisclosureIndicator.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.configurationDisclosureIndicatorTrailingConstraint),
             
-            emojiCollectionView.topAnchor.constraint(equalTo: scheduleButton.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewTopConstraint),
+            emojiCollectionView.topAnchor.constraint(equalTo: configurationStackView.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewTopConstraint),
             emojiCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emojiCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             emojiCollectionView.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewHeightConstraint),
