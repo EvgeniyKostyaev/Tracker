@@ -17,7 +17,6 @@ enum ConfigurationTrackerViewControllerTheme {
     static let createButtonTitle: String = "Создать"
     static let warningText: String = "Ограничение 38 символов"
     static let everyDayRepresentation: String = "Каждый день"
-    static let collectionViewHeaderTitle: String = "Emoji"
     
     static let warningLabelFontSize: CGFloat = 17.0
     
@@ -90,7 +89,7 @@ enum ConfigurationTrackerViewControllerTheme {
         static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
         
         static let collectionViewTopConstraint: CGFloat = 20.0
-        static let collectionViewHeightConstraint: CGFloat = 400.0
+        static let collectionViewHeightConstraint: CGFloat = 230.0
     }
 }
 
@@ -102,15 +101,20 @@ final class ConfigurationTrackerViewController: UIViewController {
     var activeDate: Date = Date()
     
     // MARK: - Private properties
-    private var trackerName = String()
-    private var trackerCategory = "Важное" // this is stub for now
+    private var trackerName: String = String()
+    private var trackerCategory: String = "Важное" // this is stub for now
     private var trackerActiveDaysWeeks: [DayWeeks] = []
-    private var trackerEmoji = String()
+    private var trackerEmoji: String = String()
+    private var trackerColor: UIColor = .clear
     
-    private let emojies = [
+    private let emojies: [String] = [
         "🙂", "😻", "🌺", "🐶", "❤️", "😱",
         "😇", "😡", "🥶", "🤔", "🙌", "🍔",
         "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
+    ]
+    
+    private let colors: [UIColor] = [
+        .red, .green, .blue, .yellow, .orange, .purple
     ]
     
     private lazy var nameTextField: UITextField = {
@@ -268,6 +272,23 @@ final class ConfigurationTrackerViewController: UIViewController {
         return emojiCollectionController
     }()
     
+    private lazy var colorCollectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        return collectionView
+    }()
+    
+    private lazy var colorCollectionController: ConfigurationColorCollectionController = {
+        let colorCollectionController = ConfigurationColorCollectionController.init(collectionView: colorCollectionView)
+        colorCollectionController.colors = colors
+        colorCollectionController.onSelectColor = { [weak self] selectedColor in
+            self?.trackerColor = selectedColor
+            self?.updateCreateButtonState()
+        }
+        
+        return colorCollectionController
+    }()
+    
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(ConfigurationTrackerViewControllerTheme.cancelButtonTitle, for: .normal)
@@ -299,6 +320,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         title = getTitle()
         
         _ = emojiCollectionController
+        _ = colorCollectionController
         
         setupLayout()
         setupConfigurationButtonsState()
@@ -369,6 +391,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         scheduleButton.addSubview(scheduleDisclosureIndicator)
         
         view.addSubview(emojiCollectionView)
+        view.addSubview(colorCollectionView)
         
         view.addSubview(cancelButton)
         view.addSubview(createButton)
@@ -414,6 +437,11 @@ final class ConfigurationTrackerViewController: UIViewController {
             emojiCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             emojiCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             emojiCollectionView.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewHeightConstraint),
+            
+            colorCollectionView.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewTopConstraint),
+            colorCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            colorCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            colorCollectionView.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewHeightConstraint),
             
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.ActionButtons.cancelButtonLeadingConstraint),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.ActionButtons.cancelButtonBottomConstraint),
@@ -481,9 +509,9 @@ final class ConfigurationTrackerViewController: UIViewController {
     private func isValidateConfiguration() -> Bool {
         switch (trackerType) {
         case .habit:
-            return !trackerName.isEmpty && !trackerCategory.isEmpty && !trackerActiveDaysWeeks.isEmpty && !trackerEmoji.isEmpty
+            return !trackerName.isEmpty && !trackerCategory.isEmpty && !trackerActiveDaysWeeks.isEmpty && !trackerEmoji.isEmpty && trackerColor != .clear
         case .irregular:
-            return !trackerName.isEmpty && !trackerCategory.isEmpty && !trackerEmoji.isEmpty
+            return !trackerName.isEmpty && !trackerCategory.isEmpty && !trackerEmoji.isEmpty && trackerColor != .clear
         }
     }
     
@@ -511,7 +539,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         let tracker = Tracker(
             id: Int.random(in: 0..<1000000),
             title: trackerName,
-            color: .systemIndigo,
+            color: trackerColor,
             emoji: trackerEmoji,
             type: trackerType,
             schedule: schedule)

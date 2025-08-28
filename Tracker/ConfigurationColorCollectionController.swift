@@ -1,5 +1,5 @@
 //
-//  ConfigurationEmojiCollectionController.swift
+//  ConfigurationColorCollectionController.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 28.08.2025.
@@ -7,17 +7,17 @@
 
 import UIKit
 
-enum ConfigurationEmojiCollectionControllerTheme {
-    static let headerTitle: String = "Emoji"
+enum ConfigurationColorCollectionControllerTheme {
+    static let headerTitle: String = "Цвет"
 }
 
-final class ConfigurationEmojiCollectionController: NSObject {
+final class ConfigurationColorCollectionController: NSObject {
     
     // MARK: - Public Properties
-    var onSelectEmoji: ((String) -> Void)?
+    var onSelectColor: ((UIColor) -> Void)?
     
-    var emojies: [String] = []
-    var selectedEmoji = String()
+    var colors: [UIColor] = []
+    var selectedColor: UIColor = .clear
     
     // MARK: - Private Properties
     private var collectionView: UICollectionView?
@@ -28,7 +28,7 @@ final class ConfigurationEmojiCollectionController: NSObject {
         
         self.collectionView = collectionView
         
-        collectionView.register(ConfigurationEmojiCollectionViewCell.self, forCellWithReuseIdentifier: ConfigurationEmojiCollectionViewCell.identifier)
+        collectionView.register(ConfigurationColorCollectionViewCell.self, forCellWithReuseIdentifier: ConfigurationColorCollectionViewCell.identifier)
         collectionView.register(TrackerSupplementaryHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackerSupplementaryHeaderView.identifier)
         
         collectionView.dataSource = self
@@ -39,9 +39,9 @@ final class ConfigurationEmojiCollectionController: NSObject {
 }
 
 // MARK: - UICollectionViewDataSource Methods
-extension ConfigurationEmojiCollectionController: UICollectionViewDataSource {
+extension ConfigurationColorCollectionController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return emojies.count
+        return colors.count
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -61,22 +61,22 @@ extension ConfigurationEmojiCollectionController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
 
-        header.titleLabel.text = ConfigurationEmojiCollectionControllerTheme.headerTitle
+        header.titleLabel.text = ConfigurationColorCollectionControllerTheme.headerTitle
 
         return header
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ConfigurationEmojiCollectionViewCell.identifier, for: indexPath) as? ConfigurationEmojiCollectionViewCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ConfigurationColorCollectionViewCell.identifier, for: indexPath) as? ConfigurationColorCollectionViewCell else { return UICollectionViewCell()}
         
-        cell.titleLabel.text = emojies[indexPath.row]
+        cell.containerView.backgroundColor = colors[indexPath.item]
         
         return cell
     }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout Methods
-extension ConfigurationEmojiCollectionController: UICollectionViewDelegateFlowLayout {
+extension ConfigurationColorCollectionController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
@@ -108,26 +108,26 @@ extension ConfigurationEmojiCollectionController: UICollectionViewDelegateFlowLa
 }
 
 // MARK: - UICollectionViewDelegate Methods
-extension ConfigurationEmojiCollectionController: UICollectionViewDelegate {
+extension ConfigurationColorCollectionController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationEmojiCollectionViewCell
+        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationColorCollectionViewCell
         
         
-        if (selectedEmoji == emojies[indexPath.item]) {
+        if (selectedColor == colors[indexPath.item]) {
             cell?.backgroundColor = .clear
             
-            selectedEmoji = String()
+            selectedColor = .clear
         } else {
             cell?.backgroundColor = .trackerLightGray
             
-            selectedEmoji = emojies[indexPath.item]
+            selectedColor = colors[indexPath.item]
         }
         
-        onSelectEmoji?(selectedEmoji)
+        onSelectColor?(selectedColor)
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationEmojiCollectionViewCell
+        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationColorCollectionViewCell
         cell?.backgroundColor = .clear
     }
 }
