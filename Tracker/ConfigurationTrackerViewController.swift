@@ -119,6 +119,18 @@ final class ConfigurationTrackerViewController: UIViewController {
         .trackerColorCollection13, .trackerColorCollection14, .trackerColorCollection15, .trackerColorCollection16, .trackerColorCollection17, .trackerColorCollection18
     ]
     
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+
+    private let contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
         textField.delegate = self
@@ -383,9 +395,13 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     private func setupLayout() {
-        view.addSubview(nameStackView)
+        view.addSubview(scrollView)
         
-        view.addSubview(configurationStackView)
+        scrollView.addSubview(contentView)
+        
+        contentView.addSubview(nameStackView)
+        
+        contentView.addSubview(configurationStackView)
         
         categoryButton.addSubview(categoryButtonStackView)
         scheduleButton.addSubview(scheduleButtonStackView)
@@ -393,16 +409,27 @@ final class ConfigurationTrackerViewController: UIViewController {
         categoryButton.addSubview(categoryDisclosureIndicator)
         scheduleButton.addSubview(scheduleDisclosureIndicator)
         
-        view.addSubview(emojiCollectionView)
-        view.addSubview(colorCollectionView)
+        contentView.addSubview(emojiCollectionView)
+        contentView.addSubview(colorCollectionView)
         
         view.addSubview(cancelButton)
         view.addSubview(createButton)
         
         NSLayoutConstraint.activate([
-            nameStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewTopConstraint),
-            nameStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewLeadingConstraint),
-            nameStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewTrailingConstraint),
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: createButton.topAnchor, constant: -20.0),
+            
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
+            nameStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewTopConstraint),
+            nameStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewLeadingConstraint),
+            nameStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.ConfigurationStackView.stackViewTrailingConstraint),
             
             nameTextField.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.NameTextField.nameTextFieldHeightConstraint),
             nameTextField.leadingAnchor.constraint(equalTo: nameStackView.leadingAnchor),
@@ -437,14 +464,15 @@ final class ConfigurationTrackerViewController: UIViewController {
             scheduleDisclosureIndicator.trailingAnchor.constraint(equalTo: scheduleButton.trailingAnchor, constant: ConfigurationTrackerViewControllerTheme.configurationDisclosureIndicatorTrailingConstraint),
             
             emojiCollectionView.topAnchor.constraint(equalTo: configurationStackView.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewTopConstraint),
-            emojiCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            emojiCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            emojiCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            emojiCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             emojiCollectionView.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewHeightConstraint),
             
             colorCollectionView.topAnchor.constraint(equalTo: emojiCollectionView.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewTopConstraint),
-            colorCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            colorCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            colorCollectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            colorCollectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             colorCollectionView.heightAnchor.constraint(equalToConstant: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewHeightConstraint),
+            colorCollectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: ConfigurationTrackerViewControllerTheme.ActionButtons.cancelButtonLeadingConstraint),
             cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: ConfigurationTrackerViewControllerTheme.ActionButtons.cancelButtonBottomConstraint),
