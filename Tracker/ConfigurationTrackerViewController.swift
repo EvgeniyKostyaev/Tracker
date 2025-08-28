@@ -114,7 +114,9 @@ final class ConfigurationTrackerViewController: UIViewController {
     ]
     
     private let colors: [UIColor] = [
-        .red, .green, .blue, .yellow, .orange, .purple
+        .trackerColorCollection1, .trackerColorCollection2, .trackerColorCollection3, .trackerColorCollection4, .trackerColorCollection5, .trackerColorCollection6,
+        .trackerColorCollection7, .trackerColorCollection8, .trackerColorCollection9, .trackerColorCollection10, .trackerColorCollection11, .trackerColorCollection12,
+        .trackerColorCollection13, .trackerColorCollection14, .trackerColorCollection15, .trackerColorCollection16, .trackerColorCollection17, .trackerColorCollection18
     ]
     
     private lazy var nameTextField: UITextField = {
@@ -293,6 +295,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle(ConfigurationTrackerViewControllerTheme.cancelButtonTitle, for: .normal)
         button.setTitleColor(.trackerRed, for: .normal)
+        button.backgroundColor = .white
         button.layer.borderWidth = ConfigurationTrackerViewControllerTheme.ActionButtons.cancellButtonBorderWidth
         button.layer.borderColor = UIColor.red.cgColor
         button.layer.cornerRadius = ConfigurationTrackerViewControllerTheme.ActionButtons.actionButtonsCornerRadius
