@@ -9,6 +9,9 @@ import UIKit
 
 enum ConfigurationColorCollectionControllerTheme {
     static let headerTitle: String = "Цвет"
+    
+    static let cellBorderWidth: CGFloat = 3.0
+    static let cellWithoutBorder: CGFloat = 0.0
 }
 
 final class ConfigurationColorCollectionController: NSObject {
@@ -114,11 +117,12 @@ extension ConfigurationColorCollectionController: UICollectionViewDelegate {
         
         
         if (selectedColor == colors[indexPath.item]) {
-            cell?.backgroundColor = .clear
+            cell?.contentView.layer.borderWidth = ConfigurationColorCollectionControllerTheme.cellWithoutBorder
             
             selectedColor = .clear
         } else {
-            cell?.backgroundColor = .trackerLightGray
+            cell?.contentView.layer.borderWidth = ConfigurationColorCollectionControllerTheme.cellBorderWidth
+            cell?.contentView.layer.borderColor = colors[indexPath.item].withAlphaComponent(ConfigurationTrackerViewControllerTheme.alphaComponent).cgColor
             
             selectedColor = colors[indexPath.item]
         }
@@ -128,7 +132,7 @@ extension ConfigurationColorCollectionController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationColorCollectionViewCell
-        cell?.backgroundColor = .clear
+        cell?.contentView.layer.borderWidth = ConfigurationColorCollectionControllerTheme.cellWithoutBorder
     }
 }
 

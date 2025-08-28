@@ -29,7 +29,7 @@ final class ConfigurationColorCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        layer.cornerRadius = ConfigurationColorCollectionViewCellTheme.cornerRadius
+        contentView.layer.cornerRadius = ConfigurationColorCollectionViewCellTheme.cornerRadius
         
         setupLayout()
     }
