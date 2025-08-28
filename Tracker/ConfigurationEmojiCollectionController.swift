@@ -7,14 +7,10 @@
 
 import UIKit
 
-protocol ConfigurationEmojiCollectionControllerDelegate: AnyObject {
-    func configurationEmojiCollectionControllerDidSelectEmoji(_ controller: ConfigurationEmojiCollectionController, emoji: String)
-}
-
-final class ConfigurationEmojiCollectionController : NSObject {
+final class ConfigurationEmojiCollectionController: NSObject {
     
     // MARK: - Public Properties
-    weak var delegate: ConfigurationEmojiCollectionControllerDelegate?
+    var onSelectEmoji: ((String) -> Void)?
     
     var emojies: [String] = []
     var selectedEmoji = String()
@@ -132,7 +128,7 @@ extension ConfigurationEmojiCollectionController: UICollectionViewDelegate {
             selectedEmoji = emojies[indexPath.item]
         }
         
-        delegate?.configurationEmojiCollectionControllerDidSelectEmoji(self, emoji: selectedEmoji)
+        onSelectEmoji?(selectedEmoji)
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {

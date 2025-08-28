@@ -260,7 +260,11 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var emojiCollectionController: ConfigurationEmojiCollectionController = {
         let emojiCollectionController = ConfigurationEmojiCollectionController.init(collectionView: emojiCollectionView)
         emojiCollectionController.emojies = emojies
-        emojiCollectionController.delegate = self
+        emojiCollectionController.onSelectEmoji = { [weak self] selectedEmoji in
+            self?.trackerEmoji = selectedEmoji
+            self?.updateCreateButtonState()
+        }
+        
         return emojiCollectionController
     }()
     
@@ -551,14 +555,5 @@ extension ConfigurationTrackerViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         dismissKeyboard()
         return true
-    }
-}
-
-// MARK: - ConfigurationEmojiCollectionControllerDelegate methods
-extension ConfigurationTrackerViewController: ConfigurationEmojiCollectionControllerDelegate {
-    func configurationEmojiCollectionControllerDidSelectEmoji(_ controller: ConfigurationEmojiCollectionController, emoji: String) {
-        trackerEmoji = emoji
-        
-        updateCreateButtonState()
     }
 }
