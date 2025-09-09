@@ -39,7 +39,7 @@ class CoreDataManager {
             do {
                 try viewContext.save()
             } catch {
-                print("Ошибка сохранения: \(error)")
+                viewContext.rollback()
             }
         }
     }
