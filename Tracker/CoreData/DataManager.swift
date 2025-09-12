@@ -1,5 +1,5 @@
 //
-//  CoreDataManager.swift
+//  DataManager.swift.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 08.09.2025.
@@ -8,8 +8,8 @@
 import Foundation
 import CoreData
 
-class CoreDataManager {
-    static let shared = CoreDataManager()
+class DataManager {
+    static let shared = DataManager()
     
     lazy var persistentContainer: NSPersistentContainer = {
         guard let modelURL = Bundle.main.url(forResource: "TrackerModel", withExtension: "momd") else {

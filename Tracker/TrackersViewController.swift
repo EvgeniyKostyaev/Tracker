@@ -62,18 +62,6 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let context = CoreDataManager.shared.viewContext
-        
-        let newTracker = TrackerCoreData(context: context)
-        newTracker.title = "Новый tracker"
-        
-        // Сохранение
-        do {
-            try context.save()
-        } catch {
-            print("Ошибка сохранения: \(error)")
-        }
-        
         setupTitle()
         setupSearchController()
         setupAddBarButton()
