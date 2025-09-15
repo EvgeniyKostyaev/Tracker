@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 
+// MARK: - Tracker ↔ TrackerEntity
 extension Tracker {
     func toEntity(in context: NSManagedObjectContext,
                   category: TrackerCategoryEntity) -> TrackerEntity {
@@ -33,10 +34,49 @@ extension TrackerEntity {
             emoji: self.emoji ?? String(),
             type: TrackerType(rawValue: self.type ?? "habit") ?? .habit,
             schedule: scheduleKind == 0 ? nil :
-                      Schedule(
-                          daysWeeks: DayWeeks.from(mask: scheduleDaysMask),
-                          date: scheduleDate
-                      )
+                Schedule(
+                    daysWeeks: DayWeeks.from(mask: scheduleDaysMask),
+                    date: scheduleDate
+                )
         )
     }
 }
+
+// MARK: - TrackerCategory ↔ TrackerCategoryEntity
+extension TrackerCategory {
+    func toEntity(in context: NSManagedObjectContext) -> TrackerCategoryEntity {
+        let entity = TrackerCategoryEntity(context: context)
+        entity.title = title
+        entity.trackers = NSSet(array: trackers.map { $0.toEntity(in: context, category: ) })
+        return entity
+    }
+}
+
+extension TrackerCategoryEntity {
+    func toModel() -> TrackerCategory {
+        return TrackerCategory(
+            title: title ?? String(),
+            trackers: (trackers?.allObjects as? [TrackerEntity])?.map { $0.toModel() } ?? []
+        )
+    }
+}
+
+// MARK: - TrackerRecord ↔ TrackerRecordEntity
+extension TrackerRecord {
+    func toEntity(in context: NSManagedObjectContext) -> TrackerRecordEntity {
+        let entity = TrackerRecordEntity(context: context)
+        entity.date = date
+        return entity
+    }
+}
+
+extension TrackerRecordEntity {
+    func toDomainModel() -> TrackerRecord {
+        return TrackerRecord(
+            trackerId: Int(tracker?.id ?? 0),
+            date: date ?? Date()
+        )
+    }
+}
+
+

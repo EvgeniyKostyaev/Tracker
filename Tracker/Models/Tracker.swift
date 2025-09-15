@@ -76,3 +76,22 @@ struct Tracker {
         activeDate <= Date()
     }
 }
+
+// MARK: - DayWeeks
+extension Array where Element == DayWeeks? {
+    func toMask() -> Int16 {
+        reduce(0) { acc, day in
+            guard let day else { return acc }
+            return acc | (1 << day.rawValue)
+        }
+    }
+}
+
+extension DayWeeks {
+    static func from(mask: Int16) -> [DayWeeks] {
+        (1...7).compactMap { bit in
+            (mask & (1 << bit)) != 0 ? DayWeeks(rawValue: bit) : nil
+        }
+    }
+}
+
