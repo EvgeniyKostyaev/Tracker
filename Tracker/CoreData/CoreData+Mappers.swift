@@ -63,18 +63,22 @@ extension TrackerCategoryEntity {
 
 // MARK: - TrackerRecord ↔ TrackerRecordEntity
 extension TrackerRecord {
-    func toEntity(in context: NSManagedObjectContext) -> TrackerRecordEntity {
+    func toEntity(in context: NSManagedObjectContext, trackerEntity: TrackerEntity) -> TrackerRecordEntity {
         let entity = TrackerRecordEntity(context: context)
         entity.date = date
+        entity.tracker = trackerEntity
         return entity
     }
 }
 
 extension TrackerRecordEntity {
-    func toDomainModel() -> TrackerRecord {
+    func toModel() -> TrackerRecord? {
+        guard let tracker = tracker,
+              let date = date else { return nil }
+
         return TrackerRecord(
-            trackerId: Int(tracker?.id ?? 0),
-            date: date ?? Date()
+            trackerId: Int(bitPattern: tracker.id),
+            date: date
         )
     }
 }
