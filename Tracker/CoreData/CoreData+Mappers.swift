@@ -45,11 +45,17 @@ extension TrackerEntity {
 // MARK: - TrackerCategory ↔ TrackerCategoryEntity
 extension TrackerCategory {
     func toEntity(in context: NSManagedObjectContext) -> TrackerCategoryEntity {
-        let entity = TrackerCategoryEntity(context: context)
-        entity.title = title
-        entity.trackers = NSSet(array: trackers.map { $0.toEntity(in: context, category: ) })
-        return entity
-    }
+            let entity = TrackerCategoryEntity(context: context)
+            entity.title = self.title
+            
+            let trackerEntities = self.trackers.map { tracker in
+                tracker.toEntity(in: context, category: entity)
+            }
+            
+            entity.trackers = NSSet(array: trackerEntities)
+            
+            return entity
+        }
 }
 
 extension TrackerCategoryEntity {
