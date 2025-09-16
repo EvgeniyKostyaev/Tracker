@@ -49,80 +49,31 @@ class CoreDataManager {
 
 // MARK: - Tracker Category
 extension CoreDataManager {
-    func addCategory(title: String) -> TrackerCategoryEntity {
+
+    func createCategory(_ category: TrackerCategory) {
         let entity = TrackerCategoryEntity(context: сontext)
-        entity.title = title
+        entity.title = category.title
+        category.trackers.forEach { tracker in
+            _ = tracker.toEntity(in: сontext, category: entity)
+        }
         saveContext()
-        return entity
     }
 
-    func fetchCategories() -> [TrackerCategoryEntity] {
+    func fetchCategories() -> [TrackerCategory] {
         let request: NSFetchRequest<TrackerCategoryEntity> = TrackerCategoryEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-        return (try? сontext.fetch(request)) ?? []
+        let result = (try? сontext.fetch(request)) ?? []
+        return result.map { $0.toModel() }
     }
 
-    func deleteCategory(_ category: TrackerCategoryEntity) {
-        сontext.delete(category)
+    func addTracker(_ tracker: Tracker, to category: TrackerCategoryEntity) {
+        _ = tracker.toEntity(in: сontext, category: category)
         saveContext()
     }
-}
 
-// MARK: - Tracker
-extension CoreDataManager {
-    func addTracker(
-        title: String,
-        colorHex: String,
-        emoji: String,
-        type: String,
-        scheduleKind: Int16,
-        scheduleDaysMask: Int16,
-        scheduleDate: Date?,
-        category: TrackerCategoryEntity
-    ) -> TrackerEntity {
-        let tracker = TrackerEntity(context: сontext)
-        tracker.title = title
-        tracker.colorHex = colorHex
-        tracker.emoji = emoji
-        tracker.type = type
-        tracker.scheduleKind = scheduleKind
-        tracker.scheduleDaysMask = scheduleDaysMask
-        tracker.scheduleDate = scheduleDate
-        tracker.category = category
-
-        saveContext()
-        return tracker
-    }
-
-    func fetchTrackers(for date: Date? = nil) -> [TrackerEntity] {
-        let request: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
-        return (try? сontext.fetch(request)) ?? []
-    }
-
-    func deleteTracker(_ tracker: TrackerEntity) {
-        сontext.delete(tracker)
-        saveContext()
-    }
-}
-
-// MARK: - Tracker Record
-extension CoreDataManager {
-    func addRecord(tracker: TrackerEntity, date: Date) -> TrackerRecordEntity {
-        let record = TrackerRecordEntity(context: сontext)
-        record.date = date
-        record.tracker = tracker
-        saveContext()
-        return record
-    }
-
-    func fetchRecords(for tracker: TrackerEntity) -> [TrackerRecordEntity] {
-        let request: NSFetchRequest<TrackerRecordEntity> = TrackerRecordEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "tracker == %@", tracker)
-        return (try? сontext.fetch(request)) ?? []
-    }
-
-    func deleteRecord(_ record: TrackerRecordEntity) {
-        сontext.delete(record)
+    func addRecord(_ record: TrackerRecord, tracker: TrackerEntity) {
+        let entity = TrackerRecordEntity(context: сontext)
+        entity.date = record.date
+        entity.tracker = tracker
         saveContext()
     }
 }

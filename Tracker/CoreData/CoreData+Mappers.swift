@@ -13,6 +13,7 @@ extension Tracker {
     func toEntity(in context: NSManagedObjectContext,
                   category: TrackerCategoryEntity) -> TrackerEntity {
         let entity = TrackerEntity(context: context)
+        entity.id = id
         entity.title = title
         entity.colorHex = color.hexString
         entity.emoji = emoji
@@ -28,11 +29,11 @@ extension Tracker {
 extension TrackerEntity {
     func toModel() -> Tracker {
         Tracker(
-            id: Int(self.objectID.hash),
-            title: self.title ?? String(),
-            color: UIColor.from(hex: self.colorHex ?? "#000000"),
-            emoji: self.emoji ?? String(),
-            type: TrackerType(rawValue: self.type ?? "habit") ?? .habit,
+            id: id ?? UUID(),
+            title: title ?? String(),
+            color: UIColor.from(hex: colorHex ?? "#000000"),
+            emoji: emoji ?? String(),
+            type: TrackerType(rawValue: type ?? "habit") ?? .habit,
             schedule: scheduleKind == 0 ? nil :
                 Schedule(
                     daysWeeks: DayWeeks.from(mask: scheduleDaysMask),
@@ -83,7 +84,7 @@ extension TrackerRecordEntity {
               let date = date else { return nil }
 
         return TrackerRecord(
-            trackerId: Int(bitPattern: tracker.id),
+            trackerId: tracker.id ?? UUID(),
             date: date
         )
     }

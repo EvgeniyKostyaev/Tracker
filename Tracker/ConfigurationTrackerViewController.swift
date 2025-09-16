@@ -568,7 +568,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         }
         
         let tracker = Tracker(
-            id: Int.random(in: 0..<1000000),
+            id: UUID(),
             title: trackerName,
             color: trackerColor,
             emoji: trackerEmoji,

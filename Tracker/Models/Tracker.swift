@@ -55,7 +55,7 @@ enum TrackerType: String, Codable {
 }
 
 struct Tracker {
-    let id: Int
+    let id: UUID
     let title: String
     let color: UIColor
     let emoji: String

@@ -87,7 +87,7 @@ final class TrackersViewController: UIViewController {
     // MARK: - Private Methods
     private func temporaryTrackersStub() {
         let tracker1 = Tracker(
-            id: 1,
+            id: UUID(),
             title: "Сделать уборку",
             color: .systemGreen,
             emoji: "❤️",
@@ -96,7 +96,7 @@ final class TrackersViewController: UIViewController {
         )
         
         let tracker2 = Tracker(
-            id: 2,
+            id: UUID(),
             title: "Помыть посуду",
             color: .systemRed,
             emoji: "❤️",
@@ -105,7 +105,7 @@ final class TrackersViewController: UIViewController {
         )
         
         let tracker3 = Tracker(
-            id: 3,
+            id: UUID(),
             title: "Подать показания счетчиков",
             color: .systemBlue,
             emoji: "❤️",
@@ -114,7 +114,7 @@ final class TrackersViewController: UIViewController {
         )
         
         let tracker4 = Tracker(
-            id: 4,
+            id: UUID(),
             title: "Свидание в слепую",
             color: .systemOrange,
             emoji: "❤️",
@@ -123,7 +123,7 @@ final class TrackersViewController: UIViewController {
         )
         
         let tracker5 = Tracker(
-            id: 5,
+            id: UUID(),
             title: "Плавание в бассейне",
             color: .systemYellow,
             emoji: "❤️",
