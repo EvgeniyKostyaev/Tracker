@@ -28,7 +28,7 @@ extension Tracker {
 
 extension TrackerEntity {
     func toModel() -> Tracker {
-        Tracker(
+        return Tracker(
             id: id ?? UUID(),
             title: title ?? String(),
             color: UIColor.from(hex: colorHex ?? "#000000"),

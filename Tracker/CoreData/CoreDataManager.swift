@@ -32,50 +32,33 @@ class CoreDataManager {
         return container
     }()
     
-    var сontext: NSManagedObjectContext {
+    var context: NSManagedObjectContext {
         return persistentContainer.viewContext
     }
-    
-    func saveContext() {
-        if сontext.hasChanges {
-            do {
-                try сontext.save()
-            } catch {
-                сontext.rollback()
-            }
-        }
+}
+
+// MARK: - Tracker
+extension CoreDataManager {
+    func addTracker(_ tracker: Tracker, to category: TrackerCategoryEntity) {
+        _ = tracker.toEntity(in: context, category: category)
+        saveContext()
     }
 }
 
 // MARK: - Tracker Category
 extension CoreDataManager {
-
+    func fetchCategories() -> [TrackerCategory] {
+        let request: NSFetchRequest<TrackerCategoryEntity> = TrackerCategoryEntity.fetchRequest()
+        let result = (try? context.fetch(request)) ?? []
+        return result.map { $0.toModel() }
+    }
+    
     func createCategory(_ category: TrackerCategory) {
-        let entity = TrackerCategoryEntity(context: сontext)
+        let entity = TrackerCategoryEntity(context: context)
         entity.title = category.title
         category.trackers.forEach { tracker in
-            _ = tracker.toEntity(in: сontext, category: entity)
+            _ = tracker.toEntity(in: context, category: entity)
         }
         saveContext()
     }
-
-    func fetchCategories() -> [TrackerCategory] {
-        let request: NSFetchRequest<TrackerCategoryEntity> = TrackerCategoryEntity.fetchRequest()
-        let result = (try? сontext.fetch(request)) ?? []
-        return result.map { $0.toModel() }
-    }
-
-    func addTracker(_ tracker: Tracker, to category: TrackerCategoryEntity) {
-        _ = tracker.toEntity(in: сontext, category: category)
-        saveContext()
-    }
-
-    func addRecord(_ record: TrackerRecord, tracker: TrackerEntity) {
-        let entity = TrackerRecordEntity(context: сontext)
-        entity.date = record.date
-        entity.tracker = tracker
-        saveContext()
-    }
 }
-
-
