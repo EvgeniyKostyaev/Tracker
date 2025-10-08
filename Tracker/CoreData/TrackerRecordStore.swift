@@ -78,7 +78,7 @@ final class TrackerRecordStore {
                 try context.save()
             } catch {
                 context.rollback()
-                print("Ошибка сохранения контекста: \(error)")
+                print("Ошибка сохранения контекста (TrackerRecordStore): \(error)")
             }
         }
     }
