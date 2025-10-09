@@ -22,6 +22,7 @@ final class TrackerRecordDataProvider: NSObject {
         super.init()
         
         let request: NSFetchRequest<TrackerRecordEntity> = TrackerRecordEntity.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: request,

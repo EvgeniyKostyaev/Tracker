@@ -31,10 +31,11 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Private Properties
     private let filterTrackersUseCase = FilterTrackersUseCase()
-    private let dataProvider = TrackerCategoryDataProvider()
+    
+    private let trackerCategoryDataProvider = TrackerCategoryDataProvider()
+    private let trackerRecordDataProvider = TrackerRecordDataProvider()
     
     private var trackerCategories: [TrackerCategory] = []
-    private var completedTrackers: [TrackerRecord] = []
     private var activeDate: Date = Date()
     
     private lazy var collectionView: UICollectionView = {
@@ -62,7 +63,8 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataProvider.delegate = self
+        trackerCategoryDataProvider.delegate = self
+        trackerRecordDataProvider.delegate = self
         
         setupTitle()
         setupSearchController()
@@ -137,7 +139,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func updateTrackersUI() {
-        let sourceTrackerCategories = dataProvider.trackerCategories
+        let sourceTrackerCategories = trackerCategoryDataProvider.trackerCategories
         trackerCategories = filterTrackersUseCase.filterTrackerCategoriesList(sourceTrackerCategories, date: activeDate)
         
         if trackerCategories.count > 0 {
@@ -237,8 +239,8 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.delegate = self
         cell.indexPath = indexPath
         
-        let completedDaysCount = tracker.completedDaysCount(from: completedTrackers)
-        let isCompleted = tracker.isCompleted(on: activeDate, from: completedTrackers)
+        let completedDaysCount = tracker.completedDaysCount(from: trackerRecordDataProvider.trackerRecords)
+        let isCompleted = tracker.isCompleted(on: activeDate, from: trackerRecordDataProvider.trackerRecords)
         let isAvailable = tracker.isAvailable(on: activeDate)
         
         cell.configure(backgroundColor: tracker.color, title: tracker.title, emoji: tracker.emoji, dayCount: completedDaysCount, isCompleted: isCompleted, isAvailable: isAvailable)
@@ -286,15 +288,15 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
             
         let tracker = trackerCategories[indexPath.section].trackers[indexPath.row]
         
-        let isCompleted = isTrackerCompleted(for: tracker, from: completedTrackers)
+        let isCompleted = isTrackerCompleted(for: tracker, from: trackerRecordDataProvider.trackerRecords)
+        
+        let trackerRecordStore = TrackerRecordStore()
         
         if (isCompleted) {
-            completedTrackers.removeAll(where: { $0.trackerId == tracker.id && $0.date.isSameDayAs(activeDate) })
+            trackerRecordStore.deleteRecord(for: tracker.id, date: activeDate)
         } else {
-            completedTrackers.append(TrackerRecord(trackerId: tracker.id, date: activeDate))
+            trackerRecordStore.addRecord(TrackerRecord(trackerId: tracker.id, date: activeDate))
         }
-         
-        collectionView.reloadData()
     }
 }
 
@@ -302,5 +304,12 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
 extension TrackersViewController: TrackerCategoryDataProviderDelegate {
     func didUpdateCategories() {
         updateTrackersUI()
+    }
+}
+
+// MARK: - TrackerRecordDataProviderDelegate Methods
+extension TrackersViewController: TrackerRecordDataProviderDelegate {
+    func didUpdateRecords() {
+        collectionView.reloadData()
     }
 }
