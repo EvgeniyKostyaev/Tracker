@@ -31,8 +31,8 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Private Properties
     private let filterTrackersUseCase = FilterTrackersUseCase()
+    private let dataProvider = TrackerCategoryDataProvider()
     
-    private var sourceTrackerCategories: [TrackerCategory] = []
     private var trackerCategories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
     private var activeDate: Date = Date()
@@ -62,6 +62,8 @@ final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        dataProvider.delegate = self
+        
         setupTitle()
         setupSearchController()
         setupAddBarButton()
@@ -69,7 +71,6 @@ final class TrackersViewController: UIViewController {
         
         setupLayout()
         
-        temporaryTrackersStub()
         updateTrackersUI()
     }
     
@@ -85,58 +86,6 @@ final class TrackersViewController: UIViewController {
     }
     
     // MARK: - Private Methods
-    private func temporaryTrackersStub() {
-        let tracker1 = Tracker(
-            id: UUID(),
-            title: "Сделать уборку",
-            color: .systemGreen,
-            emoji: "❤️",
-            type: .habit,
-            schedule: Schedule(daysWeeks: [.saturday], date: nil)
-        )
-        
-        let tracker2 = Tracker(
-            id: UUID(),
-            title: "Помыть посуду",
-            color: .systemRed,
-            emoji: "❤️",
-            type: .habit,
-            schedule: Schedule(daysWeeks: [.tuesday, .wednesday, .thursday, .friday], date: nil)
-        )
-        
-        let tracker3 = Tracker(
-            id: UUID(),
-            title: "Подать показания счетчиков",
-            color: .systemBlue,
-            emoji: "❤️",
-            type: .habit,
-            schedule: nil
-        )
-        
-        let tracker4 = Tracker(
-            id: UUID(),
-            title: "Свидание в слепую",
-            color: .systemOrange,
-            emoji: "❤️",
-            type: .habit,
-            schedule: nil
-        )
-        
-        let tracker5 = Tracker(
-            id: UUID(),
-            title: "Плавание в бассейне",
-            color: .systemYellow,
-            emoji: "❤️",
-            type: .habit,
-            schedule: Schedule(daysWeeks: [.monday, .thursday, .friday], date: nil)
-        )
-        
-        let homeCategory = TrackerCategory(title: "Домашний уют", trackers: [tracker1, tracker2, tracker3])
-        let happyCategory = TrackerCategory(title: "Радостные мелочи", trackers: [tracker4, tracker5])
-    
-        sourceTrackerCategories.append(contentsOf: [homeCategory, happyCategory])
-    }
-    
     private func setupTitle() {
         title = TrackersViewControllerTheme.title
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -188,6 +137,7 @@ final class TrackersViewController: UIViewController {
     }
     
     private func updateTrackersUI() {
+        let sourceTrackerCategories = dataProvider.trackerCategories
         trackerCategories = filterTrackersUseCase.filterTrackerCategoriesList(sourceTrackerCategories, date: activeDate)
         
         if trackerCategories.count > 0 {
@@ -206,22 +156,15 @@ final class TrackersViewController: UIViewController {
     }
     
     private func addTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
-        var sectionIndex: Int
+        let categoryStore = TrackerCategoryStore()
+        let trackerStore = TrackerStore()
         
-        if let existingIndex = sourceTrackerCategories.firstIndex(where: { $0.title == categoryTitle }) {
-            sectionIndex = existingIndex
+        if let categoryEntity = categoryStore.fetchCategoryEntity(by: categoryTitle) {
+            trackerStore.addTracker(tracker, to: categoryEntity)
         } else {
-            let newCategory = TrackerCategory(title: categoryTitle, trackers: [])
-            sourceTrackerCategories.append(newCategory)
-            
-            sectionIndex = sourceTrackerCategories.count - 1
+            let newCategory = TrackerCategory(title: categoryTitle, trackers: [tracker])
+            categoryStore.addCategory(newCategory)
         }
-        
-        let oldTrackerCategory = sourceTrackerCategories[sectionIndex]
-        
-        let updatedTrackerCategory = TrackerCategory(title: oldTrackerCategory.title, trackers: oldTrackerCategory.trackers + [tracker])
-        
-        sourceTrackerCategories[sectionIndex] = updatedTrackerCategory
     }
     
     private func isTrackerCompleted(for tracker: Tracker, from completedTrackers: [TrackerRecord]) -> Bool {
@@ -352,5 +295,12 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
         }
          
         collectionView.reloadData()
+    }
+}
+
+// MARK: - TrackerCategoryDataProviderDelegate Methods
+extension TrackersViewController: TrackerCategoryDataProviderDelegate {
+    func didUpdateCategories() {
+        updateTrackersUI()
     }
 }

@@ -102,7 +102,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     // MARK: - Private properties
     private var trackerName: String = String()
-    private var trackerCategory: String = "Важное" // this is stub for now
+    private var trackerCategory: String = "Нужное" // this is stub for now
     private var trackerActiveDaysWeeks: [DayWeeks] = []
     private var trackerEmoji: String = String()
     private var trackerColor: UIColor = .clear

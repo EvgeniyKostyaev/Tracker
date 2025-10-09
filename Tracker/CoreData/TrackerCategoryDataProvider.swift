@@ -35,7 +35,7 @@ final class TrackerCategoryDataProvider: NSObject {
         try? fetchedResultsController.performFetch()
     }
     
-    var categories: [TrackerCategory] {
+    var trackerCategories: [TrackerCategory] {
         guard let entities = fetchedResultsController.fetchedObjects else { return [] }
         return entities.compactMap { $0.toModel() }
     }

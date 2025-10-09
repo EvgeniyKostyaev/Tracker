@@ -50,6 +50,19 @@ final class TrackerCategoryStore {
         }
     }
     
+    func fetchCategoryEntity(by title: String) -> TrackerCategoryEntity? {
+        let request: NSFetchRequest<TrackerCategoryEntity> = TrackerCategoryEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "title == %@", title)
+        request.fetchLimit = 1
+        
+        do {
+            return try context.fetch(request).first
+        } catch {
+            print("Ошибка получения категории с названием \(title): \(error)")
+            return nil
+        }
+    }
+    
     // MARK: - Delete
     func deleteCategory(by title: String) {
         let request: NSFetchRequest<TrackerCategoryEntity> = TrackerCategoryEntity.fetchRequest()
