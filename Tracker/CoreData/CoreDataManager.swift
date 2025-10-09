@@ -36,21 +36,3 @@ class CoreDataManager {
         return persistentContainer.viewContext
     }
 }
-
-//// MARK: - Tracker Category
-//extension CoreDataManager {
-//    func fetchCategories() -> [TrackerCategory] {
-//        let request: NSFetchRequest<TrackerCategoryEntity> = TrackerCategoryEntity.fetchRequest()
-//        let result = (try? context.fetch(request)) ?? []
-//        return result.map { $0.toModel() }
-//    }
-//    
-//    func createCategory(_ category: TrackerCategory) {
-//        let entity = TrackerCategoryEntity(context: context)
-//        entity.title = category.title
-//        category.trackers.forEach { tracker in
-//            _ = tracker.toEntity(in: context, category: entity)
-//        }
-//        saveContext()
-//    }
-//}
