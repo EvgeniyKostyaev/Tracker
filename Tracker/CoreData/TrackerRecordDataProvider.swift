@@ -1,5 +1,5 @@
 //
-//  TrackerCategoryDataProvider.swift
+//  TrackerRecordDataProvider.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 09.10.2025.
@@ -8,26 +8,25 @@
 import Foundation
 import CoreData
 
-protocol TrackerCategoryDataProviderDelegate: AnyObject {
-    func didUpdateCategories()
+protocol TrackerRecordDataProviderDelegate: AnyObject {
+    func didUpdateRecords()
 }
 
-final class TrackerCategoryDataProvider: NSObject {
+final class TrackerRecordDataProvider: NSObject {
     private let context = CoreDataManager.shared.context
-    private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryEntity>?
+    private var fetchedResultsController: NSFetchedResultsController<TrackerRecordEntity>?
     
-    weak var delegate: TrackerCategoryDataProviderDelegate?
+    weak var delegate: TrackerRecordDataProviderDelegate?
     
     override init() {
         super.init()
         
-        let request: NSFetchRequest<TrackerCategoryEntity> = TrackerCategoryEntity.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        let request: NSFetchRequest<TrackerRecordEntity> = TrackerRecordEntity.fetchRequest()
         
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: request,
             managedObjectContext: context,
-            sectionNameKeyPath: "title",
+            sectionNameKeyPath: nil,
             cacheName: nil
         )
         fetchedResultsController?.delegate = self
@@ -35,15 +34,15 @@ final class TrackerCategoryDataProvider: NSObject {
         try? fetchedResultsController?.performFetch()
     }
     
-    var trackerCategories: [TrackerCategory] {
+    var trackerRecords: [TrackerRecord] {
         guard let entities = fetchedResultsController?.fetchedObjects else { return [] }
         return entities.compactMap { $0.toModel() }
     }
 }
 
 // MARK: - NSFetchedResultsControllerDelegate
-extension TrackerCategoryDataProvider: NSFetchedResultsControllerDelegate {
+extension TrackerRecordDataProvider: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        delegate?.didUpdateCategories()
+        delegate?.didUpdateRecords()
     }
 }
