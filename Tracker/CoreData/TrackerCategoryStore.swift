@@ -15,11 +15,7 @@ final class TrackerCategoryStore {
     
     // MARK: - Create
     func addCategory(_ category: TrackerCategory) {
-        let categoryEntity = category.toEntity(in: context)
-        
-        for tracker in category.trackers {
-            trackerStore.addTracker(tracker, to: categoryEntity)
-        }
+        _ = category.toEntity(in: context)
         
         saveContext()
     }
