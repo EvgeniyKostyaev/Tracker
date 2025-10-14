@@ -7,11 +7,6 @@
 
 import UIKit
 
-enum ConfigurationEmojiCollectionViewCellTheme {
-    static let cornerRadius: CGFloat = 16.0
-    static let fontSize: CGFloat = 32.0
-}
-
 final class ConfigurationEmojiCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Public Properties
@@ -19,17 +14,23 @@ final class ConfigurationEmojiCollectionViewCell: UICollectionViewCell {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: ConfigurationEmojiCollectionViewCellTheme.fontSize)
+        label.font = UIFont.boldSystemFont(ofSize: Theme.fontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
     }()
     
+    // MARK: - Private Properties
+    private enum Theme {
+        static let cornerRadius: CGFloat = 16.0
+        static let fontSize: CGFloat = 32.0
+    }
+    
     // MARK: - Overrides Methods
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        layer.cornerRadius = ConfigurationEmojiCollectionViewCellTheme.cornerRadius
+        layer.cornerRadius = Theme.cornerRadius
         
         setupLayout()
     }

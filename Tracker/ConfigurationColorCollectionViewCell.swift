@@ -7,12 +7,6 @@
 
 import UIKit
 
-enum ConfigurationColorCollectionViewCellTheme {
-    static let cornerRadius: CGFloat = 8.0
-    static let containerViewHeightConstraint: CGFloat = 40.0
-    static let containerViewWidthConstraint: CGFloat = 40.0
-}
-
 final class ConfigurationColorCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Public Properties
@@ -20,16 +14,23 @@ final class ConfigurationColorCollectionViewCell: UICollectionViewCell {
     
     let containerView: UIView = {
         let view = UIView()
-        view.layer.cornerRadius = ConfigurationColorCollectionViewCellTheme.cornerRadius
+        view.layer.cornerRadius = Theme.cornerRadius
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    // MARK: - Private Properties
+    private enum Theme {
+        static let cornerRadius: CGFloat = 8.0
+        static let containerViewHeightConstraint: CGFloat = 40.0
+        static let containerViewWidthConstraint: CGFloat = 40.0
+    }
     
     // MARK: - Overrides Methods
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        contentView.layer.cornerRadius = ConfigurationColorCollectionViewCellTheme.cornerRadius
+        contentView.layer.cornerRadius = Theme.cornerRadius
         
         setupLayout()
     }
@@ -45,8 +46,8 @@ final class ConfigurationColorCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint.activate([
             containerView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             containerView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            containerView.heightAnchor.constraint(equalToConstant: ConfigurationColorCollectionViewCellTheme.containerViewHeightConstraint),
-            containerView.widthAnchor.constraint(equalToConstant: ConfigurationColorCollectionViewCellTheme.containerViewWidthConstraint)
+            containerView.heightAnchor.constraint(equalToConstant: Theme.containerViewHeightConstraint),
+            containerView.widthAnchor.constraint(equalToConstant: Theme.containerViewWidthConstraint)
         ])
     }
 }

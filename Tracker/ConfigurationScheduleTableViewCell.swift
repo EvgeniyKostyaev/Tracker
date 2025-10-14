@@ -7,13 +7,6 @@
 
 import UIKit
 
-enum ConfigurationScheduleTableViewCellTheme {
-    static let dayLabelFontSize: CGFloat = 17.0
-    static let dayLabelLeadingConstraint: CGFloat = 16.0
-    static let daySwitchTrailingConstraint: CGFloat = -16.0
-    static let contentViewHeightConstraint: CGFloat = 75.0
-}
-
 final class ConfigurationScheduleTableViewCell: UITableViewCell {
     
     // MARK: - Public Properties
@@ -22,9 +15,16 @@ final class ConfigurationScheduleTableViewCell: UITableViewCell {
     static let identifier = "DayCell"
     
     // MARK: - Private Properties
+    private enum Theme {
+        static let dayLabelFontSize: CGFloat = 17.0
+        static let dayLabelLeadingConstraint: CGFloat = 16.0
+        static let daySwitchTrailingConstraint: CGFloat = -16.0
+        static let contentViewHeightConstraint: CGFloat = 75.0
+    }
+    
     private let dayLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: ConfigurationScheduleTableViewCellTheme.dayLabelFontSize)
+        label.font = UIFont.systemFont(ofSize: Theme.dayLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -60,13 +60,13 @@ final class ConfigurationScheduleTableViewCell: UITableViewCell {
         contentView.addSubview(daySwitch)
         
         NSLayoutConstraint.activate([
-            dayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: ConfigurationScheduleTableViewCellTheme.dayLabelLeadingConstraint),
+            dayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.dayLabelLeadingConstraint),
             dayLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            daySwitch.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: ConfigurationScheduleTableViewCellTheme.daySwitchTrailingConstraint),
+            daySwitch.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Theme.daySwitchTrailingConstraint),
             daySwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            contentView.heightAnchor.constraint(equalToConstant: ConfigurationScheduleTableViewCellTheme.contentViewHeightConstraint)
+            contentView.heightAnchor.constraint(equalToConstant: Theme.contentViewHeightConstraint)
         ])
     }
     

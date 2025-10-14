@@ -7,12 +7,6 @@
 
 import UIKit
 
-enum TrackerSupplementaryHeaderViewTheme {
-    static let fontSize: CGFloat = 19.0
-    static let leadingConstraint: CGFloat = 28.0
-    static let trailingConstraint: CGFloat = 28.0
-}
-
 final class TrackerSupplementaryHeaderView: UICollectionReusableView {
     
     // MARK: - Public Properties
@@ -20,10 +14,17 @@ final class TrackerSupplementaryHeaderView: UICollectionReusableView {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: TrackerSupplementaryHeaderViewTheme.fontSize)
+        label.font = UIFont.boldSystemFont(ofSize: Theme.fontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    // MARK: - Private Properties
+    private enum Theme {
+        static let fontSize: CGFloat = 19.0
+        static let leadingConstraint: CGFloat = 28.0
+        static let trailingConstraint: CGFloat = 28.0
+    }
     
     // MARK: - Overrides Methods
     override init(frame: CGRect) {
@@ -42,8 +43,8 @@ final class TrackerSupplementaryHeaderView: UICollectionReusableView {
         
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: self.topAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant:TrackerSupplementaryHeaderViewTheme.leadingConstraint),
-            titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: TrackerSupplementaryHeaderViewTheme.trailingConstraint),
+            titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: Theme.leadingConstraint),
+            titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: Theme.trailingConstraint),
             titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }

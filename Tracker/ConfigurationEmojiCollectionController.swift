@@ -7,10 +7,6 @@
 
 import UIKit
 
-enum ConfigurationEmojiCollectionControllerTheme {
-    static let headerTitle: String = "Emoji"
-}
-
 final class ConfigurationEmojiCollectionController: NSObject {
     
     // MARK: - Public Properties
@@ -20,6 +16,25 @@ final class ConfigurationEmojiCollectionController: NSObject {
     var selectedEmoji = String()
     
     // MARK: - Private Properties
+    private enum Theme {
+        static let headerTitle: String = "Emoji"
+        
+        enum CollectionView {
+            static let collectionViewHeaderHeight: CGFloat = 44.0
+            static let collectionViewCellHeight: CGFloat = 52.0
+            static let collectionViewCellCount: Int = 6
+            static let collectionViewTopInset: CGFloat = 10.0
+            static let collectionViewBottomInset: CGFloat = 0.0
+            static let collectionViewLeftInset: CGFloat = 16.0
+            static let collectionViewRightInset: CGFloat = 16.0
+            static let collectionViewCellSpacing: CGFloat = 10.0
+            static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+            
+            static let collectionViewTopConstraint: CGFloat = 20.0
+            static let collectionViewHeightConstraint: CGFloat = 230.0
+        }
+    }
+    
     private var collectionView: UICollectionView?
     
     // MARK: - Initializers
@@ -61,7 +76,7 @@ extension ConfigurationEmojiCollectionController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
 
-        header.titleLabel.text = ConfigurationEmojiCollectionControllerTheme.headerTitle
+        header.titleLabel.text = Theme.headerTitle
 
         return header
     }
@@ -80,30 +95,30 @@ extension ConfigurationEmojiCollectionController: UICollectionViewDelegateFlowLa
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewHeaderHeight)
+        return CGSize(width: collectionView.bounds.width, height: Theme.CollectionView.collectionViewHeaderHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let availableWidth = collectionView.frame.width - ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewPaddingWidth
-        let cellWidth =  availableWidth / CGFloat(ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewCellCount)
+        let availableWidth = collectionView.frame.width - Theme.CollectionView.collectionViewPaddingWidth
+        let cellWidth =  availableWidth / CGFloat(Theme.CollectionView.collectionViewCellCount)
         
         return CGSize(width: cellWidth,
-                      height: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewCellHeight)
+                      height: Theme.CollectionView.collectionViewCellHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(
-            top: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewTopInset,
-            left: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewLeftInset,
-            bottom: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewBottomInset,
-            right: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewRightInset
+            top: Theme.CollectionView.collectionViewTopInset,
+            left: Theme.CollectionView.collectionViewLeftInset,
+            bottom: Theme.CollectionView.collectionViewBottomInset,
+            right: Theme.CollectionView.collectionViewRightInset
         )
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewCellSpacing
+        return Theme.CollectionView.collectionViewCellSpacing
     }
 }
 

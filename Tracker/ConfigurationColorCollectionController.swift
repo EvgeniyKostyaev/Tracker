@@ -7,13 +7,6 @@
 
 import UIKit
 
-enum ConfigurationColorCollectionControllerTheme {
-    static let headerTitle: String = "Цвет"
-    
-    static let cellBorderWidth: CGFloat = 3.0
-    static let cellWithoutBorder: CGFloat = 0.0
-}
-
 final class ConfigurationColorCollectionController: NSObject {
     
     // MARK: - Public Properties
@@ -23,6 +16,30 @@ final class ConfigurationColorCollectionController: NSObject {
     var selectedColor: UIColor = .clear
     
     // MARK: - Private Properties
+    private enum Theme {
+        static let headerTitle: String = "Цвет"
+        
+        static let cellBorderWidth: CGFloat = 3.0
+        static let cellWithoutBorder: CGFloat = 0.0
+        
+        static let alphaComponent: CGFloat = 0.3
+        
+        enum CollectionView {
+            static let collectionViewHeaderHeight: CGFloat = 44.0
+            static let collectionViewCellHeight: CGFloat = 52.0
+            static let collectionViewCellCount: Int = 6
+            static let collectionViewTopInset: CGFloat = 10.0
+            static let collectionViewBottomInset: CGFloat = 0.0
+            static let collectionViewLeftInset: CGFloat = 16.0
+            static let collectionViewRightInset: CGFloat = 16.0
+            static let collectionViewCellSpacing: CGFloat = 10.0
+            static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+            
+            static let collectionViewTopConstraint: CGFloat = 20.0
+            static let collectionViewHeightConstraint: CGFloat = 230.0
+        }
+    }
+    
     private var collectionView: UICollectionView?
     
     // MARK: - Initializers
@@ -64,7 +81,7 @@ extension ConfigurationColorCollectionController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
 
-        header.titleLabel.text = ConfigurationColorCollectionControllerTheme.headerTitle
+        header.titleLabel.text = Theme.headerTitle
 
         return header
     }
@@ -83,30 +100,30 @@ extension ConfigurationColorCollectionController: UICollectionViewDelegateFlowLa
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewHeaderHeight)
+        return CGSize(width: collectionView.bounds.width, height: Theme.CollectionView.collectionViewHeaderHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let availableWidth = collectionView.frame.width - ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewPaddingWidth
-        let cellWidth =  availableWidth / CGFloat(ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewCellCount)
+        let availableWidth = collectionView.frame.width - Theme.CollectionView.collectionViewPaddingWidth
+        let cellWidth =  availableWidth / CGFloat(Theme.CollectionView.collectionViewCellCount)
         
         return CGSize(width: cellWidth,
-                      height: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewCellHeight)
+                      height: Theme.CollectionView.collectionViewCellHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(
-            top: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewTopInset,
-            left: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewLeftInset,
-            bottom: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewBottomInset,
-            right: ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewRightInset
+            top: Theme.CollectionView.collectionViewTopInset,
+            left: Theme.CollectionView.collectionViewLeftInset,
+            bottom: Theme.CollectionView.collectionViewBottomInset,
+            right: Theme.CollectionView.collectionViewRightInset
         )
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return ConfigurationTrackerViewControllerTheme.CollectionView.collectionViewCellSpacing
+        return Theme.CollectionView.collectionViewCellSpacing
     }
 }
 
@@ -117,12 +134,12 @@ extension ConfigurationColorCollectionController: UICollectionViewDelegate {
         
         
         if (selectedColor == colors[indexPath.item]) {
-            cell?.contentView.layer.borderWidth = ConfigurationColorCollectionControllerTheme.cellWithoutBorder
+            cell?.contentView.layer.borderWidth = Theme.cellWithoutBorder
             
             selectedColor = .clear
         } else {
-            cell?.contentView.layer.borderWidth = ConfigurationColorCollectionControllerTheme.cellBorderWidth
-            cell?.contentView.layer.borderColor = colors[indexPath.item].withAlphaComponent(ConfigurationTrackerViewControllerTheme.alphaComponent).cgColor
+            cell?.contentView.layer.borderWidth = Theme.cellBorderWidth
+            cell?.contentView.layer.borderColor = colors[indexPath.item].withAlphaComponent(Theme.alphaComponent).cgColor
             
             selectedColor = colors[indexPath.item]
         }
@@ -132,7 +149,7 @@ extension ConfigurationColorCollectionController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationColorCollectionViewCell
-        cell?.contentView.layer.borderWidth = ConfigurationColorCollectionControllerTheme.cellWithoutBorder
+        cell?.contentView.layer.borderWidth = Theme.cellWithoutBorder
     }
 }
 

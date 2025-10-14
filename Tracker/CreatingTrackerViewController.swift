@@ -7,26 +7,6 @@
 
 import UIKit
 
-enum CreatingTrackerViewControllerTeme {
-    static let title: String = "Создание трекера"
-    static let habitButtonTitle: String = "Привычка"
-    static let irregularEventButtonTitle: String = "Нерегулярное событие"
-    
-    static let sheetPresentationCornerRadius: CGFloat = 16.0
-    
-    enum ActionButton {
-        static let actionButtonFontSise: CGFloat =  16.0
-        static let actionButtonCornerRadius: CGFloat =  16.0
-        static let actionButtonHeightConstraint: CGFloat = 60.0
-    }
-    
-    enum StackView {
-        static let stackViewSpacing: CGFloat = 16.0
-        static let stackViewLeadingConstraint: CGFloat = 20
-        static let stackViewTrailingConstraint: CGFloat = -20
-    }
-}
-
 final class CreatingTrackerViewController: UIViewController {
     
     // MARK: - Public properties
@@ -34,13 +14,33 @@ final class CreatingTrackerViewController: UIViewController {
     var activeDate: Date = Date()
     
     // MARK: - Private properties
+    enum Teme {
+        static let title: String = "Создание трекера"
+        static let habitButtonTitle: String = "Привычка"
+        static let irregularEventButtonTitle: String = "Нерегулярное событие"
+        
+        static let sheetPresentationCornerRadius: CGFloat = 16.0
+        
+        enum ActionButton {
+            static let actionButtonFontSise: CGFloat =  16.0
+            static let actionButtonCornerRadius: CGFloat =  16.0
+            static let actionButtonHeightConstraint: CGFloat = 60.0
+        }
+        
+        enum StackView {
+            static let stackViewSpacing: CGFloat = 16.0
+            static let stackViewLeadingConstraint: CGFloat = 20
+            static let stackViewTrailingConstraint: CGFloat = -20
+        }
+    }
+    
     private lazy var habitButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(CreatingTrackerViewControllerTeme.habitButtonTitle, for: .normal)
+        button.setTitle(Teme.habitButtonTitle, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
-        button.titleLabel?.font = UIFont.systemFont(ofSize: CreatingTrackerViewControllerTeme.ActionButton.actionButtonFontSise, weight: .medium)
-        button.layer.cornerRadius = CreatingTrackerViewControllerTeme.ActionButton.actionButtonCornerRadius
+        button.titleLabel?.font = UIFont.systemFont(ofSize: Teme.ActionButton.actionButtonFontSise, weight: .medium)
+        button.layer.cornerRadius = Teme.ActionButton.actionButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(habitButtonTaped), for: .touchUpInside)
         return button
@@ -48,11 +48,11 @@ final class CreatingTrackerViewController: UIViewController {
     
     private lazy var irregularEventButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(CreatingTrackerViewControllerTeme.irregularEventButtonTitle, for: .normal)
+        button.setTitle(Teme.irregularEventButtonTitle, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
-        button.titleLabel?.font = UIFont.systemFont(ofSize: CreatingTrackerViewControllerTeme.ActionButton.actionButtonFontSise, weight: .medium)
-        button.layer.cornerRadius = CreatingTrackerViewControllerTeme.ActionButton.actionButtonCornerRadius
+        button.titleLabel?.font = UIFont.systemFont(ofSize: Teme.ActionButton.actionButtonFontSise, weight: .medium)
+        button.layer.cornerRadius = Teme.ActionButton.actionButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(irregularEventButtonTaped), for: .touchUpInside)
         return button
@@ -61,7 +61,7 @@ final class CreatingTrackerViewController: UIViewController {
     private lazy var optionButtonsStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [habitButton, irregularEventButton])
         stack.axis = .vertical
-        stack.spacing = CreatingTrackerViewControllerTeme.StackView.stackViewSpacing
+        stack.spacing = Teme.StackView.stackViewSpacing
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -70,7 +70,7 @@ final class CreatingTrackerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = CreatingTrackerViewControllerTeme.title
+        title = Teme.title
         
         setupLayout()
     }
@@ -89,11 +89,11 @@ final class CreatingTrackerViewController: UIViewController {
         view.addSubview(optionButtonsStack)
         
         NSLayoutConstraint.activate([
-            optionButtonsStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: CreatingTrackerViewControllerTeme.StackView.stackViewLeadingConstraint),
-            optionButtonsStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: CreatingTrackerViewControllerTeme.StackView.stackViewTrailingConstraint),
+            optionButtonsStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Teme.StackView.stackViewLeadingConstraint),
+            optionButtonsStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Teme.StackView.stackViewTrailingConstraint),
             optionButtonsStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            habitButton.heightAnchor.constraint(equalToConstant: CreatingTrackerViewControllerTeme.ActionButton.actionButtonHeightConstraint),
-            irregularEventButton.heightAnchor.constraint(equalToConstant: CreatingTrackerViewControllerTeme.ActionButton.actionButtonHeightConstraint)
+            habitButton.heightAnchor.constraint(equalToConstant: Teme.ActionButton.actionButtonHeightConstraint),
+            irregularEventButton.heightAnchor.constraint(equalToConstant: Teme.ActionButton.actionButtonHeightConstraint)
         ])
     }
     
@@ -113,7 +113,7 @@ final class CreatingTrackerViewController: UIViewController {
         
         if let sheet = navigationController.sheetPresentationController {
             sheet.detents = [.large()]
-            sheet.preferredCornerRadius = CreatingTrackerViewControllerTeme.sheetPresentationCornerRadius
+            sheet.preferredCornerRadius = Teme.sheetPresentationCornerRadius
         }
         
         present(navigationController, animated: true)

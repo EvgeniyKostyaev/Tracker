@@ -7,14 +7,14 @@
 
 import UIKit
 
-enum SplashViewControllerTheme {
-    static let splashImageViewHeight: CGFloat = 94
-    static let splashImageViewWidth: CGFloat = 91
-}
-
 final class SplashViewController: UIViewController {
 
     // MARK: - Private Properties
+    private enum Theme {
+        static let splashImageViewHeight: CGFloat = 94
+        static let splashImageViewWidth: CGFloat = 91
+    }
+    
     private let splashImageView: UIImageView = {
         let splashImageView = UIImageView()
         
@@ -44,8 +44,8 @@ final class SplashViewController: UIViewController {
         view.addSubview(splashImageView)
         
         NSLayoutConstraint.activate([
-            splashImageView.heightAnchor.constraint(equalToConstant: SplashViewControllerTheme.splashImageViewHeight),
-            splashImageView.widthAnchor.constraint(equalToConstant: SplashViewControllerTheme.splashImageViewWidth),
+            splashImageView.heightAnchor.constraint(equalToConstant: Theme.splashImageViewHeight),
+            splashImageView.widthAnchor.constraint(equalToConstant: Theme.splashImageViewWidth),
             splashImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             splashImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
