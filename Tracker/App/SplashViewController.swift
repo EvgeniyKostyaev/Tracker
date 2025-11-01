@@ -7,13 +7,16 @@
 
 import UIKit
 
-final class SplashViewController: UIViewController {
+private enum Theme {
+    static let splashImageViewHeight: CGFloat = 94
+    static let splashImageViewWidth: CGFloat = 91
+}
 
+
+final class SplashViewController: UIViewController {
+    
     // MARK: - Private Properties
-    private enum Theme {
-        static let splashImageViewHeight: CGFloat = 94
-        static let splashImageViewWidth: CGFloat = 91
-    }
+    private let appSettings: AppSettingsProtocol?
     
     private let splashImageView: UIImageView = {
         let splashImageView = UIImageView()
@@ -23,6 +26,17 @@ final class SplashViewController: UIViewController {
         
         return splashImageView
     }()
+    
+    // MARK: - Initializers
+    init() {
+        appSettings = AppSettings()
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Overrides Methods
     override func viewDidAppear(_ animated: Bool) {
@@ -57,6 +71,10 @@ final class SplashViewController: UIViewController {
             return
         }
         
-        window.rootViewController = OnboardingPageViewController()
+        if let isFirstLaunch = appSettings?.isFirstLaunch, isFirstLaunch {
+            window.rootViewController = OnboardingPageViewController()
+        } else {
+            window.rootViewController = MainTabBarController()
+        }
     }
 }

@@ -8,26 +8,28 @@
 import Foundation
 import UIKit
 
+private enum Theme {
+    static let buttonTitle: String = "Вот это технологии!"
+    
+    static let firstTitle: String = "Отслеживайте только то, что хотите"
+    static let secondTitle: String = "Даже если это не литры воды и йога"
+    
+    static let pageControlBottomConstraint: CGFloat = -24.0
+    
+    enum ActionButton {
+        static let actionButtonFontSise: CGFloat =  16.0
+        static let actionButtonCornerRadius: CGFloat =  16.0
+        static let actionButtonHeightConstraint: CGFloat = 60.0
+        static let actionButtonLeadingConstraint: CGFloat = 20.0
+        static let actionButtonTrailingConstraint: CGFloat = -20.0
+        static let actionButtonBottomConstraint: CGFloat = -50.0
+    }
+}
+
 final class OnboardingPageViewController: UIPageViewController {
     
     // MARK: - Private Properties
-    private enum Theme {
-        static let buttonTitle: String = "Вот это технологии!"
-        
-        static let firstTitle: String = "Отслеживайте только то, что хотите"
-        static let secondTitle: String = "Даже если это не литры воды и йога"
-        
-        static let pageControlBottomConstraint: CGFloat = -24.0
-        
-        enum ActionButton {
-            static let actionButtonFontSise: CGFloat =  16.0
-            static let actionButtonCornerRadius: CGFloat =  16.0
-            static let actionButtonHeightConstraint: CGFloat = 60.0
-            static let actionButtonLeadingConstraint: CGFloat = 20.0
-            static let actionButtonTrailingConstraint: CGFloat = -20.0
-            static let actionButtonBottomConstraint: CGFloat = -50.0
-        }
-    }
+    private var appSettings: AppSettingsProtocol?
     
     private lazy var pages: [UIViewController] = {
         let firstPage = PageViewController(image: .firstPageOnboarding, text: Theme.firstTitle)
@@ -62,10 +64,14 @@ final class OnboardingPageViewController: UIPageViewController {
     
     // MARK: - Initializers
     init() {
+        appSettings = AppSettings()
+        
         super.init(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     }
     
     required init?(coder: NSCoder) {
+        appSettings = AppSettings()
+        
         super.init(coder: coder)
     }
     
@@ -85,6 +91,8 @@ final class OnboardingPageViewController: UIPageViewController {
     
     // MARK: - Actions
     @objc private func okButtonTaped() {
+        appSettings?.isFirstLaunch = false
+        
         navigateToMainTabBarController()
     }
     
