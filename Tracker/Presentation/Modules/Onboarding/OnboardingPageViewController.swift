@@ -85,7 +85,7 @@ final class OnboardingPageViewController: UIPageViewController {
     
     // MARK: - Actions
     @objc private func okButtonTaped() {
-        
+        navigateToMainTabBarController()
     }
     
     // MARK: - Private Methods
@@ -102,6 +102,15 @@ final class OnboardingPageViewController: UIPageViewController {
             pageControl.bottomAnchor.constraint(equalTo: okButton.topAnchor, constant: Theme.pageControlBottomConstraint),
             pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
+    }
+    
+    private func navigateToMainTabBarController() {
+        guard let window = UIApplication.shared.windows.first else {
+            assertionFailure("Invalid window configuration")
+            return
+        }
+        
+        window.rootViewController = MainTabBarController()
     }
 }
 
