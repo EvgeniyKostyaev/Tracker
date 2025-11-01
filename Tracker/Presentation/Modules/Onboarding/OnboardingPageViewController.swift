@@ -8,11 +8,15 @@
 import Foundation
 import UIKit
 
-class OnboardingPageViewController: UIPageViewController {
+final class OnboardingPageViewController: UIPageViewController {
     
     // MARK: - Private Properties
     private enum Theme {
         static let buttonTitle: String = "Вот это технологии!"
+        
+        static let firstTitle: String = "Отслеживайте только то, что хотите"
+        static let secondTitle: String = "Даже если это не литры воды и йога"
+        
         static let pageControlBottomConstraint: CGFloat = -24.0
         
         enum ActionButton {
@@ -26,13 +30,10 @@ class OnboardingPageViewController: UIPageViewController {
     }
     
     private lazy var pages: [UIViewController] = {
-        let red = UIViewController()
-        red.view.backgroundColor = .red
+        let firstPage = PageViewController(image: .firstPageOnboarding, text: Theme.firstTitle)
+        let secondPage = PageViewController(image: .secondPageOnboarding, text: Theme.secondTitle)
         
-        let green = UIViewController()
-        green.view.backgroundColor = .green
-        
-        return [red, green]
+        return [firstPage, secondPage]
     }()
     
     private lazy var pageControl: UIPageControl = {
