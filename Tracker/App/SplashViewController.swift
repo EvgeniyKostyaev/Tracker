@@ -57,6 +57,6 @@ final class SplashViewController: UIViewController {
             return
         }
         
-        window.rootViewController = MainTabBarController()
+        window.rootViewController = OnboardingPageViewController()
     }
 }
