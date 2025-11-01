@@ -7,6 +7,11 @@
 
 import UIKit
 
+private enum Theme {
+    static let cornerRadius: CGFloat = 16.0
+    static let fontSize: CGFloat = 32.0
+}
+
 final class ConfigurationEmojiCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Public Properties
@@ -19,12 +24,6 @@ final class ConfigurationEmojiCollectionViewCell: UICollectionViewCell {
         
         return label
     }()
-    
-    // MARK: - Private Properties
-    private enum Theme {
-        static let cornerRadius: CGFloat = 16.0
-        static let fontSize: CGFloat = 32.0
-    }
     
     // MARK: - Overrides Methods
     override init(frame: CGRect) {

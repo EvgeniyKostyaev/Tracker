@@ -7,13 +7,12 @@
 
 import UIKit
 
+private enum Theme {
+    static let trackersTabBarItemTitle: String = "Трекеры"
+    static let statisticTabBarItemTitle: String = "Статистика"
+}
+
 final class MainTabBarController: UITabBarController {
-    
-    // MARK: - Private Properties
-    private enum Theme {
-        static let trackersTabBarItemTitle: String = "Трекеры"
-        static let statisticTabBarItemTitle: String = "Статистика"
-    }
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {

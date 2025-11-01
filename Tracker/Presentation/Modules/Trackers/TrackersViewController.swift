@@ -7,29 +7,29 @@
 
 import UIKit
 
+private enum Theme {
+    static let title: String = "Трекеры"
+    static let searchPlaceholder: String = "Поиск"
+    static let emptySatateTitle: String = "Что будем отслеживать?"
+    
+    static let sheetPresentationCornerRadius: CGFloat = 16.0
+    
+    enum CollectionView {
+        static let collectionViewHeaderHeight: CGFloat = 44.0
+        static let collectionViewCellHeight: CGFloat = 140.0
+        static let collectionViewCellCount: Int = 2
+        static let collectionViewTopInset: CGFloat = 0.0
+        static let collectionViewBottomInset: CGFloat = 0.0
+        static let collectionViewLeftInset: CGFloat = 16.0
+        static let collectionViewRightInset: CGFloat = 16.0
+        static let collectionViewCellSpacing: CGFloat = 10.0
+        static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+    }
+}
+
 final class TrackersViewController: UIViewController {
     
     // MARK: - Private Properties
-    private enum Theme {
-        static let title: String = "Трекеры"
-        static let searchPlaceholder: String = "Поиск"
-        static let emptySatateTitle: String = "Что будем отслеживать?"
-        
-        static let sheetPresentationCornerRadius: CGFloat = 16.0
-        
-        enum CollectionView {
-            static let collectionViewHeaderHeight: CGFloat = 44.0
-            static let collectionViewCellHeight: CGFloat = 140.0
-            static let collectionViewCellCount: Int = 2
-            static let collectionViewTopInset: CGFloat = 0.0
-            static let collectionViewBottomInset: CGFloat = 0.0
-            static let collectionViewLeftInset: CGFloat = 16.0
-            static let collectionViewRightInset: CGFloat = 16.0
-            static let collectionViewCellSpacing: CGFloat = 10.0
-            static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
-        }
-    }
-    
     private let filterTrackersUseCase = FilterTrackersUseCase()
     
     private let trackerCategoryDataProvider = TrackerCategoryDataProvider()

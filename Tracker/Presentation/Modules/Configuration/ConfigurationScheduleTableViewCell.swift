@@ -7,6 +7,13 @@
 
 import UIKit
 
+private enum Theme {
+    static let dayLabelFontSize: CGFloat = 17.0
+    static let dayLabelLeadingConstraint: CGFloat = 16.0
+    static let daySwitchTrailingConstraint: CGFloat = -16.0
+    static let contentViewHeightConstraint: CGFloat = 75.0
+}
+
 final class ConfigurationScheduleTableViewCell: UITableViewCell {
     
     // MARK: - Public Properties
@@ -15,13 +22,6 @@ final class ConfigurationScheduleTableViewCell: UITableViewCell {
     static let identifier = "DayCell"
     
     // MARK: - Private Properties
-    private enum Theme {
-        static let dayLabelFontSize: CGFloat = 17.0
-        static let dayLabelLeadingConstraint: CGFloat = 16.0
-        static let daySwitchTrailingConstraint: CGFloat = -16.0
-        static let contentViewHeightConstraint: CGFloat = 75.0
-    }
-    
     private let dayLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: Theme.dayLabelFontSize)

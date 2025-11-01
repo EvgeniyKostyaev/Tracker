@@ -7,6 +7,25 @@
 
 import UIKit
 
+private enum Theme {
+    static let headerTitle: String = "Emoji"
+    
+    enum CollectionView {
+        static let collectionViewHeaderHeight: CGFloat = 44.0
+        static let collectionViewCellHeight: CGFloat = 52.0
+        static let collectionViewCellCount: Int = 6
+        static let collectionViewTopInset: CGFloat = 10.0
+        static let collectionViewBottomInset: CGFloat = 0.0
+        static let collectionViewLeftInset: CGFloat = 16.0
+        static let collectionViewRightInset: CGFloat = 16.0
+        static let collectionViewCellSpacing: CGFloat = 10.0
+        static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+        
+        static let collectionViewTopConstraint: CGFloat = 20.0
+        static let collectionViewHeightConstraint: CGFloat = 230.0
+    }
+}
+
 final class ConfigurationEmojiCollectionController: NSObject {
     
     // MARK: - Public Properties
@@ -16,25 +35,6 @@ final class ConfigurationEmojiCollectionController: NSObject {
     var selectedEmoji = String()
     
     // MARK: - Private Properties
-    private enum Theme {
-        static let headerTitle: String = "Emoji"
-        
-        enum CollectionView {
-            static let collectionViewHeaderHeight: CGFloat = 44.0
-            static let collectionViewCellHeight: CGFloat = 52.0
-            static let collectionViewCellCount: Int = 6
-            static let collectionViewTopInset: CGFloat = 10.0
-            static let collectionViewBottomInset: CGFloat = 0.0
-            static let collectionViewLeftInset: CGFloat = 16.0
-            static let collectionViewRightInset: CGFloat = 16.0
-            static let collectionViewCellSpacing: CGFloat = 10.0
-            static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
-            
-            static let collectionViewTopConstraint: CGFloat = 20.0
-            static let collectionViewHeightConstraint: CGFloat = 230.0
-        }
-    }
-    
     private var collectionView: UICollectionView?
     
     // MARK: - Initializers

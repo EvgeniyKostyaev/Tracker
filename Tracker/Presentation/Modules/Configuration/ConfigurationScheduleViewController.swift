@@ -7,6 +7,32 @@
 
 import UIKit
 
+private enum Theme {
+    static let title: String = "Расписание"
+    static let doneButtonTitle: String = "Готово"
+    
+    static let containerViewCornerRadius: CGFloat = 16.0
+    static let tableViewSeparatorInset: CGFloat = 16.0
+    
+    static let alphaComponent: CGFloat = 0.3
+    
+    enum DoneButton {
+        static let doneButtonCornerRadius: CGFloat = 16.0
+        static let doneButtonTopConstraint: CGFloat = 16.0
+        static let doneButtonLeadingConstraint: CGFloat = 20.0
+        static let doneButtonTrailingConstraint: CGFloat = -20.0
+        static let doneButtonHeightConstraint: CGFloat = 60.0
+        static let doneButtonBottomConstraint: CGFloat = -16.0
+    }
+    
+    enum ContainerView {
+        static let containerViewTopConstraint: CGFloat = 16.0
+        static let containerViewLeadingConstraint: CGFloat = 16.0
+        static let containerViewTrailingConstraint: CGFloat = -16.0
+        static let containerViewHeightConstraint: CGFloat = 525.0
+    }
+}
+
 final class ConfigurationScheduleViewController: UIViewController {
     
     // MARK: - Public Properties
@@ -15,32 +41,6 @@ final class ConfigurationScheduleViewController: UIViewController {
     var activeDaysWeeks: [DayWeeks] = []
     
     // MARK: - Private Properties
-    private enum Theme {
-        static let title: String = "Расписание"
-        static let doneButtonTitle: String = "Готово"
-        
-        static let containerViewCornerRadius: CGFloat = 16.0
-        static let tableViewSeparatorInset: CGFloat = 16.0
-        
-        static let alphaComponent: CGFloat = 0.3
-        
-        enum DoneButton {
-            static let doneButtonCornerRadius: CGFloat = 16.0
-            static let doneButtonTopConstraint: CGFloat = 16.0
-            static let doneButtonLeadingConstraint: CGFloat = 20.0
-            static let doneButtonTrailingConstraint: CGFloat = -20.0
-            static let doneButtonHeightConstraint: CGFloat = 60.0
-            static let doneButtonBottomConstraint: CGFloat = -16.0
-        }
-        
-        enum ContainerView {
-            static let containerViewTopConstraint: CGFloat = 16.0
-            static let containerViewLeadingConstraint: CGFloat = 16.0
-            static let containerViewTrailingConstraint: CGFloat = -16.0
-            static let containerViewHeightConstraint: CGFloat = 525.0
-        }
-    }
-    
     private let daysWeeks: [DayWeeks] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
     
     private lazy var containerView: UIView = {

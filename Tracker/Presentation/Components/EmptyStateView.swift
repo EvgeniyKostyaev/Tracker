@@ -7,17 +7,17 @@
 
 import UIKit
 
+private enum Theme {
+    static let numberOfLinesLabel: Int = 0
+    static let fontSizeLabel: CGFloat = 16
+    static let spacingStackView: CGFloat = 16
+    static let heightImageView: CGFloat = 80
+    static let widthImageView: CGFloat = 80
+}
+
 final class EmptyStateView: UIView {
     
     // MARK: - Private Properties
-    private enum Theme {
-        static let numberOfLinesLabel: Int = 0
-        static let fontSizeLabel: CGFloat = 16
-        static let spacingStackView: CGFloat = 16
-        static let heightImageView: CGFloat = 80
-        static let widthImageView: CGFloat = 80
-    }
-    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit

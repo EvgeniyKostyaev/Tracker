@@ -8,18 +8,18 @@
 import Foundation
 import UIKit
 
+private enum Theme {
+    static let labelFontSize: CGFloat = 34.0
+    static let labelNumberLines: Int = 3
+    
+    static let labelLeadingConstraint: CGFloat = 16.0
+    static let labelTrailingConstraint: CGFloat = -16.0
+    static let labelCenterYConstraint: CGFloat = 66.0
+}
+
 final class PageViewController: UIViewController {
 
     // MARK: - Private Properties
-    private enum Theme {
-        static let labelFontSize: CGFloat = 34.0
-        static let labelNumberLines: Int = 3
-        
-        static let labelLeadingConstraint: CGFloat = 16.0
-        static let labelTrailingConstraint: CGFloat = -16.0
-        static let labelCenterYConstraint: CGFloat = 66.0
-    }
-    
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false

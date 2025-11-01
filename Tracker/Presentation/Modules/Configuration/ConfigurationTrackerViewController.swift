@@ -7,6 +7,92 @@
 
 import UIKit
 
+private enum Theme {
+    static let habitTitle: String = "Новая привычка"
+    static let irregularTitle: String = "Новое нерегулярное событие"
+    static let textFieldPlaceholder: String = "Введите название трекера"
+    static let categoryButtonTitle: String = "Категория"
+    static let scheduleButtonTitle: String = "Расписание"
+    static let cancelButtonTitle: String = "Отменить"
+    static let createButtonTitle: String = "Создать"
+    static let warningText: String = "Ограничение 38 символов"
+    static let everyDayRepresentation: String = "Каждый день"
+    
+    static let warningLabelFontSize: CGFloat = 17.0
+    
+    static let configurationDescriptionLabelTrailingConstraint: CGFloat = -36.0
+    static let configurationDisclosureIndicatorTrailingConstraint: CGFloat = -16.0
+    
+    static let sheetPresentationCornerRadius: CGFloat = 16.0
+    
+    static let allDaysOfWeekCount: Int = 7
+    
+    static let alphaComponent: CGFloat = 0.3
+    
+    enum ConfigurationStackView {
+        static let stackViewSpacing: CGFloat = 8.0
+        static let stackViewTopConstraint: CGFloat = 24.0
+        static let stackViewLeadingConstraint: CGFloat = 16.0
+        static let stackViewTrailingConstraint: CGFloat = -16.0
+        
+        static let stackViewScheduleSpacing: CGFloat = 2.0
+        
+        static let stackViewConfigurationTopConstraint: CGFloat = 16.0
+        static let stackViewConfigurationLeadingConstraint: CGFloat = 16.0
+        static let stackViewConfigurationTrailingConstraint: CGFloat = -16.0
+        static let stackViewConfigurationBottomConstraint: CGFloat = -16.0
+    }
+    
+    enum NameTextField {
+        static let nameTextFieldCornerRadius: CGFloat = 16.0
+        static let nameTextFieldLimit: Int = 38
+        static let nameTextFieldLeftFrame: CGRect = CGRect(x: 0, y: 0, width: 12, height: 0)
+        static let nameTextFieldFontSize: CGFloat = 17.0
+        static let nameTextFieldHeightConstraint: CGFloat = 75.0
+    }
+    
+    enum ActionButtons {
+        static let actionButtonsCornerRadius: CGFloat = 16.0
+        
+        static let categoryButtonTopConstraint: CGFloat = 24.0
+        
+        static let configurationButtonsCornerRadius: CGFloat = 16.0
+        static let configurationButtonsleftInset: CGFloat = 12.0
+        static let configurationTitleLabelFontSize: CGFloat = 17.0
+        static let configurationDescriptionLabelFontSize: CGFloat = 17.0
+        static let configurationButtonsHeightConstraint: CGFloat = 75.0
+        
+        static let cancellButtonBorderWidth: CGFloat = 1.0
+        static let cancelButtonLeadingConstraint: CGFloat = 20.0
+        static let cancelButtonBottomConstraint: CGFloat = -16.0
+        static let cancelButtonHeightConstraint: CGFloat = 60.0
+        static let cancelButtonWidthConstraintMultiplier: CGFloat = 0.44
+        
+        static let createButtonTrailingConstraint: CGFloat = -20.0
+    }
+    
+    enum Separator {
+        static let separatorLeadingConstraint: CGFloat = 16.0
+        static let separatorTrailingConstraint: CGFloat = -16.0
+        static let separatorHeightConstraint: CGFloat = 1.0
+    }
+    
+    enum CollectionView {
+        static let collectionViewHeaderHeight: CGFloat = 44.0
+        static let collectionViewCellHeight: CGFloat = 52.0
+        static let collectionViewCellCount: Int = 6
+        static let collectionViewTopInset: CGFloat = 10.0
+        static let collectionViewBottomInset: CGFloat = 0.0
+        static let collectionViewLeftInset: CGFloat = 16.0
+        static let collectionViewRightInset: CGFloat = 16.0
+        static let collectionViewCellSpacing: CGFloat = 10.0
+        static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+        
+        static let collectionViewTopConstraint: CGFloat = 20.0
+        static let collectionViewHeightConstraint: CGFloat = 230.0
+    }
+}
+
 final class ConfigurationTrackerViewController: UIViewController {
     
     // MARK: - Public properties
@@ -15,92 +101,6 @@ final class ConfigurationTrackerViewController: UIViewController {
     var activeDate: Date = Date()
     
     // MARK: - Private properties
-    private enum Theme {
-        static let habitTitle: String = "Новая привычка"
-        static let irregularTitle: String = "Новое нерегулярное событие"
-        static let textFieldPlaceholder: String = "Введите название трекера"
-        static let categoryButtonTitle: String = "Категория"
-        static let scheduleButtonTitle: String = "Расписание"
-        static let cancelButtonTitle: String = "Отменить"
-        static let createButtonTitle: String = "Создать"
-        static let warningText: String = "Ограничение 38 символов"
-        static let everyDayRepresentation: String = "Каждый день"
-        
-        static let warningLabelFontSize: CGFloat = 17.0
-        
-        static let configurationDescriptionLabelTrailingConstraint: CGFloat = -36.0
-        static let configurationDisclosureIndicatorTrailingConstraint: CGFloat = -16.0
-        
-        static let sheetPresentationCornerRadius: CGFloat = 16.0
-        
-        static let allDaysOfWeekCount: Int = 7
-        
-        static let alphaComponent: CGFloat = 0.3
-        
-        enum ConfigurationStackView {
-            static let stackViewSpacing: CGFloat = 8.0
-            static let stackViewTopConstraint: CGFloat = 24.0
-            static let stackViewLeadingConstraint: CGFloat = 16.0
-            static let stackViewTrailingConstraint: CGFloat = -16.0
-            
-            static let stackViewScheduleSpacing: CGFloat = 2.0
-            
-            static let stackViewConfigurationTopConstraint: CGFloat = 16.0
-            static let stackViewConfigurationLeadingConstraint: CGFloat = 16.0
-            static let stackViewConfigurationTrailingConstraint: CGFloat = -16.0
-            static let stackViewConfigurationBottomConstraint: CGFloat = -16.0
-        }
-        
-        enum NameTextField {
-            static let nameTextFieldCornerRadius: CGFloat = 16.0
-            static let nameTextFieldLimit: Int = 38
-            static let nameTextFieldLeftFrame: CGRect = CGRect(x: 0, y: 0, width: 12, height: 0)
-            static let nameTextFieldFontSize: CGFloat = 17.0
-            static let nameTextFieldHeightConstraint: CGFloat = 75.0
-        }
-        
-        enum ActionButtons {
-            static let actionButtonsCornerRadius: CGFloat = 16.0
-            
-            static let categoryButtonTopConstraint: CGFloat = 24.0
-            
-            static let configurationButtonsCornerRadius: CGFloat = 16.0
-            static let configurationButtonsleftInset: CGFloat = 12.0
-            static let configurationTitleLabelFontSize: CGFloat = 17.0
-            static let configurationDescriptionLabelFontSize: CGFloat = 17.0
-            static let configurationButtonsHeightConstraint: CGFloat = 75.0
-            
-            static let cancellButtonBorderWidth: CGFloat = 1.0
-            static let cancelButtonLeadingConstraint: CGFloat = 20.0
-            static let cancelButtonBottomConstraint: CGFloat = -16.0
-            static let cancelButtonHeightConstraint: CGFloat = 60.0
-            static let cancelButtonWidthConstraintMultiplier: CGFloat = 0.44
-            
-            static let createButtonTrailingConstraint: CGFloat = -20.0
-        }
-        
-        enum Separator {
-            static let separatorLeadingConstraint: CGFloat = 16.0
-            static let separatorTrailingConstraint: CGFloat = -16.0
-            static let separatorHeightConstraint: CGFloat = 1.0
-        }
-        
-        enum CollectionView {
-            static let collectionViewHeaderHeight: CGFloat = 44.0
-            static let collectionViewCellHeight: CGFloat = 52.0
-            static let collectionViewCellCount: Int = 6
-            static let collectionViewTopInset: CGFloat = 10.0
-            static let collectionViewBottomInset: CGFloat = 0.0
-            static let collectionViewLeftInset: CGFloat = 16.0
-            static let collectionViewRightInset: CGFloat = 16.0
-            static let collectionViewCellSpacing: CGFloat = 10.0
-            static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
-            
-            static let collectionViewTopConstraint: CGFloat = 20.0
-            static let collectionViewHeightConstraint: CGFloat = 230.0
-        }
-    }
-    
     private var trackerName: String = String()
     private var trackerCategory: String = "Важное" // this is stub for now
     private var trackerActiveDaysWeeks: [DayWeeks] = []

@@ -7,6 +7,26 @@
 
 import UIKit
 
+private enum Theme {
+    static let title: String = "Создание трекера"
+    static let habitButtonTitle: String = "Привычка"
+    static let irregularEventButtonTitle: String = "Нерегулярное событие"
+    
+    static let sheetPresentationCornerRadius: CGFloat = 16.0
+    
+    enum ActionButton {
+        static let actionButtonFontSise: CGFloat =  16.0
+        static let actionButtonCornerRadius: CGFloat =  16.0
+        static let actionButtonHeightConstraint: CGFloat = 60.0
+    }
+    
+    enum StackView {
+        static let stackViewSpacing: CGFloat = 16.0
+        static let stackViewLeadingConstraint: CGFloat = 20
+        static let stackViewTrailingConstraint: CGFloat = -20
+    }
+}
+
 final class CreatingTrackerViewController: UIViewController {
     
     // MARK: - Public properties
@@ -14,26 +34,6 @@ final class CreatingTrackerViewController: UIViewController {
     var activeDate: Date = Date()
     
     // MARK: - Private properties
-    private enum Theme {
-        static let title: String = "Создание трекера"
-        static let habitButtonTitle: String = "Привычка"
-        static let irregularEventButtonTitle: String = "Нерегулярное событие"
-        
-        static let sheetPresentationCornerRadius: CGFloat = 16.0
-        
-        enum ActionButton {
-            static let actionButtonFontSise: CGFloat =  16.0
-            static let actionButtonCornerRadius: CGFloat =  16.0
-            static let actionButtonHeightConstraint: CGFloat = 60.0
-        }
-        
-        enum StackView {
-            static let stackViewSpacing: CGFloat = 16.0
-            static let stackViewLeadingConstraint: CGFloat = 20
-            static let stackViewTrailingConstraint: CGFloat = -20
-        }
-    }
-    
     private lazy var habitButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(Theme.habitButtonTitle, for: .normal)
