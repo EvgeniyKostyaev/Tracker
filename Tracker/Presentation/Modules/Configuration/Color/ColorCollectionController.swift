@@ -1,5 +1,5 @@
 //
-//  ConfigurationColorCollectionController.swift
+//  ColorCollectionController.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 28.08.2025.
@@ -31,7 +31,7 @@ private enum Theme {
     }
 }
 
-final class ConfigurationColorCollectionController: NSObject {
+final class ColorCollectionController: NSObject {
     
     // MARK: - Public Properties
     var onSelectColor: ((UIColor) -> Void)?
@@ -48,7 +48,7 @@ final class ConfigurationColorCollectionController: NSObject {
         
         self.collectionView = collectionView
         
-        collectionView.register(ConfigurationColorCollectionViewCell.self, forCellWithReuseIdentifier: ConfigurationColorCollectionViewCell.identifier)
+        collectionView.register(ColorCollectionViewCell.self, forCellWithReuseIdentifier: ColorCollectionViewCell.identifier)
         collectionView.register(TrackerSupplementaryHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackerSupplementaryHeaderView.identifier)
         
         collectionView.dataSource = self
@@ -59,7 +59,7 @@ final class ConfigurationColorCollectionController: NSObject {
 }
 
 // MARK: - UICollectionViewDataSource Methods
-extension ConfigurationColorCollectionController: UICollectionViewDataSource {
+extension ColorCollectionController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return colors.count
     }
@@ -87,7 +87,7 @@ extension ConfigurationColorCollectionController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ConfigurationColorCollectionViewCell.identifier, for: indexPath) as? ConfigurationColorCollectionViewCell else { return UICollectionViewCell()}
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCollectionViewCell.identifier, for: indexPath) as? ColorCollectionViewCell else { return UICollectionViewCell()}
         
         cell.containerView.backgroundColor = colors[indexPath.item]
         
@@ -96,7 +96,7 @@ extension ConfigurationColorCollectionController: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout Methods
-extension ConfigurationColorCollectionController: UICollectionViewDelegateFlowLayout {
+extension ColorCollectionController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
@@ -128,9 +128,9 @@ extension ConfigurationColorCollectionController: UICollectionViewDelegateFlowLa
 }
 
 // MARK: - UICollectionViewDelegate Methods
-extension ConfigurationColorCollectionController: UICollectionViewDelegate {
+extension ColorCollectionController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationColorCollectionViewCell
+        let cell = collectionView.cellForItem(at: indexPath) as? ColorCollectionViewCell
         
         
         if (selectedColor == colors[indexPath.item]) {
@@ -148,7 +148,7 @@ extension ConfigurationColorCollectionController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationColorCollectionViewCell
+        let cell = collectionView.cellForItem(at: indexPath) as? ColorCollectionViewCell
         cell?.contentView.layer.borderWidth = Theme.cellWithoutBorder
     }
 }

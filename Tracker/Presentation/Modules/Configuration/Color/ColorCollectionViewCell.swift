@@ -1,5 +1,5 @@
 //
-//  ConfigurationColorCollectionViewCell.swift
+//  ColorCollectionViewCell.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 22.08.2025.
@@ -13,7 +13,7 @@ private enum Theme {
     static let containerViewWidthConstraint: CGFloat = 40.0
 }
 
-final class ConfigurationColorCollectionViewCell: UICollectionViewCell {
+final class ColorCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Public Properties
     static let identifier = "ColorCell"

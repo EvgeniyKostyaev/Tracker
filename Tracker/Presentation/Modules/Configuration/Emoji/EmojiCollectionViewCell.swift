@@ -1,5 +1,5 @@
 //
-//  ConfigurationEmojiCollectionViewCell.swift
+//  EmojiCollectionViewCell.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 22.08.2025.
@@ -12,7 +12,7 @@ private enum Theme {
     static let fontSize: CGFloat = 32.0
 }
 
-final class ConfigurationEmojiCollectionViewCell: UICollectionViewCell {
+final class EmojiCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Public Properties
     static let identifier = "EmojiCell"

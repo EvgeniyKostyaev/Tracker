@@ -275,8 +275,8 @@ final class ConfigurationTrackerViewController: UIViewController {
         return collectionView
     }()
     
-    private lazy var emojiCollectionController: ConfigurationEmojiCollectionController = {
-        let emojiCollectionController = ConfigurationEmojiCollectionController.init(collectionView: emojiCollectionView)
+    private lazy var emojiCollectionController: EmojiCollectionController = {
+        let emojiCollectionController = EmojiCollectionController.init(collectionView: emojiCollectionView)
         emojiCollectionController.emojies = emojies
         emojiCollectionController.onSelectEmoji = { [weak self] selectedEmoji in
             self?.trackerEmoji = selectedEmoji
@@ -292,8 +292,8 @@ final class ConfigurationTrackerViewController: UIViewController {
         return collectionView
     }()
     
-    private lazy var colorCollectionController: ConfigurationColorCollectionController = {
-        let colorCollectionController = ConfigurationColorCollectionController.init(collectionView: colorCollectionView)
+    private lazy var colorCollectionController: ColorCollectionController = {
+        let colorCollectionController = ColorCollectionController.init(collectionView: colorCollectionView)
         colorCollectionController.colors = colors
         colorCollectionController.onSelectColor = { [weak self] selectedColor in
             self?.trackerColor = selectedColor
@@ -360,7 +360,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func scheduleTapped() {
-        presentConfigurationScheduleAsSheet(activeDaysWeeks: trackerActiveDaysWeeks)
+        presentScheduleAsSheet(activeDaysWeeks: trackerActiveDaysWeeks)
     }
     
     // MARK: - Private methods
@@ -507,18 +507,18 @@ final class ConfigurationTrackerViewController: UIViewController {
         view.endEditing(true)
     }
     
-    private func presentConfigurationScheduleAsSheet(activeDaysWeeks: [DayWeeks]) {
-        let configurationScheduleViewController = ConfigurationScheduleViewController()
-        configurationScheduleViewController.activeDaysWeeks = activeDaysWeeks
+    private func presentScheduleAsSheet(activeDaysWeeks: [DayWeeks]) {
+        let scheduleViewController = ScheduleViewController()
+        scheduleViewController.activeDaysWeeks = activeDaysWeeks
         
-        configurationScheduleViewController.onSave = { [weak self] newActiveDays in
+        scheduleViewController.onSave = { [weak self] newActiveDays in
             self?.trackerActiveDaysWeeks = newActiveDays
             self?.scheduleDescriptionLabel.text = self?.getActiveDaysWeeksRepresentation()
             
             self?.updateCreateButtonState()
         }
         
-        let navigationController = UINavigationController(rootViewController: configurationScheduleViewController)
+        let navigationController = UINavigationController(rootViewController: scheduleViewController)
         navigationController.modalPresentationStyle = .pageSheet
         
         if let sheet = navigationController.sheetPresentationController {

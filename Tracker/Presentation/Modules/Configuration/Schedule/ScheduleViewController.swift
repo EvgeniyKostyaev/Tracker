@@ -1,5 +1,5 @@
 //
-//  ConfigurationScheduleViewController.swift
+//  ScheduleViewController.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 21.08.2025.
@@ -33,7 +33,7 @@ private enum Theme {
     }
 }
 
-final class ConfigurationScheduleViewController: UIViewController {
+final class ScheduleViewController: UIViewController {
     
     // MARK: - Public Properties
     var onSave: (([DayWeeks]) -> Void)?
@@ -58,8 +58,8 @@ final class ConfigurationScheduleViewController: UIViewController {
         tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.1))
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(
-            ConfigurationScheduleTableViewCell.self,
-            forCellReuseIdentifier: ConfigurationScheduleTableViewCell.identifier
+            ScheduleTableViewCell.self,
+            forCellReuseIdentifier: ScheduleTableViewCell.identifier
         )
         tableView.backgroundColor = .clear
         tableView.allowsSelection = false
@@ -135,13 +135,13 @@ final class ConfigurationScheduleViewController: UIViewController {
 }
 
 // MARK: - UITableViewDataSource
-extension ConfigurationScheduleViewController: UITableViewDataSource {
+extension ScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return daysWeeks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ConfigurationScheduleTableViewCell.identifier, for: indexPath) as? ConfigurationScheduleTableViewCell else { return UITableViewCell()}
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ScheduleTableViewCell.identifier, for: indexPath) as? ScheduleTableViewCell else { return UITableViewCell()}
         
         let day = daysWeeks[indexPath.row]
         let isActive = activeDaysWeeks.contains(day)

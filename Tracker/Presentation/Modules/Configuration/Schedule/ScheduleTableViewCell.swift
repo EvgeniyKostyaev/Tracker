@@ -1,5 +1,5 @@
 //
-//  ConfigurationScheduleTableViewCell.swift
+//  ScheduleTableViewCell.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 22.08.2025.
@@ -14,7 +14,7 @@ private enum Theme {
     static let contentViewHeightConstraint: CGFloat = 75.0
 }
 
-final class ConfigurationScheduleTableViewCell: UITableViewCell {
+final class ScheduleTableViewCell: UITableViewCell {
     
     // MARK: - Public Properties
     var onSwitchChanged: ((Bool) -> Void)?
