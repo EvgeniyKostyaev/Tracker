@@ -113,12 +113,10 @@ final class OnboardingPageViewController: UIPageViewController {
     }
     
     private func navigateToMainTabBarController() {
-        guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Invalid window configuration")
-            return
-        }
+        let mainTabBarController = MainTabBarController()
+        mainTabBarController.modalPresentationStyle = .fullScreen
         
-        window.rootViewController = MainTabBarController()
+        present(mainTabBarController, animated: true)
     }
 }
 
