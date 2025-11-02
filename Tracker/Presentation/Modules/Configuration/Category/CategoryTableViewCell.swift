@@ -1,0 +1,68 @@
+//
+//  CategoryTableViewCell.swift
+//  Tracker
+//
+//  Created by Evgeniy Kostyaev on 02.10.2025.
+//
+
+import UIKit
+
+private enum Theme {
+    static let categoryLabelFontSize: CGFloat = 17.0
+    static let categoryLabelLeadingConstraint: CGFloat = 16.0
+    static let checkmarkImageViewTrailingConstraint: CGFloat = -16.0
+    static let contentViewHeightConstraint: CGFloat = 75.0
+}
+
+final class CategoryTableViewCell: UITableViewCell {
+    
+    // MARK: - Public Properties
+    static let identifier = "CategotyCell"
+    
+    // MARK: - Private Properties
+    private let categoryLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: Theme.categoryLabelFontSize)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var checkmarkImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    // MARK: - Overrides Methods
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        setupLayout()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Public Methods
+    func configure(with category: String, isActive: Bool) {
+        categoryLabel.text = category
+        checkmarkImageView.image = isActive ? .check : nil
+    }
+    
+    // MARK: - Private Methods
+    private func setupLayout() {
+        contentView.addSubview(categoryLabel)
+        contentView.addSubview(checkmarkImageView)
+        
+        NSLayoutConstraint.activate([
+            categoryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.categoryLabelLeadingConstraint),
+            categoryLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            checkmarkImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Theme.checkmarkImageViewTrailingConstraint),
+            checkmarkImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            contentView.heightAnchor.constraint(equalToConstant: Theme.contentViewHeightConstraint)
+        ])
+    }
+}

@@ -356,7 +356,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func categoryTapped() {
-        
+        presentCategoriesListAsSheet(trackerCategory: trackerCategory)
     }
     
     @objc private func scheduleTapped() {
@@ -505,6 +505,28 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     @objc private func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    private func presentCategoriesListAsSheet(trackerCategory: String) {
+        let categoriesListViewController = CategoriesListViewController()
+        categoriesListViewController.trackerCategory = trackerCategory
+        
+        categoriesListViewController.onSelect = { [weak self] newTrackerCategory in
+            self?.trackerCategory = newTrackerCategory
+            self?.categoryDescriptionLabel.text = self?.getCategoryRepresentation()
+            
+            self?.updateCreateButtonState()
+        }
+        
+        let navigationController = UINavigationController(rootViewController: categoriesListViewController)
+        navigationController.modalPresentationStyle = .pageSheet
+        
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.preferredCornerRadius = Theme.sheetPresentationCornerRadius
+        }
+        
+        present(navigationController, animated: true)
     }
     
     private func presentScheduleAsSheet(activeDaysWeeks: [DayWeeks]) {
