@@ -10,6 +10,7 @@ import UIKit
 private enum Theme {
     static let title: String = "Категория"
     static let addButtonTitle: String = "Добавить категорию"
+    static let emptySatateTitle: String = "Привычки и события можно объединить по смыслу"
     
     static let containerViewCornerRadius: CGFloat = 16.0
     static let tableViewSeparatorInset: CGFloat = 16.0
@@ -41,7 +42,7 @@ final class CategoriesListViewController: UIViewController {
     var trackerCategory: String = String()
     
     // MARK: - Private Properties
-    private let categoriesList: [String] = ["Важное"]
+    private let categoriesList: [String] = []
     
     private lazy var containerView: UIView = {
         let view = UIView()
@@ -87,6 +88,12 @@ final class CategoriesListViewController: UIViewController {
         return appearance
     }()
     
+    private lazy var emptyView: EmptyStateView = {
+        let emptyView = EmptyStateView(image: UIImage(resource: .noItems), text: Theme.emptySatateTitle)
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return emptyView
+    }()
     
     // MARK: - Overrides Methods
     override func viewDidLoad() {
@@ -101,12 +108,15 @@ final class CategoriesListViewController: UIViewController {
         tableView.delegate = self
         
         setupLayout()
+        
+        updateCategoriesListUI()
     }
     
     // MARK: - Private Methods
     private func setupLayout() {
         view.addSubview(containerView)
         containerView.addSubview(tableView)
+        view.addSubview(emptyView)
         view.addSubview(addButton)
         
         NSLayoutConstraint.activate([
@@ -114,6 +124,9 @@ final class CategoriesListViewController: UIViewController {
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.ContainerView.containerViewLeadingConstraint),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.ContainerView.containerViewTrailingConstraint),
             containerView.heightAnchor.constraint(equalToConstant: Theme.ContainerView.containerViewHeightConstraint),
+            
+            emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
             tableView.topAnchor.constraint(equalTo: containerView.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
@@ -126,6 +139,16 @@ final class CategoriesListViewController: UIViewController {
             addButton.heightAnchor.constraint(equalToConstant: Theme.AddButton.addButtonHeightConstraint),
             addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Theme.AddButton.addButtonBottomConstraint)
         ])
+    }
+    
+    private func updateCategoriesListUI() {
+        if categoriesList.count > 0 {
+            containerView.isHidden = false
+            emptyView.isHidden = true
+        } else {
+            emptyView.isHidden = false
+            containerView.isHidden = true
+        }
     }
     
     @objc private func addTapped() {

@@ -53,7 +53,7 @@ final class TrackersViewController: UIViewController {
     }()
     
     private lazy var emptyView: EmptyStateView = {
-        let emptyView = EmptyStateView(image: UIImage(resource: .noTrackers), text: Theme.emptySatateTitle)
+        let emptyView = EmptyStateView(image: UIImage(resource: .noItems), text: Theme.emptySatateTitle)
         emptyView.translatesAutoresizingMaskIntoConstraints = false
         
         return emptyView
