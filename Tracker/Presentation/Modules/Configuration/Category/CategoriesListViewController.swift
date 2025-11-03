@@ -17,6 +17,8 @@ private enum Theme {
     
     static let alphaComponent: CGFloat = 0.3
     
+    static let sheetPresentationCornerRadius: CGFloat = 16.0
+    
     enum AddButton {
         static let addButtonCornerRadius: CGFloat = 16.0
         static let addButtonTopConstraint: CGFloat = 16.0
@@ -42,7 +44,7 @@ final class CategoriesListViewController: UIViewController {
     var trackerCategory: String = String()
     
     // MARK: - Private Properties
-    private let categoriesList: [String] = []
+    private var categoriesList: [String] = ["TEST", "TEST2"]
     
     private lazy var containerView: UIView = {
         let view = UIView()
@@ -112,6 +114,11 @@ final class CategoriesListViewController: UIViewController {
         updateCategoriesListUI()
     }
     
+    // MARK: - Action methods
+    @objc private func addTapped() {
+        presentNewCategoryAsSheet()
+    }
+    
     // MARK: - Private Methods
     private func setupLayout() {
         view.addSubview(containerView)
@@ -151,8 +158,25 @@ final class CategoriesListViewController: UIViewController {
         }
     }
     
-    @objc private func addTapped() {
+    private func presentNewCategoryAsSheet() {
+        let newCategoryViewController = NewCategoryViewController()
         
+        newCategoryViewController.onCreate = { [weak self] newTrackerCategory in
+            self?.categoriesList.append(newTrackerCategory)
+            
+            self?.tableView.reloadData()
+            self?.updateCategoriesListUI()
+        }
+        
+        let navigationController = UINavigationController(rootViewController: newCategoryViewController)
+        navigationController.modalPresentationStyle = .pageSheet
+        
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.preferredCornerRadius = Theme.sheetPresentationCornerRadius
+        }
+        
+        present(navigationController, animated: true)
     }
 }
 
