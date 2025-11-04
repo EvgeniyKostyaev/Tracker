@@ -39,12 +39,14 @@ private enum Theme {
 final class CategoriesListViewController: UIViewController {
     
     // MARK: - Public Properties
-    var onSelect: ((String) -> Void)?
+    var onSelectCategory: ((String) -> Void)?
     
     var trackerCategory: String = String()
     
     // MARK: - Private Properties
-    private var categoriesList: [String] = ["TEST", "TEST2"]
+    private let categoryStore = TrackerCategoryStore()
+    
+    private var categoriesList: [TrackerCategory] = []
     
     private lazy var containerView: UIView = {
         let view = UIView()
@@ -106,6 +108,8 @@ final class CategoriesListViewController: UIViewController {
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
         
+        loadCategoriesList()
+        
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -158,12 +162,18 @@ final class CategoriesListViewController: UIViewController {
         }
     }
     
+    private func loadCategoriesList() {
+        categoriesList = categoryStore.fetchAllCategories()
+    }
+    
     private func presentNewCategoryAsSheet() {
         let newCategoryViewController = NewCategoryViewController()
         
-        newCategoryViewController.onCreate = { [weak self] newTrackerCategory in
-            self?.categoriesList.append(newTrackerCategory)
+        newCategoryViewController.onCreateCategory = { [weak self] newCategoryTitle in
+            self?.categoryStore.addCategory(TrackerCategory(title: newCategoryTitle, trackers: []))
             
+            self?.loadCategoriesList()
+
             self?.tableView.reloadData()
             self?.updateCategoriesListUI()
         }
@@ -190,8 +200,8 @@ extension CategoriesListViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.identifier, for: indexPath) as? CategoryTableViewCell else { return UITableViewCell()}
         
         let category = categoriesList[indexPath.row]
-        let isActive = category == trackerCategory
-        cell.configure(with: category, isActive: isActive)
+        let isActive = category.title == trackerCategory
+        cell.configure(with: category.title, isActive: isActive)
         
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
@@ -215,7 +225,7 @@ extension CategoriesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let category = categoriesList[indexPath.row]
-        onSelect?(category)
+        onSelectCategory?(category.title)
         dismiss(animated: true)
     }
 }

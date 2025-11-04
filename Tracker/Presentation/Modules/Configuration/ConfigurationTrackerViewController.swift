@@ -511,7 +511,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         let categoriesListViewController = CategoriesListViewController()
         categoriesListViewController.trackerCategory = trackerCategory
         
-        categoriesListViewController.onSelect = { [weak self] newTrackerCategory in
+        categoriesListViewController.onSelectCategory = { [weak self] newTrackerCategory in
             self?.trackerCategory = newTrackerCategory
             self?.categoryDescriptionLabel.text = self?.getCategoryRepresentation()
             

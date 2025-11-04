@@ -34,7 +34,7 @@ private enum Theme {
 final class NewCategoryViewController: UIViewController {
     
     // MARK: - Public Properties
-    var onCreate: ((String) -> Void)?
+    var onCreateCategory: ((String) -> Void)?
     
     // MARK: - Private Properties
     private var categoryName: String = String()
@@ -84,7 +84,7 @@ final class NewCategoryViewController: UIViewController {
     }
     
     @objc private func doneTapped() {
-        onCreate?(categoryName)
+        onCreateCategory?(categoryName)
         dismiss(animated: true)
     }
     
