@@ -508,15 +508,18 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     private func presentCategoriesListAsSheet(trackerCategory: String) {
-        let categoriesListViewController = CategoriesListViewController()
-        categoriesListViewController.trackerCategory = trackerCategory
         
-        categoriesListViewController.onSelectCategory = { [weak self] newTrackerCategory in
+        let categoriesListViewModel = CategoriesListViewModel()
+        categoriesListViewModel.currentCategory = trackerCategory
+        categoriesListViewModel.onSelectTrackerCategory = { [weak self] newTrackerCategory in
             self?.trackerCategory = newTrackerCategory
             self?.categoryDescriptionLabel.text = self?.getCategoryRepresentation()
             
             self?.updateCreateButtonState()
         }
+        
+        let categoriesListViewController = CategoriesListViewController()
+        categoriesListViewController.initialize(viewModel: categoriesListViewModel)
         
         let navigationController = UINavigationController(rootViewController: categoriesListViewController)
         navigationController.modalPresentationStyle = .pageSheet

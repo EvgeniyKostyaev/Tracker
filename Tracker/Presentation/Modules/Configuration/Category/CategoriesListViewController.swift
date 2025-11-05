@@ -38,15 +38,11 @@ private enum Theme {
 
 final class CategoriesListViewController: UIViewController {
     
-    // MARK: - Public Properties
-    var onSelectCategory: ((String) -> Void)?
-    
-    var trackerCategory: String = String()
-    
     // MARK: - Private Properties
-    private let categoryStore = TrackerCategoryStore()
+    private var viewModel: CategoriesListViewModel?
     
     private var categoriesList: [TrackerCategory] = []
+    private var currentCategory: String = String()
     
     private lazy var containerView: UIView = {
         let view = UIView()
@@ -108,14 +104,12 @@ final class CategoriesListViewController: UIViewController {
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
         
-        loadCategoriesList()
-        
         tableView.dataSource = self
         tableView.delegate = self
         
         setupLayout()
         
-        updateCategoriesListUI()
+        viewModel?.viewIsReady()
     }
     
     // MARK: - Action methods
@@ -123,7 +117,37 @@ final class CategoriesListViewController: UIViewController {
         presentNewCategoryAsSheet()
     }
     
+    // MARK: - Public Methods
+    func initialize(viewModel: CategoriesListViewModel) {
+        self.viewModel = viewModel
+        bind()
+    }
+    
     // MARK: - Private Methods
+    private func bind() {
+        guard let viewModel = viewModel else { return }
+        
+        viewModel.showCategoriesList = { [weak self] data in
+            let (categoriesList, currentCategory) = data
+            
+            self?.categoriesList = categoriesList
+            self?.currentCategory = currentCategory
+            self?.tableView.reloadData()
+            
+            self?.containerView.isHidden = false
+            self?.emptyView.isHidden = true
+        }
+        
+        viewModel.showEmptyState = { [weak self] in
+            self?.emptyView.isHidden = false
+            self?.containerView.isHidden = true
+        }
+        
+        viewModel.exitFromCurrentPage = { [weak self] in
+            self?.dismiss(animated: true)
+        }
+    }
+    
     private func setupLayout() {
         view.addSubview(containerView)
         containerView.addSubview(tableView)
@@ -152,30 +176,11 @@ final class CategoriesListViewController: UIViewController {
         ])
     }
     
-    private func updateCategoriesListUI() {
-        if categoriesList.count > 0 {
-            containerView.isHidden = false
-            emptyView.isHidden = true
-        } else {
-            emptyView.isHidden = false
-            containerView.isHidden = true
-        }
-    }
-    
-    private func loadCategoriesList() {
-        categoriesList = categoryStore.fetchAllCategories()
-    }
-    
     private func presentNewCategoryAsSheet() {
         let newCategoryViewController = NewCategoryViewController()
         
         newCategoryViewController.onCreateCategory = { [weak self] newCategoryTitle in
-            self?.categoryStore.addCategory(TrackerCategory(title: newCategoryTitle, trackers: []))
-            
-            self?.loadCategoriesList()
-
-            self?.tableView.reloadData()
-            self?.updateCategoriesListUI()
+            self?.viewModel?.onCreateCategory(newCategoryTitle: newCategoryTitle)
         }
         
         let navigationController = UINavigationController(rootViewController: newCategoryViewController)
@@ -200,7 +205,7 @@ extension CategoriesListViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.identifier, for: indexPath) as? CategoryTableViewCell else { return UITableViewCell()}
         
         let category = categoriesList[indexPath.row]
-        let isActive = category.title == trackerCategory
+        let isActive = category.title == currentCategory
         cell.configure(with: category.title, isActive: isActive)
         
         if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
@@ -225,7 +230,7 @@ extension CategoriesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let category = categoriesList[indexPath.row]
-        onSelectCategory?(category.title)
-        dismiss(animated: true)
+        
+        viewModel?.onSelectTrackerCategory(categoryTitle: category.title)
     }
 }
