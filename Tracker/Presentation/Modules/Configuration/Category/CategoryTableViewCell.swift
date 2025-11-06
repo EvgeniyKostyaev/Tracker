@@ -13,7 +13,7 @@ private enum Theme {
     static let checkmarkImageViewTrailingConstraint: CGFloat = -16.0
     static let contentViewHeightConstraint: CGFloat = 75.0
     static let tableViewSeparatorInset: CGFloat = 16.0
-    static let separatorViewHeightConstraint: CGFloat = 0.5
+    static let separatorViewHeightConstraint: CGFloat = 1
 }
 
 final class CategoryTableViewCell: UITableViewCell {
@@ -36,11 +36,10 @@ final class CategoryTableViewCell: UITableViewCell {
     }()
     
     private let separatorView: UIView = {
-        let separatorView = UIView()
-        separatorView.backgroundColor = .lightGray
-        separatorView.translatesAutoresizingMaskIntoConstraints = false
-        separatorView.isHidden = false
-        return separatorView
+        let view = UIView()
+        view.backgroundColor = .trackerLightGray
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     // MARK: - Overrides Methods

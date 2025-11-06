@@ -165,7 +165,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         return stackView
     }()
     
-    private let separator: UIView = {
+    private let separatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .trackerLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -261,7 +261,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     }()
     
     private lazy var configurationStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [categoryButton, separator, scheduleButton])
+        let stackView = UIStackView(arrangedSubviews: [categoryButton, scheduleButton])
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .fill
@@ -402,6 +402,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         contentView.addSubview(nameStackView)
         
         contentView.addSubview(configurationStackView)
+        contentView.addSubview(separatorView)
         
         categoryButton.addSubview(categoryButtonStackView)
         scheduleButton.addSubview(scheduleButtonStackView)
@@ -441,9 +442,10 @@ final class ConfigurationTrackerViewController: UIViewController {
             
             categoryButton.heightAnchor.constraint(equalToConstant: Theme.ActionButtons.configurationButtonsHeightConstraint),
             
-            separator.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor, constant: Theme.Separator.separatorLeadingConstraint),
-            separator.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: Theme.Separator.separatorTrailingConstraint),
-            separator.heightAnchor.constraint(equalToConstant: Theme.Separator.separatorHeightConstraint),
+            separatorView.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor, constant: Theme.Separator.separatorLeadingConstraint),
+            separatorView.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: Theme.Separator.separatorTrailingConstraint),
+            separatorView.bottomAnchor.constraint(equalTo: categoryButton.bottomAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: Theme.Separator.separatorHeightConstraint),
             
             scheduleButton.heightAnchor.constraint(equalToConstant: Theme.ActionButtons.configurationButtonsHeightConstraint),
             
@@ -492,7 +494,7 @@ final class ConfigurationTrackerViewController: UIViewController {
             categoryButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
             scheduleButton.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         case .irregular:
-            separator.isHidden = true
+            separatorView.isHidden = true
             scheduleButton.isHidden = true
         }
     }
