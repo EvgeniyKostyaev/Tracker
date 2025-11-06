@@ -25,6 +25,11 @@ private enum Theme {
         static let collectionViewCellSpacing: CGFloat = 10.0
         static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
     }
+    
+    enum EmptyStateView {
+        static let emptyStateViewLeadingConstraint: CGFloat = 16.0
+        static let emptyStateViewTrailingConstraint: CGFloat = -16.0
+    }
 }
 
 final class TrackersViewController: UIViewController {
@@ -52,11 +57,11 @@ final class TrackersViewController: UIViewController {
         return collectionView
     }()
     
-    private lazy var emptyView: EmptyStateView = {
-        let emptyView = EmptyStateView(image: UIImage(resource: .noItems), text: Theme.emptySatateTitle)
-        emptyView.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var emptyStateView: EmptyStateView = {
+        let emptyStateView = EmptyStateView(image: UIImage(resource: .noItems), text: Theme.emptySatateTitle)
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         
-        return emptyView
+        return emptyStateView
     }()
     
     // MARK: - Overrides Methods
@@ -125,7 +130,7 @@ final class TrackersViewController: UIViewController {
     
     private func setupLayout() {
         view.addSubview(collectionView)
-        view.addSubview(emptyView)
+        view.addSubview(emptyStateView)
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -133,8 +138,11 @@ final class TrackersViewController: UIViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            emptyStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.EmptyStateView.emptyStateViewLeadingConstraint),
+            emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.EmptyStateView.emptyStateViewTrailingConstraint),
         ])
     }
     
@@ -144,9 +152,9 @@ final class TrackersViewController: UIViewController {
         
         if trackerCategories.count > 0 {
             collectionView.isHidden = false
-            emptyView.isHidden = true
+            emptyStateView.isHidden = true
         } else {
-            emptyView.isHidden = false
+            emptyStateView.isHidden = false
             collectionView.isHidden = true
         }
         

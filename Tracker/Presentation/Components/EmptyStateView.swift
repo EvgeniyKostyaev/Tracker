@@ -13,6 +13,8 @@ private enum Theme {
     static let spacingStackView: CGFloat = 16
     static let heightImageView: CGFloat = 80
     static let widthImageView: CGFloat = 80
+    static let stackViewLeadingConstraint: CGFloat = 16.0
+    static let stackViewTrailingConstraint: CGFloat = -16.0
 }
 
 final class EmptyStateView: UIView {
@@ -64,6 +66,10 @@ final class EmptyStateView: UIView {
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Theme.stackViewLeadingConstraint),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Theme.stackViewTrailingConstraint),
+            
             imageView.heightAnchor.constraint(equalToConstant: Theme.heightImageView),
             imageView.widthAnchor.constraint(equalToConstant: Theme.widthImageView)
         ])

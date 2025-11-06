@@ -34,6 +34,11 @@ private enum Theme {
         static let containerViewTrailingConstraint: CGFloat = -16.0
         static let containerViewHeightConstraint: CGFloat = 525.0
     }
+    
+    enum EmptyStateView {
+        static let emptyStateViewLeadingConstraint: CGFloat = 32.0
+        static let emptyStateViewTrailingConstraint: CGFloat = -32.0
+    }
 }
 
 final class CategoriesListViewController: UIViewController {
@@ -88,11 +93,11 @@ final class CategoriesListViewController: UIViewController {
         return appearance
     }()
     
-    private lazy var emptyView: EmptyStateView = {
-        let emptyView = EmptyStateView(image: UIImage(resource: .noItems), text: Theme.emptySatateTitle)
-        emptyView.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var emptyStateView: EmptyStateView = {
+        let emptyStateView = EmptyStateView(image: UIImage(resource: .noItems), text: Theme.emptySatateTitle)
+        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         
-        return emptyView
+        return emptyStateView
     }()
     
     // MARK: - Overrides Methods
@@ -135,11 +140,11 @@ final class CategoriesListViewController: UIViewController {
             self?.tableView.reloadData()
             
             self?.containerView.isHidden = false
-            self?.emptyView.isHidden = true
+            self?.emptyStateView.isHidden = true
         }
         
         viewModel.showEmptyState = { [weak self] in
-            self?.emptyView.isHidden = false
+            self?.emptyStateView.isHidden = false
             self?.containerView.isHidden = true
         }
         
@@ -151,7 +156,7 @@ final class CategoriesListViewController: UIViewController {
     private func setupLayout() {
         view.addSubview(containerView)
         containerView.addSubview(tableView)
-        view.addSubview(emptyView)
+        view.addSubview(emptyStateView)
         view.addSubview(addButton)
         
         NSLayoutConstraint.activate([
@@ -160,8 +165,11 @@ final class CategoriesListViewController: UIViewController {
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.ContainerView.containerViewTrailingConstraint),
             containerView.heightAnchor.constraint(equalToConstant: Theme.ContainerView.containerViewHeightConstraint),
             
-            emptyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptyView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.EmptyStateView.emptyStateViewLeadingConstraint),
+            emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.EmptyStateView.emptyStateViewTrailingConstraint),
             
             tableView.topAnchor.constraint(equalTo: containerView.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
