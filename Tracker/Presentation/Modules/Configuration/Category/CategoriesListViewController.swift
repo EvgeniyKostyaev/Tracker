@@ -60,8 +60,6 @@ final class CategoriesListViewController: UIViewController {
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
-        tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.1))
-        tableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0.1))
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(
             CategoryTableViewCell.self,
