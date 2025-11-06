@@ -71,6 +71,7 @@ final class CategoriesListViewController: UIViewController {
         tableView.allowsSelection = true
         tableView.isScrollEnabled = true
         tableView.showsVerticalScrollIndicator = false
+        tableView.separatorStyle = .none
         return tableView
     }()
     
@@ -214,18 +215,8 @@ extension CategoriesListViewController: UITableViewDataSource {
         
         let category = categoriesList[indexPath.row]
         let isActive = category.title == currentCategory
-        cell.configure(with: category.title, isActive: isActive)
-        
-        if indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1 {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
-        } else {
-            cell.separatorInset = UIEdgeInsets(
-                top: 0,
-                left: Theme.tableViewSeparatorInset,
-                bottom: 0,
-                right: Theme.tableViewSeparatorInset
-            )
-        }
+        let isLastCell = indexPath.row == categoriesList.count - 1
+        cell.configure(with: category.title, isActive: isActive, isLastCell: isLastCell)
         
         cell.backgroundColor = .clear
         

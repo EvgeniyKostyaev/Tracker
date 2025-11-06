@@ -12,6 +12,8 @@ private enum Theme {
     static let categoryLabelLeadingConstraint: CGFloat = 16.0
     static let checkmarkImageViewTrailingConstraint: CGFloat = -16.0
     static let contentViewHeightConstraint: CGFloat = 75.0
+    static let tableViewSeparatorInset: CGFloat = 16.0
+    static let separatorViewHeightConstraint: CGFloat = 0.5
 }
 
 final class CategoryTableViewCell: UITableViewCell {
@@ -33,6 +35,14 @@ final class CategoryTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    private let separatorView: UIView = {
+        let separatorView = UIView()
+        separatorView.backgroundColor = .lightGray
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        separatorView.isHidden = false
+        return separatorView
+    }()
+    
     // MARK: - Overrides Methods
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -45,15 +55,17 @@ final class CategoryTableViewCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure(with category: String, isActive: Bool) {
+    func configure(with category: String, isActive: Bool, isLastCell: Bool = false) {
         categoryLabel.text = category
         checkmarkImageView.image = isActive ? .check : nil
+        separatorView.isHidden = isLastCell
     }
     
     // MARK: - Private Methods
     private func setupLayout() {
         contentView.addSubview(categoryLabel)
         contentView.addSubview(checkmarkImageView)
+        contentView.addSubview(separatorView)
         
         NSLayoutConstraint.activate([
             categoryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.categoryLabelLeadingConstraint),
@@ -62,7 +74,12 @@ final class CategoryTableViewCell: UITableViewCell {
             checkmarkImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Theme.checkmarkImageViewTrailingConstraint),
             checkmarkImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            contentView.heightAnchor.constraint(equalToConstant: Theme.contentViewHeightConstraint)
+            contentView.heightAnchor.constraint(equalToConstant: Theme.contentViewHeightConstraint),
+            
+            separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.tableViewSeparatorInset),
+            separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.tableViewSeparatorInset),
+            separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: Theme.separatorViewHeightConstraint)
         ])
     }
 }
