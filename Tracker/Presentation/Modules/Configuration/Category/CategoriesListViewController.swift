@@ -15,8 +15,6 @@ private enum Theme {
     static let containerViewCornerRadius: CGFloat = 16.0
     static let tableViewSeparatorInset: CGFloat = 16.0
     
-    static let alphaComponent: CGFloat = 0.3
-    
     static let sheetPresentationCornerRadius: CGFloat = 16.0
     
     enum AddButton {
@@ -56,8 +54,7 @@ final class CategoriesListViewController: UIViewController {
             CategoryTableViewCell.self,
             forCellReuseIdentifier: CategoryTableViewCell.identifier
         )
-        tableView.backgroundColor = .trackerLightGray.withAlphaComponent(Theme.alphaComponent)
-        tableView.layer.cornerRadius = Theme.containerViewCornerRadius
+        tableView.backgroundColor = .clear
         tableView.allowsSelection = true
         tableView.isScrollEnabled = true
         tableView.showsVerticalScrollIndicator = false
@@ -199,8 +196,9 @@ extension CategoriesListViewController: UITableViewDataSource {
         
         let category = categoriesList[indexPath.row]
         let isActive = category.title == currentCategory
+        let isFirstCell = indexPath.row == 0
         let isLastCell = indexPath.row == categoriesList.count - 1
-        cell.configure(with: category.title, isActive: isActive, isLastCell: isLastCell)
+        cell.configure(with: category.title, isActive: isActive, isFirstCell: isFirstCell, isLastCell: isLastCell)
         
         cell.backgroundColor = .clear
         
