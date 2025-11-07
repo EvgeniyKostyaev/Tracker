@@ -12,6 +12,8 @@ private enum Theme {
     static let dayLabelLeadingConstraint: CGFloat = 16.0
     static let daySwitchTrailingConstraint: CGFloat = -16.0
     static let contentViewHeightConstraint: CGFloat = 75.0
+    static let tableViewSeparatorInset: CGFloat = 16.0
+    static let separatorViewHeightConstraint: CGFloat = 1
 }
 
 final class ScheduleTableViewCell: UITableViewCell {
@@ -37,6 +39,13 @@ final class ScheduleTableViewCell: UITableViewCell {
         return daySwitch
     }()
     
+    private let separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .trackerLightGray
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     // MARK: - Overrides Methods
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -49,15 +58,17 @@ final class ScheduleTableViewCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure(with dayWeeks: DayWeeks, isOn: Bool) {
+    func configure(with dayWeeks: DayWeeks, isOn: Bool, isLastCell: Bool = false) {
         dayLabel.text = dayWeeks.fullRepresentation
         daySwitch.isOn = isOn
+        separatorView.isHidden = isLastCell
     }
     
     // MARK: - Private Methods
     private func setupLayout() {
         contentView.addSubview(dayLabel)
         contentView.addSubview(daySwitch)
+        contentView.addSubview(separatorView)
         
         NSLayoutConstraint.activate([
             dayLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.dayLabelLeadingConstraint),
@@ -65,6 +76,11 @@ final class ScheduleTableViewCell: UITableViewCell {
             
             daySwitch.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Theme.daySwitchTrailingConstraint),
             daySwitch.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            
+            separatorView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.tableViewSeparatorInset),
+            separatorView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -Theme.tableViewSeparatorInset),
+            separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: Theme.separatorViewHeightConstraint),
             
             contentView.heightAnchor.constraint(equalToConstant: Theme.contentViewHeightConstraint)
         ])
