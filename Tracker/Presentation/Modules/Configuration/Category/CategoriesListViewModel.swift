@@ -16,17 +16,13 @@ final class CategoriesListViewModel {
     
     // MARK: - Public Properties
     var onSelectTrackerCategory: ((String) -> Void)?
-    
     var currentCategory: String = String()
-    
     var showCategoriesList:  Binding<CategoriesTuple>?
     var showEmptyState: BindingVoid?
-    
     var exitFromCurrentPage: BindingVoid?
     
     // MARK: - Private Properties
     private let categoryStore = TrackerCategoryStore()
-    
     private var categoriesList: [TrackerCategory] = []
     
     // MARK: - Public methods
@@ -36,7 +32,7 @@ final class CategoriesListViewModel {
     
     func onCreateCategory(newCategoryTitle: String) {
         categoryStore.addCategory(TrackerCategory(title: newCategoryTitle, trackers: []))
-        
+    
         loadCategoriesList()
     }
     

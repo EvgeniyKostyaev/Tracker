@@ -14,7 +14,6 @@ private enum Theme {
     
     static let containerViewCornerRadius: CGFloat = 16.0
     static let tableViewSeparatorInset: CGFloat = 16.0
-    
     static let sheetPresentationCornerRadius: CGFloat = 16.0
     
     enum AddButton {
@@ -91,18 +90,12 @@ final class CategoriesListViewController: UIViewController {
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        title = Theme.title
         
-        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-        
-        tableView.dataSource = self
-        tableView.delegate = self
-        
+        setupView()
+        setupNavigationBar()
+        setupTableView()
         setupLayout()
-        
-        viewModel?.viewIsReady()
+        bindViewModel()
     }
     
     // MARK: - Action methods
@@ -140,6 +133,21 @@ final class CategoriesListViewController: UIViewController {
             self?.dismiss(animated: true)
         }
     }
+
+    private func setupView() {
+        view.backgroundColor = .white
+        title = Theme.title
+    }
+
+    private func setupNavigationBar() {
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
+    }
+
+    private func setupTableView() {
+        tableView.dataSource = self
+        tableView.delegate = self
+    }
     
     private func setupLayout() {
         view.addSubview(tableView)
@@ -164,6 +172,10 @@ final class CategoriesListViewController: UIViewController {
             addButton.heightAnchor.constraint(equalToConstant: Theme.AddButton.addButtonHeightConstraint),
             addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Theme.AddButton.addButtonBottomConstraint)
         ])
+    }
+    
+    private func bindViewModel() {
+        viewModel?.viewIsReady()
     }
     
     private func presentNewCategoryAsSheet() {

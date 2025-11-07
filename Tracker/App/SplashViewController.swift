@@ -12,7 +12,6 @@ private enum Theme {
     static let splashImageViewWidth: CGFloat = 91
 }
 
-
 final class SplashViewController: UIViewController {
     
     // MARK: - Private Properties

@@ -16,7 +16,6 @@ final class AppSettings: AppSettingsProtocol {
     // MARK: - Private Properties
     private let storage: UserDefaults = .standard
     
-    
     // MARK: - Public Properties
     var isFirstLaunch: Bool {
         get {
@@ -32,5 +31,4 @@ final class AppSettings: AppSettingsProtocol {
             
         }
     }
-    
 }
