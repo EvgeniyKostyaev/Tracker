@@ -68,7 +68,7 @@ final class ScheduleTableViewCell: UITableViewCell {
         daySwitch.isOn = isOn
         separatorView.isHidden = isLastCell
         
-        setupCornerRadius(isFirstCell: isFirstCell, isLastCell: isLastCell)
+        setupCornerRadius(cornerRadius: Theme.cornerRadius, isFirstCell: isFirstCell, isLastCell: isLastCell)
     }
     
     // MARK: - Private Methods
@@ -91,22 +91,6 @@ final class ScheduleTableViewCell: UITableViewCell {
             
             contentView.heightAnchor.constraint(equalToConstant: Theme.contentViewHeightConstraint)
         ])
-    }
-    
-    private func setupCornerRadius(isFirstCell: Bool, isLastCell: Bool) {
-        contentView.layer.cornerRadius = Theme.cornerRadius
-        contentView.layer.masksToBounds = true
-        
-        switch (isFirstCell, isLastCell) {
-        case (true, true):
-            contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        case (true, false):
-            contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        case (false, true):
-            contentView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        case (false, false):
-            contentView.layer.cornerRadius = CGFloat.zero
-        }
     }
     
     @objc private func switchChanged(_ sender: UISwitch) {

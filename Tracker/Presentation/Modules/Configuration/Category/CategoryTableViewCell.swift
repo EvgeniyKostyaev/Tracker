@@ -64,7 +64,7 @@ final class CategoryTableViewCell: UITableViewCell {
         checkmarkImageView.image = isActive ? .check : nil
         separatorView.isHidden = isLastCell
         
-        setupCornerRadius(isFirstCell: isFirstCell, isLastCell: isLastCell)
+        setupCornerRadius(cornerRadius: Theme.cornerRadius, isFirstCell: isFirstCell, isLastCell: isLastCell)
     }
     
     // MARK: - Private Methods
@@ -87,21 +87,5 @@ final class CategoryTableViewCell: UITableViewCell {
             separatorView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: Theme.separatorViewHeightConstraint)
         ])
-    }
-    
-    private func setupCornerRadius(isFirstCell: Bool, isLastCell: Bool) {
-        contentView.layer.cornerRadius = Theme.cornerRadius
-        contentView.layer.masksToBounds = true
-        
-        switch (isFirstCell, isLastCell) {
-        case (true, true):
-            contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        case (true, false):
-            contentView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        case (false, true):
-            contentView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        case (false, false):
-            contentView.layer.cornerRadius = CGFloat.zero
-        }
     }
 }
