@@ -25,11 +25,11 @@ private enum Theme {
         static let doneButtonBottomConstraint: CGFloat = -16.0
     }
     
-    enum ContainerView {
-        static let containerViewTopConstraint: CGFloat = 16.0
-        static let containerViewLeadingConstraint: CGFloat = 16.0
-        static let containerViewTrailingConstraint: CGFloat = -16.0
-        static let containerViewHeightConstraint: CGFloat = 525.0
+    enum TableView {
+        static let tableViewTopConstraint: CGFloat = 16.0
+        static let tableViewLeadingConstraint: CGFloat = 16.0
+        static let tableViewTrailingConstraint: CGFloat = -16.0
+        static let tableViewBottomConstraint: CGFloat = -16.0
     }
 }
 
@@ -42,15 +42,6 @@ final class ScheduleViewController: UIViewController {
     
     // MARK: - Private Properties
     private let daysWeeks: [DayWeeks] = [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday]
-    
-    private lazy var containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .trackerLightGray.withAlphaComponent(Theme.alphaComponent)
-        view.layer.cornerRadius = Theme.containerViewCornerRadius
-        view.layer.masksToBounds = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
@@ -103,22 +94,15 @@ final class ScheduleViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setupLayout() {
-        view.addSubview(containerView)
-        containerView.addSubview(tableView)
+        view.addSubview(tableView)
         view.addSubview(doneButton)
         
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Theme.ContainerView.containerViewTopConstraint),
-            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.ContainerView.containerViewLeadingConstraint),
-            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.ContainerView.containerViewTrailingConstraint),
-            containerView.heightAnchor.constraint(equalToConstant: Theme.ContainerView.containerViewHeightConstraint),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Theme.TableView.tableViewTopConstraint),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.TableView.tableViewLeadingConstraint),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.TableView.tableViewTrailingConstraint),
+            tableView.bottomAnchor.constraint(equalTo: doneButton.topAnchor, constant: Theme.TableView.tableViewBottomConstraint),
             
-            tableView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
-            
-            doneButton.topAnchor.constraint(greaterThanOrEqualTo: containerView.bottomAnchor, constant: Theme.DoneButton.doneButtonTopConstraint),
             doneButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.DoneButton.doneButtonLeadingConstraint),
             doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.DoneButton.doneButtonTrailingConstraint),
             doneButton.heightAnchor.constraint(equalToConstant: Theme.DoneButton.doneButtonHeightConstraint),
@@ -144,8 +128,9 @@ extension ScheduleViewController: UITableViewDataSource {
         
         let day = daysWeeks[indexPath.row]
         let isActive = activeDaysWeeks.contains(day)
+        let isFirstCell = indexPath.row == 0
         let isLastCell = indexPath.row == daysWeeks.count - 1
-        cell.configure(with: day, isOn: isActive, isLastCell: isLastCell)
+        cell.configure(with: day, isOn: isActive, isFirstCell: isFirstCell, isLastCell: isLastCell)
         
         cell.onSwitchChanged = { [weak self] isOn in
             guard let self = self else { return }
