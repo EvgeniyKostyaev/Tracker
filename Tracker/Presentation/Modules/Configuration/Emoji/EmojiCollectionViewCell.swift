@@ -1,5 +1,5 @@
 //
-//  ConfigurationEmojiCollectionViewCell.swift
+//  EmojiCollectionViewCell.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 22.08.2025.
@@ -7,7 +7,12 @@
 
 import UIKit
 
-final class ConfigurationEmojiCollectionViewCell: UICollectionViewCell {
+private enum Theme {
+    static let cornerRadius: CGFloat = 16.0
+    static let fontSize: CGFloat = 32.0
+}
+
+final class EmojiCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Public Properties
     static let identifier = "EmojiCell"
@@ -19,12 +24,6 @@ final class ConfigurationEmojiCollectionViewCell: UICollectionViewCell {
         
         return label
     }()
-    
-    // MARK: - Private Properties
-    private enum Theme {
-        static let cornerRadius: CGFloat = 16.0
-        static let fontSize: CGFloat = 32.0
-    }
     
     // MARK: - Overrides Methods
     override init(frame: CGRect) {

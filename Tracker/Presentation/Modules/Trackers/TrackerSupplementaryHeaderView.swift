@@ -7,6 +7,12 @@
 
 import UIKit
 
+private enum Theme {
+    static let fontSize: CGFloat = 19.0
+    static let leadingConstraint: CGFloat = 28.0
+    static let trailingConstraint: CGFloat = 28.0
+}
+
 final class TrackerSupplementaryHeaderView: UICollectionReusableView {
     
     // MARK: - Public Properties
@@ -18,13 +24,6 @@ final class TrackerSupplementaryHeaderView: UICollectionReusableView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    // MARK: - Private Properties
-    private enum Theme {
-        static let fontSize: CGFloat = 19.0
-        static let leadingConstraint: CGFloat = 28.0
-        static let trailingConstraint: CGFloat = 28.0
-    }
     
     // MARK: - Overrides Methods
     override init(frame: CGRect) {

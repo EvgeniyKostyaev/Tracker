@@ -7,6 +7,92 @@
 
 import UIKit
 
+private enum Theme {
+    static let habitTitle: String = "Новая привычка"
+    static let irregularTitle: String = "Новое нерегулярное событие"
+    static let textFieldPlaceholder: String = "Введите название трекера"
+    static let categoryButtonTitle: String = "Категория"
+    static let scheduleButtonTitle: String = "Расписание"
+    static let cancelButtonTitle: String = "Отменить"
+    static let createButtonTitle: String = "Создать"
+    static let warningText: String = "Ограничение 38 символов"
+    static let everyDayRepresentation: String = "Каждый день"
+    
+    static let warningLabelFontSize: CGFloat = 17.0
+    
+    static let configurationDescriptionLabelTrailingConstraint: CGFloat = -36.0
+    static let configurationDisclosureIndicatorTrailingConstraint: CGFloat = -16.0
+    
+    static let sheetPresentationCornerRadius: CGFloat = 16.0
+    
+    static let allDaysOfWeekCount: Int = 7
+    
+    static let alphaComponent: CGFloat = 0.3
+    
+    enum ConfigurationStackView {
+        static let stackViewSpacing: CGFloat = 8.0
+        static let stackViewTopConstraint: CGFloat = 24.0
+        static let stackViewLeadingConstraint: CGFloat = 16.0
+        static let stackViewTrailingConstraint: CGFloat = -16.0
+        
+        static let stackViewScheduleSpacing: CGFloat = 2.0
+        
+        static let stackViewConfigurationTopConstraint: CGFloat = 16.0
+        static let stackViewConfigurationLeadingConstraint: CGFloat = 16.0
+        static let stackViewConfigurationTrailingConstraint: CGFloat = -16.0
+        static let stackViewConfigurationBottomConstraint: CGFloat = -16.0
+    }
+    
+    enum NameTextField {
+        static let nameTextFieldCornerRadius: CGFloat = 16.0
+        static let nameTextFieldLimit: Int = 38
+        static let nameTextFieldLeftFrame: CGRect = CGRect(x: 0, y: 0, width: 12, height: 0)
+        static let nameTextFieldFontSize: CGFloat = 17.0
+        static let nameTextFieldHeightConstraint: CGFloat = 75.0
+    }
+    
+    enum ActionButtons {
+        static let actionButtonsCornerRadius: CGFloat = 16.0
+        
+        static let categoryButtonTopConstraint: CGFloat = 24.0
+        
+        static let configurationButtonsCornerRadius: CGFloat = 16.0
+        static let configurationButtonsleftInset: CGFloat = 12.0
+        static let configurationTitleLabelFontSize: CGFloat = 17.0
+        static let configurationDescriptionLabelFontSize: CGFloat = 17.0
+        static let configurationButtonsHeightConstraint: CGFloat = 75.0
+        
+        static let cancellButtonBorderWidth: CGFloat = 1.0
+        static let cancelButtonLeadingConstraint: CGFloat = 20.0
+        static let cancelButtonBottomConstraint: CGFloat = -16.0
+        static let cancelButtonHeightConstraint: CGFloat = 60.0
+        static let cancelButtonWidthConstraintMultiplier: CGFloat = 0.44
+        
+        static let createButtonTrailingConstraint: CGFloat = -20.0
+    }
+    
+    enum Separator {
+        static let separatorLeadingConstraint: CGFloat = 16.0
+        static let separatorTrailingConstraint: CGFloat = -16.0
+        static let separatorHeightConstraint: CGFloat = 1.0
+    }
+    
+    enum CollectionView {
+        static let collectionViewHeaderHeight: CGFloat = 44.0
+        static let collectionViewCellHeight: CGFloat = 52.0
+        static let collectionViewCellCount: Int = 6
+        static let collectionViewTopInset: CGFloat = 10.0
+        static let collectionViewBottomInset: CGFloat = 0.0
+        static let collectionViewLeftInset: CGFloat = 16.0
+        static let collectionViewRightInset: CGFloat = 16.0
+        static let collectionViewCellSpacing: CGFloat = 10.0
+        static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+        
+        static let collectionViewTopConstraint: CGFloat = 20.0
+        static let collectionViewHeightConstraint: CGFloat = 230.0
+    }
+}
+
 final class ConfigurationTrackerViewController: UIViewController {
     
     // MARK: - Public properties
@@ -15,94 +101,8 @@ final class ConfigurationTrackerViewController: UIViewController {
     var activeDate: Date = Date()
     
     // MARK: - Private properties
-    private enum Theme {
-        static let habitTitle: String = "Новая привычка"
-        static let irregularTitle: String = "Новое нерегулярное событие"
-        static let textFieldPlaceholder: String = "Введите название трекера"
-        static let categoryButtonTitle: String = "Категория"
-        static let scheduleButtonTitle: String = "Расписание"
-        static let cancelButtonTitle: String = "Отменить"
-        static let createButtonTitle: String = "Создать"
-        static let warningText: String = "Ограничение 38 символов"
-        static let everyDayRepresentation: String = "Каждый день"
-        
-        static let warningLabelFontSize: CGFloat = 17.0
-        
-        static let configurationDescriptionLabelTrailingConstraint: CGFloat = -36.0
-        static let configurationDisclosureIndicatorTrailingConstraint: CGFloat = -16.0
-        
-        static let sheetPresentationCornerRadius: CGFloat = 16.0
-        
-        static let allDaysOfWeekCount: Int = 7
-        
-        static let alphaComponent: CGFloat = 0.3
-        
-        enum ConfigurationStackView {
-            static let stackViewSpacing: CGFloat = 8.0
-            static let stackViewTopConstraint: CGFloat = 24.0
-            static let stackViewLeadingConstraint: CGFloat = 16.0
-            static let stackViewTrailingConstraint: CGFloat = -16.0
-            
-            static let stackViewScheduleSpacing: CGFloat = 2.0
-            
-            static let stackViewConfigurationTopConstraint: CGFloat = 16.0
-            static let stackViewConfigurationLeadingConstraint: CGFloat = 16.0
-            static let stackViewConfigurationTrailingConstraint: CGFloat = -16.0
-            static let stackViewConfigurationBottomConstraint: CGFloat = -16.0
-        }
-        
-        enum NameTextField {
-            static let nameTextFieldCornerRadius: CGFloat = 16.0
-            static let nameTextFieldLimit: Int = 38
-            static let nameTextFieldLeftFrame: CGRect = CGRect(x: 0, y: 0, width: 12, height: 0)
-            static let nameTextFieldFontSize: CGFloat = 17.0
-            static let nameTextFieldHeightConstraint: CGFloat = 75.0
-        }
-        
-        enum ActionButtons {
-            static let actionButtonsCornerRadius: CGFloat = 16.0
-            
-            static let categoryButtonTopConstraint: CGFloat = 24.0
-            
-            static let configurationButtonsCornerRadius: CGFloat = 16.0
-            static let configurationButtonsleftInset: CGFloat = 12.0
-            static let configurationTitleLabelFontSize: CGFloat = 17.0
-            static let configurationDescriptionLabelFontSize: CGFloat = 17.0
-            static let configurationButtonsHeightConstraint: CGFloat = 75.0
-            
-            static let cancellButtonBorderWidth: CGFloat = 1.0
-            static let cancelButtonLeadingConstraint: CGFloat = 20.0
-            static let cancelButtonBottomConstraint: CGFloat = -16.0
-            static let cancelButtonHeightConstraint: CGFloat = 60.0
-            static let cancelButtonWidthConstraintMultiplier: CGFloat = 0.44
-            
-            static let createButtonTrailingConstraint: CGFloat = -20.0
-        }
-        
-        enum Separator {
-            static let separatorLeadingConstraint: CGFloat = 16.0
-            static let separatorTrailingConstraint: CGFloat = -16.0
-            static let separatorHeightConstraint: CGFloat = 1.0
-        }
-        
-        enum CollectionView {
-            static let collectionViewHeaderHeight: CGFloat = 44.0
-            static let collectionViewCellHeight: CGFloat = 52.0
-            static let collectionViewCellCount: Int = 6
-            static let collectionViewTopInset: CGFloat = 10.0
-            static let collectionViewBottomInset: CGFloat = 0.0
-            static let collectionViewLeftInset: CGFloat = 16.0
-            static let collectionViewRightInset: CGFloat = 16.0
-            static let collectionViewCellSpacing: CGFloat = 10.0
-            static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
-            
-            static let collectionViewTopConstraint: CGFloat = 20.0
-            static let collectionViewHeightConstraint: CGFloat = 230.0
-        }
-    }
-    
     private var trackerName: String = String()
-    private var trackerCategory: String = "Важное" // this is stub for now
+    private var trackerCategory: String = String()
     private var trackerActiveDaysWeeks: [DayWeeks] = []
     private var trackerEmoji: String = String()
     private var trackerColor: UIColor = .clear
@@ -165,7 +165,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         return stackView
     }()
     
-    private let separator: UIView = {
+    private let separatorView: UIView = {
         let view = UIView()
         view.backgroundColor = .trackerLightGray
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -261,7 +261,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     }()
     
     private lazy var configurationStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [categoryButton, separator, scheduleButton])
+        let stackView = UIStackView(arrangedSubviews: [categoryButton, scheduleButton])
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.alignment = .fill
@@ -275,8 +275,8 @@ final class ConfigurationTrackerViewController: UIViewController {
         return collectionView
     }()
     
-    private lazy var emojiCollectionController: ConfigurationEmojiCollectionController = {
-        let emojiCollectionController = ConfigurationEmojiCollectionController.init(collectionView: emojiCollectionView)
+    private lazy var emojiCollectionController: EmojiCollectionController = {
+        let emojiCollectionController = EmojiCollectionController.init(collectionView: emojiCollectionView)
         emojiCollectionController.emojies = emojies
         emojiCollectionController.onSelectEmoji = { [weak self] selectedEmoji in
             self?.trackerEmoji = selectedEmoji
@@ -292,8 +292,8 @@ final class ConfigurationTrackerViewController: UIViewController {
         return collectionView
     }()
     
-    private lazy var colorCollectionController: ConfigurationColorCollectionController = {
-        let colorCollectionController = ConfigurationColorCollectionController.init(collectionView: colorCollectionView)
+    private lazy var colorCollectionController: ColorCollectionController = {
+        let colorCollectionController = ColorCollectionController.init(collectionView: colorCollectionView)
         colorCollectionController.colors = colors
         colorCollectionController.onSelectColor = { [weak self] selectedColor in
             self?.trackerColor = selectedColor
@@ -356,11 +356,11 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func categoryTapped() {
-        
+        presentCategoriesListAsSheet(trackerCategory: trackerCategory)
     }
     
     @objc private func scheduleTapped() {
-        presentConfigurationScheduleAsSheet(activeDaysWeeks: trackerActiveDaysWeeks)
+        presentScheduleAsSheet(activeDaysWeeks: trackerActiveDaysWeeks)
     }
     
     // MARK: - Private methods
@@ -402,6 +402,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         contentView.addSubview(nameStackView)
         
         contentView.addSubview(configurationStackView)
+        contentView.addSubview(separatorView)
         
         categoryButton.addSubview(categoryButtonStackView)
         scheduleButton.addSubview(scheduleButtonStackView)
@@ -441,9 +442,10 @@ final class ConfigurationTrackerViewController: UIViewController {
             
             categoryButton.heightAnchor.constraint(equalToConstant: Theme.ActionButtons.configurationButtonsHeightConstraint),
             
-            separator.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor, constant: Theme.Separator.separatorLeadingConstraint),
-            separator.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: Theme.Separator.separatorTrailingConstraint),
-            separator.heightAnchor.constraint(equalToConstant: Theme.Separator.separatorHeightConstraint),
+            separatorView.leadingAnchor.constraint(equalTo: categoryButton.leadingAnchor, constant: Theme.Separator.separatorLeadingConstraint),
+            separatorView.trailingAnchor.constraint(equalTo: categoryButton.trailingAnchor, constant: Theme.Separator.separatorTrailingConstraint),
+            separatorView.bottomAnchor.constraint(equalTo: categoryButton.bottomAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: Theme.Separator.separatorHeightConstraint),
             
             scheduleButton.heightAnchor.constraint(equalToConstant: Theme.ActionButtons.configurationButtonsHeightConstraint),
             
@@ -492,7 +494,7 @@ final class ConfigurationTrackerViewController: UIViewController {
             categoryButton.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
             scheduleButton.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         case .irregular:
-            separator.isHidden = true
+            separatorView.isHidden = true
             scheduleButton.isHidden = true
         }
     }
@@ -507,18 +509,43 @@ final class ConfigurationTrackerViewController: UIViewController {
         view.endEditing(true)
     }
     
-    private func presentConfigurationScheduleAsSheet(activeDaysWeeks: [DayWeeks]) {
-        let configurationScheduleViewController = ConfigurationScheduleViewController()
-        configurationScheduleViewController.activeDaysWeeks = activeDaysWeeks
+    private func presentCategoriesListAsSheet(trackerCategory: String) {
         
-        configurationScheduleViewController.onSave = { [weak self] newActiveDays in
+        let categoriesListViewModel = CategoriesListViewModel()
+        categoriesListViewModel.currentCategory = trackerCategory
+        categoriesListViewModel.onSelectTrackerCategory = { [weak self] newTrackerCategory in
+            self?.trackerCategory = newTrackerCategory
+            self?.categoryDescriptionLabel.text = self?.getCategoryRepresentation()
+            
+            self?.updateCreateButtonState()
+        }
+        
+        let categoriesListViewController = CategoriesListViewController()
+        categoriesListViewController.initialize(viewModel: categoriesListViewModel)
+        
+        let navigationController = UINavigationController(rootViewController: categoriesListViewController)
+        navigationController.modalPresentationStyle = .pageSheet
+        
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.preferredCornerRadius = Theme.sheetPresentationCornerRadius
+        }
+        
+        present(navigationController, animated: true)
+    }
+    
+    private func presentScheduleAsSheet(activeDaysWeeks: [DayWeeks]) {
+        let scheduleViewController = ScheduleViewController()
+        scheduleViewController.activeDaysWeeks = activeDaysWeeks
+        
+        scheduleViewController.onSave = { [weak self] newActiveDays in
             self?.trackerActiveDaysWeeks = newActiveDays
             self?.scheduleDescriptionLabel.text = self?.getActiveDaysWeeksRepresentation()
             
             self?.updateCreateButtonState()
         }
         
-        let navigationController = UINavigationController(rootViewController: configurationScheduleViewController)
+        let navigationController = UINavigationController(rootViewController: scheduleViewController)
         navigationController.modalPresentationStyle = .pageSheet
         
         if let sheet = navigationController.sheetPresentationController {

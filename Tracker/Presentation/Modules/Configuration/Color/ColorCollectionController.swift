@@ -1,5 +1,5 @@
 //
-//  ConfigurationColorCollectionController.swift
+//  ColorCollectionController.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 28.08.2025.
@@ -7,7 +7,31 @@
 
 import UIKit
 
-final class ConfigurationColorCollectionController: NSObject {
+private enum Theme {
+    static let headerTitle: String = "Цвет"
+    
+    static let cellBorderWidth: CGFloat = 3.0
+    static let cellWithoutBorder: CGFloat = 0.0
+    
+    static let alphaComponent: CGFloat = 0.3
+    
+    enum CollectionView {
+        static let collectionViewHeaderHeight: CGFloat = 44.0
+        static let collectionViewCellHeight: CGFloat = 52.0
+        static let collectionViewCellCount: Int = 6
+        static let collectionViewTopInset: CGFloat = 10.0
+        static let collectionViewBottomInset: CGFloat = 0.0
+        static let collectionViewLeftInset: CGFloat = 16.0
+        static let collectionViewRightInset: CGFloat = 16.0
+        static let collectionViewCellSpacing: CGFloat = 10.0
+        static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+        
+        static let collectionViewTopConstraint: CGFloat = 20.0
+        static let collectionViewHeightConstraint: CGFloat = 230.0
+    }
+}
+
+final class ColorCollectionController: NSObject {
     
     // MARK: - Public Properties
     var onSelectColor: ((UIColor) -> Void)?
@@ -16,30 +40,6 @@ final class ConfigurationColorCollectionController: NSObject {
     var selectedColor: UIColor = .clear
     
     // MARK: - Private Properties
-    private enum Theme {
-        static let headerTitle: String = "Цвет"
-        
-        static let cellBorderWidth: CGFloat = 3.0
-        static let cellWithoutBorder: CGFloat = 0.0
-        
-        static let alphaComponent: CGFloat = 0.3
-        
-        enum CollectionView {
-            static let collectionViewHeaderHeight: CGFloat = 44.0
-            static let collectionViewCellHeight: CGFloat = 52.0
-            static let collectionViewCellCount: Int = 6
-            static let collectionViewTopInset: CGFloat = 10.0
-            static let collectionViewBottomInset: CGFloat = 0.0
-            static let collectionViewLeftInset: CGFloat = 16.0
-            static let collectionViewRightInset: CGFloat = 16.0
-            static let collectionViewCellSpacing: CGFloat = 10.0
-            static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
-            
-            static let collectionViewTopConstraint: CGFloat = 20.0
-            static let collectionViewHeightConstraint: CGFloat = 230.0
-        }
-    }
-    
     private var collectionView: UICollectionView?
     
     // MARK: - Initializers
@@ -48,7 +48,7 @@ final class ConfigurationColorCollectionController: NSObject {
         
         self.collectionView = collectionView
         
-        collectionView.register(ConfigurationColorCollectionViewCell.self, forCellWithReuseIdentifier: ConfigurationColorCollectionViewCell.identifier)
+        collectionView.register(ColorCollectionViewCell.self, forCellWithReuseIdentifier: ColorCollectionViewCell.identifier)
         collectionView.register(TrackerSupplementaryHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackerSupplementaryHeaderView.identifier)
         
         collectionView.dataSource = self
@@ -59,7 +59,7 @@ final class ConfigurationColorCollectionController: NSObject {
 }
 
 // MARK: - UICollectionViewDataSource Methods
-extension ConfigurationColorCollectionController: UICollectionViewDataSource {
+extension ColorCollectionController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return colors.count
     }
@@ -87,7 +87,7 @@ extension ConfigurationColorCollectionController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ConfigurationColorCollectionViewCell.identifier, for: indexPath) as? ConfigurationColorCollectionViewCell else { return UICollectionViewCell()}
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCollectionViewCell.identifier, for: indexPath) as? ColorCollectionViewCell else { return UICollectionViewCell()}
         
         cell.containerView.backgroundColor = colors[indexPath.item]
         
@@ -96,7 +96,7 @@ extension ConfigurationColorCollectionController: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout Methods
-extension ConfigurationColorCollectionController: UICollectionViewDelegateFlowLayout {
+extension ColorCollectionController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
@@ -128,9 +128,9 @@ extension ConfigurationColorCollectionController: UICollectionViewDelegateFlowLa
 }
 
 // MARK: - UICollectionViewDelegate Methods
-extension ConfigurationColorCollectionController: UICollectionViewDelegate {
+extension ColorCollectionController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationColorCollectionViewCell
+        let cell = collectionView.cellForItem(at: indexPath) as? ColorCollectionViewCell
         
         
         if (selectedColor == colors[indexPath.item]) {
@@ -148,7 +148,7 @@ extension ConfigurationColorCollectionController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationColorCollectionViewCell
+        let cell = collectionView.cellForItem(at: indexPath) as? ColorCollectionViewCell
         cell?.contentView.layer.borderWidth = Theme.cellWithoutBorder
     }
 }

@@ -1,5 +1,5 @@
 //
-//  ConfigurationColorCollectionViewCell.swift
+//  ColorCollectionViewCell.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 22.08.2025.
@@ -7,7 +7,13 @@
 
 import UIKit
 
-final class ConfigurationColorCollectionViewCell: UICollectionViewCell {
+private enum Theme {
+    static let cornerRadius: CGFloat = 8.0
+    static let containerViewHeightConstraint: CGFloat = 40.0
+    static let containerViewWidthConstraint: CGFloat = 40.0
+}
+
+final class ColorCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Public Properties
     static let identifier = "ColorCell"
@@ -18,13 +24,6 @@ final class ConfigurationColorCollectionViewCell: UICollectionViewCell {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-    // MARK: - Private Properties
-    private enum Theme {
-        static let cornerRadius: CGFloat = 8.0
-        static let containerViewHeightConstraint: CGFloat = 40.0
-        static let containerViewWidthConstraint: CGFloat = 40.0
-    }
     
     // MARK: - Overrides Methods
     override init(frame: CGRect) {

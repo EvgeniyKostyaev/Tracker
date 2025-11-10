@@ -7,6 +7,39 @@
 
 import UIKit
 
+private enum Theme {
+    static let cardViewCornerRadius: CGFloat = 16.0
+    static let cardViewHeightConstraint: CGFloat = 90.0
+    
+    static let emojiCircleViewCornerRadius: CGFloat = 12.0
+    static let emojiLabelFontSize: CGFloat = 14.0
+    static let emojiCircleViewTopConstraint: CGFloat = 12.0
+    static let emojiCircleViewLeadingConstraint: CGFloat = 12.0
+    static let emojiCircleViewWidthConstraint: CGFloat = 24.0
+    static let emojiCircleViewHeightConstraint: CGFloat = 24.0
+    
+    static let titleLabelFontSize: CGFloat = 12.0
+    static let titleLabelNumberOfLines: Int = 2
+    static let titleLabelLeadingConstraint: CGFloat = 12.0
+    static let titleLabelTrailingConstraint: CGFloat = -12.0
+    static let titleLabelBottomConstraint: CGFloat = -12.0
+    
+    static let daysLabelFontSize: CGFloat = 12.0
+    static let daysLabelTopConstraint: CGFloat = 16.0
+    static let daysLabelHeightConstraint: CGFloat = 18.0
+    static let daysLabelLeadingConstraint: CGFloat = 12.0
+    static let daysLabelTrailingConstraint: CGFloat = 12.0
+    
+    static let plusButtonFontSize: CGFloat = 24.0
+    static let plusButtonCornerRadius: CGFloat = 17.0
+    static let plusButtonWidthConstraint: CGFloat = 34.0
+    static let plusButtonHeightConstraint: CGFloat = 34.0
+    static let plusButtonTrailingConstraint: CGFloat = -12.0
+    static let plusButtonSymbolConfigurationPointSize: CGFloat = 10.0
+    static let plusButtonImageSystemNamePlus: String = "plus"
+    static let plusButtonImageSystemNameCheckmark: String = "checkmark"
+}
+
 protocol TrackerCollectionViewCellDelegate: AnyObject {
     func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton indexPath: IndexPath?)
 }
@@ -21,40 +54,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     var indexPath: IndexPath?
     
     // MARK: - Private Properties
-    private enum Theme {
-        static let cardViewCornerRadius: CGFloat = 16.0
-        static let cardViewHeightConstraint: CGFloat = 90.0
-        
-        static let emojiCircleViewCornerRadius: CGFloat = 12.0
-        static let emojiLabelFontSize: CGFloat = 14.0
-        static let emojiCircleViewTopConstraint: CGFloat = 12.0
-        static let emojiCircleViewLeadingConstraint: CGFloat = 12.0
-        static let emojiCircleViewWidthConstraint: CGFloat = 24.0
-        static let emojiCircleViewHeightConstraint: CGFloat = 24.0
-        
-        static let titleLabelFontSize: CGFloat = 12.0
-        static let titleLabelNumberOfLines: Int = 2
-        static let titleLabelLeadingConstraint: CGFloat = 12.0
-        static let titleLabelTrailingConstraint: CGFloat = -12.0
-        static let titleLabelBottomConstraint: CGFloat = -12.0
-        
-        static let daysLabelFontSize: CGFloat = 12.0
-        static let daysLabelTopConstraint: CGFloat = 16.0
-        static let daysLabelHeightConstraint: CGFloat = 18.0
-        static let daysLabelLeadingConstraint: CGFloat = 12.0
-        static let daysLabelTrailingConstraint: CGFloat = 12.0
-        
-        static let plusButtonFontSize: CGFloat = 24.0
-        static let plusButtonCornerRadius: CGFloat = 17.0
-        static let plusButtonWidthConstraint: CGFloat = 34.0
-        static let plusButtonHeightConstraint: CGFloat = 34.0
-        static let plusButtonTrailingConstraint: CGFloat = -12.0
-        static let plusButtonSymbolConfigurationPointSize: CGFloat = 10.0
-        static let plusButtonImageSystemNamePlus: String = "plus"
-        static let plusButtonImageSystemNameCheckmark: String = "checkmark"
-    }
-
-    
     private let cardView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = Theme.cardViewCornerRadius

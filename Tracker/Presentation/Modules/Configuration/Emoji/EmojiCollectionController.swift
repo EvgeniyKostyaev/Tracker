@@ -1,5 +1,5 @@
 //
-//  ConfigurationEmojiCollectionController.swift
+//  EmojiCollectionController.swift
 //  Tracker
 //
 //  Created by Evgeniy Kostyaev on 28.08.2025.
@@ -7,7 +7,26 @@
 
 import UIKit
 
-final class ConfigurationEmojiCollectionController: NSObject {
+private enum Theme {
+    static let headerTitle: String = "Emoji"
+    
+    enum CollectionView {
+        static let collectionViewHeaderHeight: CGFloat = 44.0
+        static let collectionViewCellHeight: CGFloat = 52.0
+        static let collectionViewCellCount: Int = 6
+        static let collectionViewTopInset: CGFloat = 10.0
+        static let collectionViewBottomInset: CGFloat = 0.0
+        static let collectionViewLeftInset: CGFloat = 16.0
+        static let collectionViewRightInset: CGFloat = 16.0
+        static let collectionViewCellSpacing: CGFloat = 10.0
+        static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+        
+        static let collectionViewTopConstraint: CGFloat = 20.0
+        static let collectionViewHeightConstraint: CGFloat = 230.0
+    }
+}
+
+final class EmojiCollectionController: NSObject {
     
     // MARK: - Public Properties
     var onSelectEmoji: ((String) -> Void)?
@@ -16,25 +35,6 @@ final class ConfigurationEmojiCollectionController: NSObject {
     var selectedEmoji = String()
     
     // MARK: - Private Properties
-    private enum Theme {
-        static let headerTitle: String = "Emoji"
-        
-        enum CollectionView {
-            static let collectionViewHeaderHeight: CGFloat = 44.0
-            static let collectionViewCellHeight: CGFloat = 52.0
-            static let collectionViewCellCount: Int = 6
-            static let collectionViewTopInset: CGFloat = 10.0
-            static let collectionViewBottomInset: CGFloat = 0.0
-            static let collectionViewLeftInset: CGFloat = 16.0
-            static let collectionViewRightInset: CGFloat = 16.0
-            static let collectionViewCellSpacing: CGFloat = 10.0
-            static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
-            
-            static let collectionViewTopConstraint: CGFloat = 20.0
-            static let collectionViewHeightConstraint: CGFloat = 230.0
-        }
-    }
-    
     private var collectionView: UICollectionView?
     
     // MARK: - Initializers
@@ -43,7 +43,7 @@ final class ConfigurationEmojiCollectionController: NSObject {
         
         self.collectionView = collectionView
         
-        collectionView.register(ConfigurationEmojiCollectionViewCell.self, forCellWithReuseIdentifier: ConfigurationEmojiCollectionViewCell.identifier)
+        collectionView.register(EmojiCollectionViewCell.self, forCellWithReuseIdentifier: EmojiCollectionViewCell.identifier)
         collectionView.register(TrackerSupplementaryHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackerSupplementaryHeaderView.identifier)
         
         collectionView.dataSource = self
@@ -54,7 +54,7 @@ final class ConfigurationEmojiCollectionController: NSObject {
 }
 
 // MARK: - UICollectionViewDataSource Methods
-extension ConfigurationEmojiCollectionController: UICollectionViewDataSource {
+extension EmojiCollectionController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return emojies.count
     }
@@ -82,7 +82,7 @@ extension ConfigurationEmojiCollectionController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ConfigurationEmojiCollectionViewCell.identifier, for: indexPath) as? ConfigurationEmojiCollectionViewCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCollectionViewCell.identifier, for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
         
         cell.titleLabel.text = emojies[indexPath.row]
         
@@ -91,7 +91,7 @@ extension ConfigurationEmojiCollectionController: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout Methods
-extension ConfigurationEmojiCollectionController: UICollectionViewDelegateFlowLayout {
+extension EmojiCollectionController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         referenceSizeForHeaderInSection section: Int) -> CGSize {
@@ -123,9 +123,9 @@ extension ConfigurationEmojiCollectionController: UICollectionViewDelegateFlowLa
 }
 
 // MARK: - UICollectionViewDelegate Methods
-extension ConfigurationEmojiCollectionController: UICollectionViewDelegate {
+extension EmojiCollectionController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationEmojiCollectionViewCell
+        let cell = collectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell
         
         
         if (selectedEmoji == emojies[indexPath.item]) {
@@ -142,7 +142,7 @@ extension ConfigurationEmojiCollectionController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? ConfigurationEmojiCollectionViewCell
+        let cell = collectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell
         cell?.backgroundColor = .clear
     }
 }
