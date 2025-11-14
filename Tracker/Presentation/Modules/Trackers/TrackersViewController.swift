@@ -10,7 +10,6 @@ import UIKit
 private enum Theme {
     static let title: String = "Трекеры"
     static let searchPlaceholder: String = "Поиск"
-    static let emptySatateTitle: String = "Что будем отслеживать?"
     
     static let sheetPresentationCornerRadius: CGFloat = 16.0
     
@@ -58,7 +57,7 @@ final class TrackersViewController: UIViewController {
     }()
     
     private lazy var emptyStateView: EmptyStateView = {
-        let emptyStateView = EmptyStateView(image: UIImage(resource: .noItems), text: Theme.emptySatateTitle)
+        let emptyStateView = EmptyStateView(image: UIImage(resource: .noItems), text: "empty_satate_title".localized)
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         
         return emptyStateView
