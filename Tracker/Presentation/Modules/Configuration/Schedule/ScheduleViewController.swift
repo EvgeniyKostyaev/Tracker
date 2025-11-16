@@ -8,9 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let title: String = "Расписание"
-    static let doneButtonTitle: String = "Готово"
-    
     static let containerViewCornerRadius: CGFloat = 16.0
     static let tableViewSeparatorInset: CGFloat = 16.0
     
@@ -60,7 +57,7 @@ final class ScheduleViewController: UIViewController {
     
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.doneButtonTitle, for: .normal)
+        button.setTitle("schedule_done_button_title".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
         button.layer.cornerRadius = Theme.DoneButton.doneButtonCornerRadius
@@ -82,7 +79,7 @@ final class ScheduleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = Theme.title
+        title = "schedule_tite".localized
         
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance

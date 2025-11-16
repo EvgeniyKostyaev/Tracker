@@ -8,10 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let title: String = "Новая категория"
-    static let doneButtonTitle: String = "Готово"
-    static let textFieldPlaceholder: String = "Введите название категории"
-    
     enum NameTextField {
         static let nameTextFieldCornerRadius: CGFloat = 16.0
         static let nameTextFieldLimit: Int = 30
@@ -42,7 +38,7 @@ final class NewCategoryViewController: UIViewController {
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
         textField.delegate = self
-        textField.placeholder = Theme.textFieldPlaceholder
+        textField.placeholder = "new_category_text_field_placeholder".localized
         textField.backgroundColor = .trackerLightGray.withAlphaComponent(Theme.alphaComponent)
         textField.layer.cornerRadius = Theme.NameTextField.nameTextFieldCornerRadius
         textField.font = .systemFont(ofSize: Theme.NameTextField.nameTextFieldFontSize)
@@ -56,7 +52,7 @@ final class NewCategoryViewController: UIViewController {
     
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.doneButtonTitle, for: .normal)
+        button.setTitle("new_category_done_button_title".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
         button.layer.cornerRadius = Theme.DoneButton.doneButtonCornerRadius
@@ -69,7 +65,7 @@ final class NewCategoryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = Theme.title
+        title = "new_category_title".localized
         
         updateDoneButtonState()
         

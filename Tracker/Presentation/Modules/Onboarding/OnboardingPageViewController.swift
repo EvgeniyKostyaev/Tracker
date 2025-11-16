@@ -9,11 +9,6 @@ import Foundation
 import UIKit
 
 private enum Theme {
-    static let buttonTitle: String = "Вот это технологии!"
-    
-    static let firstTitle: String = "Отслеживайте только то, что хотите"
-    static let secondTitle: String = "Даже если это не литры воды и йога"
-    
     static let pageControlBottomConstraint: CGFloat = -24.0
     
     enum ActionButton {
@@ -32,8 +27,8 @@ final class OnboardingPageViewController: UIPageViewController {
     private var appSettings: AppSettingsProtocol?
     
     private lazy var pages: [UIViewController] = {
-        let firstPage = PageViewController(image: .firstPageOnboarding, text: Theme.firstTitle)
-        let secondPage = PageViewController(image: .secondPageOnboarding, text: Theme.secondTitle)
+        let firstPage = PageViewController(image: .firstPageOnboarding, text: "onboarding_first_title".localized)
+        let secondPage = PageViewController(image: .secondPageOnboarding, text: "onboarding_second_title".localized)
         
         return [firstPage, secondPage]
     }()
@@ -52,7 +47,7 @@ final class OnboardingPageViewController: UIPageViewController {
     
     private lazy var okButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.buttonTitle, for: .normal)
+        button.setTitle("onboarding_button_title".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
         button.titleLabel?.font = UIFont.systemFont(ofSize: Theme.ActionButton.actionButtonFontSise, weight: .medium)

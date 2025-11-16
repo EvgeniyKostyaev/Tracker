@@ -8,16 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let habitTitle: String = "Новая привычка"
-    static let irregularTitle: String = "Новое нерегулярное событие"
-    static let textFieldPlaceholder: String = "Введите название трекера"
-    static let categoryButtonTitle: String = "Категория"
-    static let scheduleButtonTitle: String = "Расписание"
-    static let cancelButtonTitle: String = "Отменить"
-    static let createButtonTitle: String = "Создать"
-    static let warningText: String = "Ограничение 38 символов"
-    static let everyDayRepresentation: String = "Каждый день"
-    
     static let warningLabelFontSize: CGFloat = 17.0
     
     static let configurationDescriptionLabelTrailingConstraint: CGFloat = -36.0
@@ -134,7 +124,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
         textField.delegate = self
-        textField.placeholder = Theme.textFieldPlaceholder
+        textField.placeholder = "configuration_text_field_placeholder".localized
         textField.backgroundColor = .trackerLightGray.withAlphaComponent(Theme.alphaComponent)
         textField.layer.cornerRadius = Theme.NameTextField.nameTextFieldCornerRadius
         textField.font = .systemFont(ofSize: Theme.NameTextField.nameTextFieldFontSize)
@@ -148,7 +138,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private let warningLabel: UILabel = {
         let label = UILabel()
-        label.text = Theme.warningText
+        label.text = "configuration_warning_text".localized
         label.font = .systemFont(ofSize: Theme.warningLabelFontSize)
         label.textAlignment = .center
         label.textColor = .trackerRed
@@ -195,7 +185,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var categoryTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = Theme.categoryButtonTitle
+        label.text = "configuration_category_button_title".localized
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: Theme.ActionButtons.configurationTitleLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -233,7 +223,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var scheduleTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = Theme.scheduleButtonTitle
+        label.text = "configuration_schedule_button_title".localized
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: Theme.ActionButtons.configurationTitleLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -305,7 +295,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.cancelButtonTitle, for: .normal)
+        button.setTitle("configuration_cancel_button_title".localized, for: .normal)
         button.setTitleColor(.trackerRed, for: .normal)
         button.backgroundColor = .white
         button.layer.borderWidth = Theme.ActionButtons.cancellButtonBorderWidth
@@ -318,7 +308,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var createButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.createButtonTitle, for: .normal)
+        button.setTitle("configuration_create_button_title".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .trackerGray
         button.layer.cornerRadius = Theme.ActionButtons.actionButtonsCornerRadius
@@ -366,8 +356,8 @@ final class ConfigurationTrackerViewController: UIViewController {
     // MARK: - Private methods
     private func getTitle() -> String {
         switch trackerType {
-        case .habit: return Theme.habitTitle
-        case .irregular: return Theme.irregularTitle
+        case .habit: return "configuration_habit_title".localized
+        case .irregular: return "configuration_irregular_title".localized
         }
     }
     
@@ -379,7 +369,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         var activeDaysWeeksRepresentation = String()
         
         if (trackerActiveDaysWeeks.count == Theme.allDaysOfWeekCount) {
-            activeDaysWeeksRepresentation = Theme.everyDayRepresentation
+            activeDaysWeeksRepresentation = "configuration_every_day_representation".localized
         } else {
             trackerActiveDaysWeeks.enumerated().forEach { (index, activeDayWeeks) in
                 let activeDayWeeksRepresentation = (index == trackerActiveDaysWeeks.count - 1) ? activeDayWeeks.shortRepresentation : activeDayWeeks.shortRepresentation + ", "

@@ -8,8 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let headerTitle: String = "Emoji"
-    
     enum CollectionView {
         static let collectionViewHeaderHeight: CGFloat = 44.0
         static let collectionViewCellHeight: CGFloat = 52.0
@@ -76,7 +74,7 @@ extension EmojiCollectionController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
 
-        header.titleLabel.text = Theme.headerTitle
+        header.titleLabel.text = "emoji_header_title".localized
 
         return header
     }

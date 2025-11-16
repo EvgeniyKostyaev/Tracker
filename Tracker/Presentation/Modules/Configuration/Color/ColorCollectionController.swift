@@ -8,8 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let headerTitle: String = "Цвет"
-    
     static let cellBorderWidth: CGFloat = 3.0
     static let cellWithoutBorder: CGFloat = 0.0
     
@@ -81,7 +79,7 @@ extension ColorCollectionController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
 
-        header.titleLabel.text = Theme.headerTitle
+        header.titleLabel.text = "color_header_title".localized
 
         return header
     }

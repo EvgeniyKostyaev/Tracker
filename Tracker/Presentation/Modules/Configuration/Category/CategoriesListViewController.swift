@@ -8,10 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let title: String = "Категория"
-    static let addButtonTitle: String = "Добавить категорию"
-    static let emptySatateTitle: String = "Привычки и события можно объединить по смыслу"
-    
     static let containerViewCornerRadius: CGFloat = 16.0
     static let tableViewSeparatorInset: CGFloat = 16.0
     static let sheetPresentationCornerRadius: CGFloat = 16.0
@@ -63,7 +59,7 @@ final class CategoriesListViewController: UIViewController {
     
     private lazy var addButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.addButtonTitle, for: .normal)
+        button.setTitle("categories_add_button_title".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
         button.layer.cornerRadius = Theme.AddButton.addButtonCornerRadius
@@ -81,7 +77,7 @@ final class CategoriesListViewController: UIViewController {
     }()
     
     private lazy var emptyStateView: EmptyStateView = {
-        let emptyStateView = EmptyStateView(image: UIImage(resource: .noItems), text: Theme.emptySatateTitle)
+        let emptyStateView = EmptyStateView(image: UIImage(resource: .noItems), text: "categories_empty_satate_title".localized)
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         
         return emptyStateView
@@ -136,7 +132,7 @@ final class CategoriesListViewController: UIViewController {
 
     private func setupView() {
         view.backgroundColor = .white
-        title = Theme.title
+        title = "categories_title".localized
     }
 
     private func setupNavigationBar() {

@@ -8,10 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let title: String = "Создание трекера"
-    static let habitButtonTitle: String = "Привычка"
-    static let irregularEventButtonTitle: String = "Нерегулярное событие"
-    
     static let sheetPresentationCornerRadius: CGFloat = 16.0
     
     enum ActionButton {
@@ -36,7 +32,7 @@ final class CreatingTrackerViewController: UIViewController {
     // MARK: - Private properties
     private lazy var habitButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.habitButtonTitle, for: .normal)
+        button.setTitle("creating_habit_button_title".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
         button.titleLabel?.font = UIFont.systemFont(ofSize: Theme.ActionButton.actionButtonFontSise, weight: .medium)
@@ -48,7 +44,7 @@ final class CreatingTrackerViewController: UIViewController {
     
     private lazy var irregularEventButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.irregularEventButtonTitle, for: .normal)
+        button.setTitle("creating_irregular_event_button_title".localized, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .black
         button.titleLabel?.font = UIFont.systemFont(ofSize: Theme.ActionButton.actionButtonFontSise, weight: .medium)
@@ -70,7 +66,7 @@ final class CreatingTrackerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = Theme.title
+        title = "creating_title".localized
         
         setupLayout()
     }

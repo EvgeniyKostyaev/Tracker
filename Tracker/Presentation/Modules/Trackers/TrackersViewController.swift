@@ -8,9 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let title: String = "Трекеры"
-    static let searchPlaceholder: String = "Поиск"
-    
     static let sheetPresentationCornerRadius: CGFloat = 16.0
     
     enum CollectionView {
@@ -57,7 +54,7 @@ final class TrackersViewController: UIViewController {
     }()
     
     private lazy var emptyStateView: EmptyStateView = {
-        let emptyStateView = EmptyStateView(image: UIImage(resource: .noItems), text: "empty_satate_title".localized)
+        let emptyStateView = EmptyStateView(image: UIImage(resource: .noItems), text: "trackers_empty_satate_title".localized)
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         
         return emptyStateView
@@ -93,14 +90,14 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setupTitle() {
-        title = Theme.title
+        title = "trackers_title".localized
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
     }
     
     private func setupSearchController() {
         let searchController = UISearchController(searchResultsController: nil)
-        searchController.searchBar.placeholder = Theme.searchPlaceholder
+        searchController.searchBar.placeholder = "trackers_search_placeholder".localized
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         navigationItem.searchController = searchController
