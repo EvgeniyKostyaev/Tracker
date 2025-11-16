@@ -6,6 +6,9 @@
   
 */
 
+"trackers_tab_bar_item_title" = "Трекеры";
+"statistic_tab_bar_item_title" = "Статистика";
+
 "trackers_title" = "Трекеры";
 "trackers_empty_satate_title" = "Что будем отслеживать?";
 "trackers_search_placeholder" = "Поиск";
@@ -31,6 +34,22 @@
 
 "schedule_tite" = "Расписание";
 "schedule_done_button_title" = "Готово";
+
+"schedule_monday" = "Понедельник";
+"schedule_tuesday" = "Вторник";
+"schedule_wednesday" = "Среда";
+"schedule_thursday" = "Четверг";
+"schedule_friday" = "Пятница";
+"schedule_saturday" = "Суббота";
+"schedule_sunday" = "Воскресенье";
+
+"schedule_monday_short" = "Пн";
+"schedule_tuesday_short" = "Вт";
+"schedule_wednesday_short" = "Ср";
+"schedule_thursday_short" = "Чт";
+"schedule_friday_short" = "Пт";
+"schedule_saturday_short" = "Сб";
+"schedule_sunday_short" = "Вс";
 
 "configuration_habit_title" = "Новая привычка";
 "configuration_irregular_title" = "Новое нерегулярное событие";

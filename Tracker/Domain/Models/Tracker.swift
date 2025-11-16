@@ -21,25 +21,25 @@ enum DayWeeks: Int {
 extension DayWeeks {
     var shortRepresentation: String {
         switch self {
-        case .monday: return "Пн"
-        case .tuesday: return "Вт"
-        case .wednesday: return "Ср"
-        case .thursday: return "Чт"
-        case .friday: return "Пт"
-        case .saturday: return "Сб"
-        case .sunday: return "Вс"
+        case .monday: return "schedule_monday_short".localized
+        case .tuesday: return "schedule_tuesday_short".localized
+        case .wednesday: return "schedule_wednesday_short".localized
+        case .thursday: return "schedule_thursday_short".localized
+        case .friday: return "schedule_friday_short".localized
+        case .saturday: return "schedule_saturday_short".localized
+        case .sunday: return "schedule_sunday_short".localized
         }
     }
     
     var fullRepresentation: String {
         switch self {
-        case .monday: return "Понедельник"
-        case .tuesday: return "Вторник"
-        case .wednesday: return "Среда"
-        case .thursday: return "Четверг"
-        case .friday: return "Пятница"
-        case .saturday: return "Суббота"
-        case .sunday: return "Воскресенье"
+        case .monday: return "schedule_monday".localized
+        case .tuesday: return "schedule_tuesday".localized
+        case .wednesday: return "schedule_wednesday".localized
+        case .thursday: return "schedule_thursday".localized
+        case .friday: return "schedule_friday".localized
+        case .saturday: return "schedule_saturday".localized
+        case .sunday: return "schedule_sunday".localized
         }
     }
 }

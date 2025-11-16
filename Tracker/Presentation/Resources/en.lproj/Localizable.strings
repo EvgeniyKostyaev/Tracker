@@ -6,6 +6,9 @@
   
 */
 
+"trackers_tab_bar_item_title" = "Trackers";
+"statistic_tab_bar_item_title" = "Statistic";
+
 "trackers_title" = "Trackers";
 "trackers_empty_satate_title" = "What will we track?";
 "trackers_search_placeholder" = "Search";
@@ -18,7 +21,7 @@
 "creating_habit_button_title" = "Habit";
 "creating_irregular_event_button_title" = "Irregular event";
 
-"categories_title" = "Категория";
+"categories_title" = "Category";
 "categories_add_button_title" = "Add category";
 "categories_empty_satate_title" = "Habits and events can be combined by meaningу";
 
@@ -31,6 +34,22 @@
 
 "schedule_tite" = "Schedule";
 "schedule_done_button_title" = "Done";
+
+"schedule_monday" = "Monday";
+"schedule_tuesday" = "Tuesday";
+"schedule_wednesday" = "Wednesday";
+"schedule_thursday" = "Thursday";
+"schedule_friday" = "Friday";
+"schedule_saturday" = "Saturday";
+"schedule_sunday" = "Sunday";
+
+"schedule_monday_short" = "Mon";
+"schedule_tuesday_short" = "Tue";
+"schedule_wednesday_short" = "Wed";
+"schedule_thursday_short" = "Thu";
+"schedule_friday_short" = "Fri";
+"schedule_saturday_short" = "Sat";
+"schedule_sunday_short" = "Sun";
 
 "configuration_habit_title" = "New habit";
 "configuration_irregular_title" = "New irregular event";
