@@ -168,11 +168,12 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     private func getDaysRepresentation(_ dayCount: Int) -> String {
-        switch dayCount {
-        case 1: return "\(dayCount) день"
-        case 2...4: return "\(dayCount) дня"
-        default: return "\(dayCount) дней"
-        }
+        let daysString = String.localizedStringWithFormat(
+            NSLocalizedString("numberOfDays", comment: String()),
+            dayCount
+        )
+        
+        return daysString
     }
     
     private func getPlusButtonImage(_ isCompleted: Bool) -> UIImage? {
