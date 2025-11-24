@@ -10,11 +10,13 @@ import Foundation
 class FilterTrackersUseCase {
     
     // MARK: - Public methods
-    func filterTrackerCategoriesList(_ trackerCategories: [TrackerCategory], date: Date) -> [TrackerCategory] {
+    func filterTrackerCategoriesList(_ trackerCategories: [TrackerCategory], date: Date, searchKeyword: String) -> [TrackerCategory] {
         var trackerCategoriesList: [TrackerCategory] = []
         
         trackerCategories.forEach { trackerCategory in
-            let filteredTrackers = filterTrackersList(trackerCategory.trackers, date: date)
+            let filteredTrackersByKeyword = filterTrackersListBySearchKeyword(trackerCategory.trackers, searchKeyword: searchKeyword)
+            
+            let filteredTrackers = filterTrackersListByDate(filteredTrackersByKeyword, date: date)
             if (!filteredTrackers.isEmpty) {
                 trackerCategoriesList.append(TrackerCategory(title: trackerCategory.title, trackers: filteredTrackers))
             }
@@ -24,7 +26,17 @@ class FilterTrackersUseCase {
     }
     
     // MARK: - Private methods
-    private func filterTrackersList(_ trackers: [Tracker], date: Date) -> [Tracker] {
+    private func filterTrackersListBySearchKeyword(_ trackers: [Tracker], searchKeyword: String) -> [Tracker] {
+        if (searchKeyword.isEmpty) {
+            return trackers
+        }
+        
+        return trackers.filter { tracker in
+            return tracker.title.lowercased().contains(searchKeyword.lowercased())
+        }
+    }
+    
+    private func filterTrackersListByDate(_ trackers: [Tracker], date: Date) -> [Tracker] {
         return trackers.filter { tracker in
             
             switch (tracker.type) {

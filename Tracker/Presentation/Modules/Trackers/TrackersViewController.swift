@@ -38,6 +38,7 @@ final class TrackersViewController: UIViewController {
     
     private var trackerCategories: [TrackerCategory] = []
     private var activeDate: Date = Date()
+    private var searchKeyword: String = String()
     
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -53,11 +54,18 @@ final class TrackersViewController: UIViewController {
         return collectionView
     }()
     
-    private lazy var emptyStateView: EmptyStateView = {
-        let emptyStateView = EmptyStateView(image: UIImage(resource: .noItems), text: "trackers_empty_satate_title".localized)
-        emptyStateView.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var emptyMainStateView: EmptyStateView = {
+        let emptyMainStateView = EmptyStateView(image: UIImage(resource: .noItems), text: "trackers_empty_main_satate_title".localized)
+        emptyMainStateView.translatesAutoresizingMaskIntoConstraints = false
         
-        return emptyStateView
+        return emptyMainStateView
+    }()
+    
+    private lazy var emptySearchStateView: EmptyStateView = {
+        let emptySearchStateView = EmptyStateView(image: UIImage(resource: .nothingFound), text: "trackers_empty_search_satate_title".localized)
+        emptySearchStateView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return emptySearchStateView
     }()
     
     // MARK: - Overrides Methods
@@ -98,8 +106,10 @@ final class TrackersViewController: UIViewController {
     private func setupSearchController() {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.placeholder = "trackers_search_placeholder".localized
+        searchController.searchBar.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchResultsUpdater = self
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
     }
@@ -126,7 +136,8 @@ final class TrackersViewController: UIViewController {
     
     private func setupLayout() {
         view.addSubview(collectionView)
-        view.addSubview(emptyStateView)
+        view.addSubview(emptyMainStateView)
+        view.addSubview(emptySearchStateView)
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -134,23 +145,37 @@ final class TrackersViewController: UIViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
-            emptyStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptyStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyMainStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyMainStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.EmptyStateView.emptyStateViewLeadingConstraint),
-            emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.EmptyStateView.emptyStateViewTrailingConstraint),
+            emptyMainStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.EmptyStateView.emptyStateViewLeadingConstraint),
+            emptyMainStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.EmptyStateView.emptyStateViewTrailingConstraint),
+            
+            emptySearchStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptySearchStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            emptySearchStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.EmptyStateView.emptyStateViewLeadingConstraint),
+            emptySearchStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.EmptyStateView.emptyStateViewTrailingConstraint),
         ])
     }
     
     private func updateTrackersUI() {
         let sourceTrackerCategories = trackerCategoryDataProvider.trackerCategories
-        trackerCategories = filterTrackersUseCase.filterTrackerCategoriesList(sourceTrackerCategories, date: activeDate)
+        trackerCategories = filterTrackersUseCase.filterTrackerCategoriesList(sourceTrackerCategories, date: activeDate, searchKeyword: searchKeyword)
         
         if trackerCategories.count > 0 {
             collectionView.isHidden = false
-            emptyStateView.isHidden = true
+            emptyMainStateView.isHidden = true
+            emptySearchStateView.isHidden = true
         } else {
-            emptyStateView.isHidden = false
+            if (searchKeyword.isEmpty) {
+                emptyMainStateView.isHidden = false
+                emptySearchStateView.isHidden = true
+            } else {
+                emptySearchStateView.isHidden = false
+                emptyMainStateView.isHidden = true
+            }
+            
             collectionView.isHidden = true
         }
         
@@ -301,6 +326,25 @@ extension TrackersViewController: TrackerCollectionViewCellDelegate {
         } else {
             trackerRecordStore.addRecord(TrackerRecord(trackerId: tracker.id, date: activeDate))
         }
+    }
+}
+
+// MARK: - UISearchResultsUpdating Methods
+extension TrackersViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if let searchText = searchController.searchBar.text, !searchText.isEmpty {
+            self.searchKeyword = searchText
+        }
+        
+        updateTrackersUI()
+    }
+}
+
+// MARK: - UISearchBarDelegate Methods
+extension TrackersViewController: UISearchBarDelegate {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchKeyword = String()
+        updateTrackersUI()
     }
 }
 

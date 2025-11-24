@@ -10,7 +10,8 @@
 "statistic_tab_bar_item_title" = "Statistic";
 
 "trackers_title" = "Trackers";
-"trackers_empty_satate_title" = "What will we track?";
+"trackers_empty_main_satate_title" = "What will we track?";
+"trackers_empty_search_satate_title" = "Nothing found";
 "trackers_search_placeholder" = "Search";
 
 "onboarding_button_title" = "This is technology!";
