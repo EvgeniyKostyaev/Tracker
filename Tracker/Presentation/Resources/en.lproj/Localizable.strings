@@ -63,5 +63,6 @@
 "configuration_schedule_button_title" = "Scedule";
 "configuration_cancel_button_title" = "Cancel";
 "configuration_create_button_title" = "Create";
+"configuration_save_button_title" = "Save";
 "configuration_warning_text" = "38 character limit";
 "configuration_every_day_representation" = "Every day";

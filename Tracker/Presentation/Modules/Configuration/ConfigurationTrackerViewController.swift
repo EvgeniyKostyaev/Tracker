@@ -64,6 +64,7 @@ private enum Theme {
         static let cancelButtonWidthConstraintMultiplier: CGFloat = 0.44
         
         static let createButtonTrailingConstraint: CGFloat = -20.0
+        static let editButtonTrailingConstraint: CGFloat = -20.0
     }
     
     enum Separator {
@@ -281,7 +282,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         emojiCollectionController.selectedEmoji = trackerEmoji
         emojiCollectionController.onSelectEmoji = { [weak self] selectedEmoji in
             self?.trackerEmoji = selectedEmoji
-            self?.updateCreateButtonState()
+            self?.updateActionButtonsState()
         }
         
         return emojiCollectionController
@@ -299,7 +300,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         colorCollectionController.selectedColor = trackerColor
         colorCollectionController.onSelectColor = { [weak self] selectedColor in
             self?.trackerColor = selectedColor
-            self?.updateCreateButtonState()
+            self?.updateActionButtonsState()
         }
         
         return colorCollectionController
@@ -330,6 +331,18 @@ final class ConfigurationTrackerViewController: UIViewController {
         return button
     }()
     
+    private lazy var editButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("configuration_save_button_title".localized, for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .trackerGray
+        button.layer.cornerRadius = Theme.ActionButtons.actionButtonsCornerRadius
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
+        button.isEnabled = true
+        return button
+    }()
+    
     // MARK: - Overrides methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -343,7 +356,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         setupConfigurationButtonsState()
         setupTapGesture()
         
-        updateCreateButtonState()
+        updateActionButtonsState()
     }
     
     // MARK: - Action methods
@@ -352,7 +365,13 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func createTapped() {
-        onCreate?(getNewTracker(), trackerCategory)
+        onCreate?(getTracker(), trackerCategory)
+        
+        dismiss(animated: true)
+    }
+    
+    @objc private func editTapped() {
+        onEdit?(getTracker())
         
         dismiss(animated: true)
     }
@@ -417,12 +436,13 @@ final class ConfigurationTrackerViewController: UIViewController {
         
         view.addSubview(cancelButton)
         view.addSubview(createButton)
+        view.addSubview(editButton)
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: createButton.topAnchor, constant: -20.0),
+            scrollView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -20.0),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -486,7 +506,12 @@ final class ConfigurationTrackerViewController: UIViewController {
             createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.ActionButtons.createButtonTrailingConstraint),
             createButton.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor),
             createButton.heightAnchor.constraint(equalTo: cancelButton.heightAnchor),
-            createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor)
+            createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor),
+            
+            editButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.ActionButtons.editButtonTrailingConstraint),
+            editButton.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor),
+            editButton.heightAnchor.constraint(equalTo: cancelButton.heightAnchor),
+            editButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor)
         ])
     }
     
@@ -519,7 +544,7 @@ final class ConfigurationTrackerViewController: UIViewController {
             self?.trackerCategory = newTrackerCategory
             self?.categoryDescriptionLabel.text = self?.trackerCategory
             
-            self?.updateCreateButtonState()
+            self?.updateActionButtonsState()
         }
         
         let categoriesListViewController = CategoriesListViewController()
@@ -544,7 +569,7 @@ final class ConfigurationTrackerViewController: UIViewController {
             self?.trackerActiveDaysWeeks = newActiveDays
             self?.scheduleDescriptionLabel.text = self?.getActiveDaysWeeksRepresentation()
             
-            self?.updateCreateButtonState()
+            self?.updateActionButtonsState()
         }
         
         let navigationController = UINavigationController(rootViewController: scheduleViewController)
@@ -558,11 +583,16 @@ final class ConfigurationTrackerViewController: UIViewController {
         present(navigationController, animated: true)
     }
     
-    private func updateCreateButtonState() {
-        if (isValidateConfiguration()) {
-            enableCreateButton()
-        } else {
-            disableCreateButton()
+    private func updateActionButtonsState() {
+        switch configurationType {
+        case .create:
+            editButton.isHidden = true
+            createButton.isHidden = false
+            isValidateConfiguration() ? enableCreateButton(): disableCreateButton()
+        case .edit:
+            createButton.isHidden = true
+            editButton.isHidden = false
+            isValidateConfiguration() ? enableEditButton(): disableEditButton()
         }
     }
     
@@ -585,7 +615,17 @@ final class ConfigurationTrackerViewController: UIViewController {
         createButton.backgroundColor = .trackerGray
     }
     
-    private func getNewTracker() -> Tracker {
+    private func enableEditButton() {
+        editButton.isEnabled = true
+        editButton.backgroundColor = .black
+    }
+    
+    private func disableEditButton() {
+        editButton.isEnabled = false
+        editButton.backgroundColor = .trackerGray
+    }
+    
+    private func getTracker() -> Tracker {
         
         let schedule: Schedule
         
@@ -625,7 +665,7 @@ extension ConfigurationTrackerViewController: UITextFieldDelegate {
         
         trackerName = updatedText.trimmingCharacters(in: .whitespaces)
         
-        updateCreateButtonState()
+        updateActionButtonsState()
         
         return true
     }
@@ -635,7 +675,7 @@ extension ConfigurationTrackerViewController: UITextFieldDelegate {
         
         trackerName = String()
         
-        updateCreateButtonState()
+        updateActionButtonsState()
         
         return true
     }

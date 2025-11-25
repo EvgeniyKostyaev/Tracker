@@ -63,5 +63,6 @@
 "configuration_schedule_button_title" = "Расписание";
 "configuration_cancel_button_title" = "Отменить";
 "configuration_create_button_title" = "Создать";
+"configuration_save_button_title" = "Сохранить";
 "configuration_warning_text" = "Ограничение 38 символов";
 "configuration_every_day_representation" = "Каждый день";
