@@ -87,7 +87,14 @@ extension ColorCollectionController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCollectionViewCell.identifier, for: indexPath) as? ColorCollectionViewCell else { return UICollectionViewCell()}
         
-        cell.containerView.backgroundColor = colors[indexPath.item]
+        cell.containerView.backgroundColor = colors[indexPath.row]
+        
+        if (selectedColor.hexString == colors[indexPath.row].hexString) {
+            cell.contentView.layer.borderWidth = Theme.cellBorderWidth
+            cell.contentView.layer.borderColor = colors[indexPath.row].withAlphaComponent(Theme.alphaComponent).cgColor
+        } else {
+            cell.contentView.layer.borderWidth = Theme.cellWithoutBorder
+        }
         
         return cell
     }
@@ -128,19 +135,10 @@ extension ColorCollectionController: UICollectionViewDelegateFlowLayout {
 // MARK: - UICollectionViewDelegate Methods
 extension ColorCollectionController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? ColorCollectionViewCell
         
+        selectedColor = colors[indexPath.row]
         
-        if (selectedColor == colors[indexPath.item]) {
-            cell?.contentView.layer.borderWidth = Theme.cellWithoutBorder
-            
-            selectedColor = .clear
-        } else {
-            cell?.contentView.layer.borderWidth = Theme.cellBorderWidth
-            cell?.contentView.layer.borderColor = colors[indexPath.item].withAlphaComponent(Theme.alphaComponent).cgColor
-            
-            selectedColor = colors[indexPath.item]
-        }
+        collectionView.reloadData()
         
         onSelectColor?(selectedColor)
     }

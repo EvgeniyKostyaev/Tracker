@@ -132,7 +132,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
-        textField.text = getTrackerName()
+        textField.text = trackerName
         textField.delegate = self
         textField.placeholder = "configuration_text_field_placeholder".localized
         textField.backgroundColor = .trackerLightGray.withAlphaComponent(Theme.alphaComponent)
@@ -204,7 +204,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var categoryDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = getCategoryRepresentation()
+        label.text = trackerCategory
         label.textColor = .trackerGray
         label.font = UIFont.systemFont(ofSize: Theme.ActionButtons.configurationDescriptionLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -278,6 +278,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var emojiCollectionController: EmojiCollectionController = {
         let emojiCollectionController = EmojiCollectionController.init(collectionView: emojiCollectionView)
         emojiCollectionController.emojies = emojies
+        emojiCollectionController.selectedEmoji = trackerEmoji
         emojiCollectionController.onSelectEmoji = { [weak self] selectedEmoji in
             self?.trackerEmoji = selectedEmoji
             self?.updateCreateButtonState()
@@ -295,6 +296,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var colorCollectionController: ColorCollectionController = {
         let colorCollectionController = ColorCollectionController.init(collectionView: colorCollectionView)
         colorCollectionController.colors = colors
+        colorCollectionController.selectedColor = trackerColor
         colorCollectionController.onSelectColor = { [weak self] selectedColor in
             self?.trackerColor = selectedColor
             self?.updateCreateButtonState()
@@ -379,14 +381,6 @@ final class ConfigurationTrackerViewController: UIViewController {
         }
     }
     
-    private func getTrackerName() -> String {
-        return trackerName
-    }
-    
-    private func getCategoryRepresentation() -> String {
-        return trackerCategory
-    }
-    
     private func getActiveDaysWeeksRepresentation() -> String {
         var activeDaysWeeksRepresentation = String()
         
@@ -400,10 +394,6 @@ final class ConfigurationTrackerViewController: UIViewController {
         }
         
         return activeDaysWeeksRepresentation
-    }
-    
-    private func setupEmojiCollectionController() {
-        
     }
     
     private func setupLayout() {
@@ -527,7 +517,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         categoriesListViewModel.currentCategory = trackerCategory
         categoriesListViewModel.onSelectTrackerCategory = { [weak self] newTrackerCategory in
             self?.trackerCategory = newTrackerCategory
-            self?.categoryDescriptionLabel.text = self?.getCategoryRepresentation()
+            self?.categoryDescriptionLabel.text = self?.trackerCategory
             
             self?.updateCreateButtonState()
         }

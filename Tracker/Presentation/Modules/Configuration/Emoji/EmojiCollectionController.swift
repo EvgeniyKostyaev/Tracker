@@ -84,6 +84,12 @@ extension EmojiCollectionController: UICollectionViewDataSource {
         
         cell.titleLabel.text = emojies[indexPath.row]
         
+        if (selectedEmoji == emojies[indexPath.row]) {
+            cell.backgroundColor = .trackerLightGray
+        } else {
+            cell.backgroundColor = .clear
+        }
+        
         return cell
     }
 }
@@ -123,18 +129,10 @@ extension EmojiCollectionController: UICollectionViewDelegateFlowLayout {
 // MARK: - UICollectionViewDelegate Methods
 extension EmojiCollectionController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell
         
+        selectedEmoji = emojies[indexPath.row]
         
-        if (selectedEmoji == emojies[indexPath.item]) {
-            cell?.backgroundColor = .clear
-            
-            selectedEmoji = String()
-        } else {
-            cell?.backgroundColor = .trackerLightGray
-            
-            selectedEmoji = emojies[indexPath.item]
-        }
+        collectionView.reloadData()
         
         onSelectEmoji?(selectedEmoji)
     }
