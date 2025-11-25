@@ -7,6 +7,11 @@
 
 import UIKit
 
+enum ConfigurationType {
+    case create
+    case edit
+}
+
 private enum Theme {
     static let warningLabelFontSize: CGFloat = 17.0
     
@@ -87,16 +92,20 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     // MARK: - Public properties
     var onCreate: ((Tracker, String) -> Void)?
+    var onEdit: ((Tracker) -> Void)?
+    
+    var configurationType: ConfigurationType = .create
+    
     var trackerType: TrackerType = .habit
+    var trackerName: String = String()
+    var trackerCategory: String = String()
+    var trackerActiveDaysWeeks: [DayWeeks] = []
+    var trackerEmoji: String = String()
+    var trackerColor: UIColor = .clear
+    
     var activeDate: Date = Date()
-    
+
     // MARK: - Private properties
-    private var trackerName: String = String()
-    private var trackerCategory: String = String()
-    private var trackerActiveDaysWeeks: [DayWeeks] = []
-    private var trackerEmoji: String = String()
-    private var trackerColor: UIColor = .clear
-    
     private let emojies: [String] = [
         "🙂", "😻", "🌺", "🐶", "❤️", "😱",
         "😇", "😡", "🥶", "🤔", "🙌", "🍔",
@@ -123,6 +132,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
+        textField.text = getTrackerName()
         textField.delegate = self
         textField.placeholder = "configuration_text_field_placeholder".localized
         textField.backgroundColor = .trackerLightGray.withAlphaComponent(Theme.alphaComponent)
@@ -355,10 +365,22 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     // MARK: - Private methods
     private func getTitle() -> String {
-        switch trackerType {
-        case .habit: return "configuration_habit_title".localized
-        case .irregular: return "configuration_irregular_title".localized
+        switch configurationType {
+        case .create:
+            switch trackerType {
+            case .habit: return "configuration_creating_habit_title".localized
+            case .irregular: return "configuration_creating_irregular_title".localized
+            }
+        case .edit:
+            switch trackerType {
+            case .habit: return "configuration_editing_habit_title".localized
+            case .irregular: return "configuration_editing_irregular_title".localized
+            }
         }
+    }
+    
+    private func getTrackerName() -> String {
+        return trackerName
     }
     
     private func getCategoryRepresentation() -> String {

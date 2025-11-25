@@ -13,6 +13,8 @@
 "trackers_empty_main_satate_title" = "What will we track?";
 "trackers_empty_search_satate_title" = "Nothing found";
 "trackers_search_placeholder" = "Search";
+"trackers_edit" = "Edit";
+"trackers_delete" = "Delete";
 
 "onboarding_button_title" = "This is technology!";
 "onboarding_first_title" = "Track only what you want";
@@ -52,8 +54,10 @@
 "schedule_saturday_short" = "Sat";
 "schedule_sunday_short" = "Sun";
 
-"configuration_habit_title" = "New habit";
-"configuration_irregular_title" = "New irregular event";
+"configuration_creating_habit_title" = "New habit";
+"configuration_creating_irregular_title" = "New irregular event";
+"configuration_editing_habit_title" = "Editing habit";
+"configuration_editing_irregular_title" = "Editing irregular event";
 "configuration_text_field_placeholder" = "Enter tracker name";
 "configuration_category_button_title" = "Category";
 "configuration_schedule_button_title" = "Scedule";

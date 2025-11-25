@@ -95,6 +95,7 @@ final class CreatingTrackerViewController: UIViewController {
     
     private func presentConfigurationTrackerAsSheet(trackerType: TrackerType) {
         let configurationTrackerViewController = ConfigurationTrackerViewController()
+        configurationTrackerViewController.configurationType = .create
         configurationTrackerViewController.trackerType = trackerType
         configurationTrackerViewController.activeDate = activeDate
         

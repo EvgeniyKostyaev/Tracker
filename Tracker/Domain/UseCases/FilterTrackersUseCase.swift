@@ -42,7 +42,7 @@ class FilterTrackersUseCase {
             switch (tracker.type) {
             case .habit:
                 let dayWeeks = tracker.schedule?.daysWeeks?.first(where: { (dayWeeks) in
-                    return dayWeeks?.rawValue == date.dayOfWeek
+                    return dayWeeks.rawValue == date.dayOfWeek
                 })
                 
                 return dayWeeks != nil

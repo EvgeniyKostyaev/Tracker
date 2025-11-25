@@ -45,7 +45,7 @@ extension DayWeeks {
 }
 
 struct Schedule {
-    let daysWeeks: [DayWeeks?]?
+    let daysWeeks: [DayWeeks]?
     let date: Date?
 }
 
@@ -78,10 +78,9 @@ struct Tracker {
 }
 
 // MARK: - DayWeeks
-extension Array where Element == DayWeeks? {
+extension Array where Element == DayWeeks {
     func toMask() -> Int16 {
         reduce(0) { acc, day in
-            guard let day else { return acc }
             return acc | (1 << day.rawValue)
         }
     }

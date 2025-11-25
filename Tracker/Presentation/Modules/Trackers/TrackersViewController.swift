@@ -224,6 +224,34 @@ final class TrackersViewController: UIViewController {
         
         present(navigationController, animated: true)
     }
+    
+    private func presentConfigurationTrackerAsSheet(tracker: Tracker, trackerCategory: String) {
+        let configurationTrackerViewController = ConfigurationTrackerViewController()
+        configurationTrackerViewController.configurationType = .edit
+        configurationTrackerViewController.trackerType = tracker.type
+        configurationTrackerViewController.trackerName = tracker.title
+        configurationTrackerViewController.trackerCategory = trackerCategory
+        configurationTrackerViewController.trackerActiveDaysWeeks = tracker.schedule?.daysWeeks ?? []
+        configurationTrackerViewController.trackerEmoji = tracker.emoji
+        configurationTrackerViewController.trackerColor = tracker.color
+        configurationTrackerViewController.activeDate = activeDate
+        
+        configurationTrackerViewController.onEdit = { [weak self] tracker in
+            // TODO Edit tracker
+            
+            self?.dismiss(animated: true)
+        }
+        
+        let navigationController = UINavigationController(rootViewController: configurationTrackerViewController)
+        navigationController.modalPresentationStyle = .pageSheet
+        
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.preferredCornerRadius = Theme.sheetPresentationCornerRadius
+        }
+        
+        present(navigationController, animated: true)
+    }
 }
 
 // MARK: - UICollectionViewDataSource Methods
@@ -286,6 +314,9 @@ extension TrackersViewController: UICollectionViewDelegate {
             return nil
         }
         
+        let trackerCategory = trackerCategories[indexPath.section].title
+        let tracker = trackerCategories[indexPath.section].trackers[indexPath.row]
+        
         let locationInCell = collectionView.convert(point, to: cell)
         
         if cell.cardView.frame.contains(locationInCell) {
@@ -301,11 +332,11 @@ extension TrackersViewController: UICollectionViewDelegate {
                 return previewController
             }) { _ in
                 return UIMenu(children: [
-                    UIAction(title: "Редактировать") { [weak self] _ in
-                        
+                    UIAction(title: "trackers_edit".localized) { [weak self] _ in
+                        self?.presentConfigurationTrackerAsSheet(tracker: tracker, trackerCategory: trackerCategory)
                     },
                     UIAction(
-                        title: "Удалить",
+                        title: "trackers_delete".localized,
                         attributes: .destructive
                     ) { [weak self] _ in
                         
