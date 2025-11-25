@@ -280,23 +280,41 @@ extension TrackersViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegate Methods
 extension TrackersViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
-        guard indexPaths.count > 0 else {
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        
+        guard let cell = collectionView.cellForItem(at: indexPath) as? TrackerCollectionViewCell else {
             return nil
         }
         
-        let indexPath = indexPaths[0]
+        let locationInCell = collectionView.convert(point, to: cell)
         
-        return UIContextMenuConfiguration(actionProvider: { actions in
-            return UIMenu(children: [
-                UIAction(title: "Редактировать") { [weak self] _ in
-                    
-                },
-                UIAction(title: "Удалить") { [weak self] _ in
-                    
-                },
-            ])
-        })
+        if cell.cardView.frame.contains(locationInCell) {
+            return UIContextMenuConfiguration(identifier: nil, previewProvider: {
+                let previewController = UIViewController()
+                
+                guard let snapshot = cell.cardView.snapshotView(afterScreenUpdates: true) else { return nil }
+                snapshot.frame = CGRect(x: 0, y: 0, width: cell.cardView.frame.width, height: cell.cardView.frame.height)
+                
+                previewController.view.addSubview(snapshot)
+                previewController.preferredContentSize = cell.cardView.frame.size
+                
+                return previewController
+            }) { _ in
+                return UIMenu(children: [
+                    UIAction(title: "Редактировать") { [weak self] _ in
+                        
+                    },
+                    UIAction(
+                        title: "Удалить",
+                        attributes: .destructive
+                    ) { [weak self] _ in
+                        
+                    }
+                ])
+            }
+        }
+        
+        return nil
     }
 }
 
