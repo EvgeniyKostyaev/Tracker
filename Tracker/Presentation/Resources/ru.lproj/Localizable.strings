@@ -20,6 +20,12 @@
 "trackers_filters" = "Фильтры";
 "trackers_delete_сonfirmation" = "Уверены что хотите удалить трекер?";
 
+"filters_title" = "Фильтры";
+"filters_all" = "Все трекеры";
+"filters_all_today" = "Трекеры на сегодня";
+"filters_complited" = "Завершенные";
+"filters_uncompleted" = "Не завершенные";
+
 "onboarding_button_title" = "Вот это технологии!";
 "onboarding_first_title" = "Отслеживайте только то, что хотите";
 "onboarding_second_title" = "Даже если это не литры воды и йога";

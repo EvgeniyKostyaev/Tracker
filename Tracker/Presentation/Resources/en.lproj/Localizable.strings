@@ -20,6 +20,12 @@
 "trackers_filters" = "Filters";
 "trackers_delete_сonfirmation" = "Are you sure delete this tracker?";
 
+"filters_title" = "Filters";
+"filters_all" = "All trackers";
+"filters_all_today" = "Trackers for today";
+"filters_complited" = "Complited";
+"filters_uncompleted" = "Uncompleted";
+
 "onboarding_button_title" = "This is technology!";
 "onboarding_first_title" = "Track only what you want";
 "onboarding_second_title" = "Even if it's not liters of water and yoga";

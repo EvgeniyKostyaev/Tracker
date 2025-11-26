@@ -49,6 +49,7 @@ final class TrackersViewController: UIViewController {
     private var trackerCategories: [TrackerCategory] = []
     private var activeDate: Date = Date()
     private var searchKeyword: String = String()
+    private var filter: Filter = .all
     
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -116,7 +117,7 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func filtersButtonTaped() {
-        
+        presentFiltersListAsSheet(filter: filter)
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
@@ -296,6 +297,29 @@ final class TrackersViewController: UIViewController {
         }
         
         let navigationController = UINavigationController(rootViewController: configurationTrackerViewController)
+        navigationController.modalPresentationStyle = .pageSheet
+        
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.large()]
+            sheet.preferredCornerRadius = Theme.sheetPresentationCornerRadius
+        }
+        
+        present(navigationController, animated: true)
+    }
+    
+    private func presentFiltersListAsSheet(filter: Filter) {
+        let filtersListViewModel = FiltersListViewModel()
+        filtersListViewModel.currentFilter = filter
+        filtersListViewModel.onSelectFilter = { [weak self] selectedFilter in
+            self?.filter = selectedFilter
+            
+            self?.updateTrackersUI()
+        }
+        
+        let filtersListViewController = FiltersListViewController()
+        filtersListViewController.initialize(viewModel: filtersListViewModel)
+        
+        let navigationController = UINavigationController(rootViewController: filtersListViewController)
         navigationController.modalPresentationStyle = .pageSheet
         
         if let sheet = navigationController.sheetPresentationController {
