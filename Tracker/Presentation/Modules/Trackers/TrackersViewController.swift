@@ -10,6 +10,15 @@ import UIKit
 private enum Theme {
     static let sheetPresentationCornerRadius: CGFloat = 16.0
     
+    enum FiltersButton {
+        static let filtersButtonFontSise: CGFloat =  17.0
+        static let filtersButtonCornerRadius: CGFloat =  16.0
+        
+        static let filtersButtonBottomConstraint: CGFloat = -16.0
+        static let filtersButtonHeightConstraint: CGFloat = 50.0
+        static let filtersButtonWidthConstraint: CGFloat = 114.0
+    }
+    
     enum CollectionView {
         static let collectionViewHeaderHeight: CGFloat = 44.0
         static let collectionViewCellHeight: CGFloat = 140.0
@@ -68,6 +77,18 @@ final class TrackersViewController: UIViewController {
         return emptySearchStateView
     }()
     
+    private lazy var filtersButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("trackers_filters".localized, for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .trackerBlue
+        button.titleLabel?.font = UIFont.systemFont(ofSize: Theme.FiltersButton.filtersButtonFontSise, weight: .medium)
+        button.layer.cornerRadius = Theme.FiltersButton.filtersButtonCornerRadius
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(filtersButtonTaped), for: .touchUpInside)
+        return button
+    }()
+    
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,6 +109,11 @@ final class TrackersViewController: UIViewController {
     // MARK: - Action Methods
     @objc private func addButtonTapped() {
         presentCreatingTrackerAsSheet()
+    }
+    
+    // MARK: - Actions
+    @objc private func filtersButtonTaped() {
+        
     }
     
     @objc private func datePickerValueChanged(_ sender: UIDatePicker) {
@@ -138,6 +164,7 @@ final class TrackersViewController: UIViewController {
         view.addSubview(collectionView)
         view.addSubview(emptyMainStateView)
         view.addSubview(emptySearchStateView)
+        view.addSubview(filtersButton)
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -156,6 +183,11 @@ final class TrackersViewController: UIViewController {
             
             emptySearchStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.EmptyStateView.emptyStateViewLeadingConstraint),
             emptySearchStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.EmptyStateView.emptyStateViewTrailingConstraint),
+            
+            filtersButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Theme.FiltersButton.filtersButtonBottomConstraint),
+            filtersButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            filtersButton.heightAnchor.constraint(equalToConstant: Theme.FiltersButton.filtersButtonHeightConstraint),
+            filtersButton.widthAnchor.constraint(equalToConstant: Theme.FiltersButton.filtersButtonWidthConstraint)
         ])
     }
     

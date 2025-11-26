@@ -17,6 +17,7 @@
 "trackers_empty_search_satate_title" = "Nothing found";
 "trackers_search_placeholder" = "Search";
 "trackers_edit" = "Edit";
+"trackers_filters" = "Filters";
 "trackers_delete_сonfirmation" = "Are you sure delete this tracker?";
 
 "onboarding_button_title" = "This is technology!";

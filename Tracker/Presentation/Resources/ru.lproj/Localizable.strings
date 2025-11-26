@@ -17,6 +17,7 @@
 "trackers_empty_search_satate_title" = "Ничего не найдено";
 "trackers_search_placeholder" = "Поиск";
 "trackers_edit" = "Редактировать";
+"trackers_filters" = "Фильтры";
 "trackers_delete_сonfirmation" = "Уверены что хотите удалить трекер?";
 
 "onboarding_button_title" = "Вот это технологии!";
