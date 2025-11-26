@@ -198,6 +198,15 @@ final class TrackersViewController: UIViewController {
         }
     }
     
+    private func editTracker(_ tracker: Tracker, toCategory categoryTitle: String) {
+        let categoryStore = TrackerCategoryStore()
+        let trackerStore = TrackerStore()
+        
+        if let categoryEntity = categoryStore.fetchCategoryEntity(by: categoryTitle) {
+            trackerStore.editTracker(tracker, in: categoryEntity)
+        }
+    }
+    
     private func isTrackerCompleted(for tracker: Tracker, from completedTrackers: [TrackerRecord]) -> Bool {
         completedTrackers.contains(where: { trackerRecord in
             return trackerRecord.trackerId == tracker.id && trackerRecord.date.isSameDayAs(activeDate)
@@ -228,6 +237,7 @@ final class TrackersViewController: UIViewController {
     private func presentConfigurationTrackerAsSheet(tracker: Tracker, trackerCategory: String) {
         let configurationTrackerViewController = ConfigurationTrackerViewController()
         configurationTrackerViewController.configurationType = .edit
+        configurationTrackerViewController.trackerId = tracker.id
         configurationTrackerViewController.trackerType = tracker.type
         configurationTrackerViewController.trackerName = tracker.title
         configurationTrackerViewController.trackerCategory = trackerCategory
@@ -236,8 +246,9 @@ final class TrackersViewController: UIViewController {
         configurationTrackerViewController.trackerColor = tracker.color
         configurationTrackerViewController.activeDate = activeDate
         
-        configurationTrackerViewController.onEdit = { [weak self] tracker in
-            // TODO Edit tracker
+        configurationTrackerViewController.onEdit = { [weak self] (tracker, trackerCategory) in
+            self?.editTracker(tracker, toCategory: trackerCategory)
+            self?.updateTrackersUI()
             
             self?.dismiss(animated: true)
         }

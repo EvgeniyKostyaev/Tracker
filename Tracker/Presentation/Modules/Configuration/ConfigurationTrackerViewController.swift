@@ -93,10 +93,11 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     // MARK: - Public properties
     var onCreate: ((Tracker, String) -> Void)?
-    var onEdit: ((Tracker) -> Void)?
+    var onEdit: ((Tracker, String) -> Void)?
     
     var configurationType: ConfigurationType = .create
     
+    var trackerId: UUID = UUID()
     var trackerType: TrackerType = .habit
     var trackerName: String = String()
     var trackerCategory: String = String()
@@ -371,7 +372,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func editTapped() {
-        onEdit?(getTracker())
+        onEdit?(getTracker(), trackerCategory)
         
         dismiss(animated: true)
     }
@@ -637,7 +638,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         }
         
         let tracker = Tracker(
-            id: UUID(),
+            id: trackerId,
             title: trackerName,
             color: trackerColor,
             emoji: trackerEmoji,

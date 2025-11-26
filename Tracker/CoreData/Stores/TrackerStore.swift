@@ -44,6 +44,24 @@ final class TrackerStore {
         }
     }
     
+    // MARK: - Update
+    func editTracker(_ tracker: Tracker, in category: TrackerCategoryEntity) {
+        let request: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", tracker.id as CVarArg)
+        request.fetchLimit = 1
+        
+        do {
+            if let entity = try context.fetch(request).first {
+                entity.update(from: tracker, category: category)
+                saveContext()
+            } else {
+                print("Трекер с id \(tracker.id) не найден")
+            }
+        } catch {
+            print("Ошибка обновления трекера \(tracker.id): \(error)")
+        }
+    }
+    
     // MARK: - Delete
     func deleteTracker(by id: UUID) {
         let request: NSFetchRequest<TrackerEntity> = TrackerEntity.fetchRequest()
