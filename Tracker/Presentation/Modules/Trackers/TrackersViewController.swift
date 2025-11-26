@@ -28,7 +28,8 @@ private enum Theme {
         static let collectionViewLeftInset: CGFloat = 16.0
         static let collectionViewRightInset: CGFloat = 16.0
         static let collectionViewCellSpacing: CGFloat = 10.0
-        static let collectionViewPaddingWidth = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+        static let collectionViewPaddingWidth: CGFloat = collectionViewLeftInset + collectionViewRightInset + CGFloat(collectionViewCellCount - 1) * collectionViewCellSpacing
+        static let collectionViewContentInset: UIEdgeInsets = UIEdgeInsets(top: 0,left: 0,bottom: FiltersButton.filtersButtonHeightConstraint + (FiltersButton.filtersButtonBottomConstraint) * -1, right: 0)
     }
     
     enum EmptyStateView {
@@ -54,6 +55,8 @@ final class TrackersViewController: UIViewController {
         
         collectionView.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
         collectionView.register(TrackerSupplementaryHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackerSupplementaryHeaderView.identifier)
+        
+        collectionView.contentInset = Theme.CollectionView.collectionViewContentInset
         
         collectionView.dataSource = self
         collectionView.delegate = self
