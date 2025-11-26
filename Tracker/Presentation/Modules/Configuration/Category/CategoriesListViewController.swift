@@ -39,21 +39,12 @@ final class CategoriesListViewController: UIViewController {
     // MARK: - Private Properties
     private var viewModel: CategoriesListViewModel?
     
-    private var categoriesList: [TrackerCategory] = []
-    private var currentCategory: String = String()
-    
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
+    private lazy var tableView: OptionTableView = {
+        let tableView = OptionTableView(style: .plain)
+        tableView.optionTableViewDelegate = self
+        
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(
-            CategoryTableViewCell.self,
-            forCellReuseIdentifier: CategoryTableViewCell.identifier
-        )
-        tableView.backgroundColor = .clear
-        tableView.allowsSelection = true
-        tableView.isScrollEnabled = true
-        tableView.showsVerticalScrollIndicator = false
-        tableView.separatorStyle = .none
+        
         return tableView
     }()
     
@@ -89,7 +80,6 @@ final class CategoriesListViewController: UIViewController {
         
         setupView()
         setupNavigationBar()
-        setupTableView()
         setupLayout()
         bindViewModel()
     }
@@ -112,8 +102,8 @@ final class CategoriesListViewController: UIViewController {
         viewModel.showCategoriesList = { [weak self] data in
             let (categoriesList, currentCategory) = data
             
-            self?.categoriesList = categoriesList
-            self?.currentCategory = currentCategory
+            self?.tableView.optionsList = categoriesList.map({ $0.title })
+            self?.tableView.currentOption = currentCategory
             self?.tableView.reloadData()
             
             self?.tableView.isHidden = false
@@ -138,11 +128,6 @@ final class CategoriesListViewController: UIViewController {
     private func setupNavigationBar() {
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-    }
-
-    private func setupTableView() {
-        tableView.dataSource = self
-        tableView.delegate = self
     }
     
     private func setupLayout() {
@@ -193,33 +178,9 @@ final class CategoriesListViewController: UIViewController {
     }
 }
 
-// MARK: - UITableViewDataSource
-extension CategoriesListViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoriesList.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.identifier, for: indexPath) as? CategoryTableViewCell else { return UITableViewCell()}
-        
-        let category = categoriesList[indexPath.row]
-        let isActive = category.title == currentCategory
-        let isFirstCell = indexPath.row == 0
-        let isLastCell = indexPath.row == categoriesList.count - 1
-        cell.configure(with: category.title, isActive: isActive, isFirstCell: isFirstCell, isLastCell: isLastCell)
-        
-        cell.backgroundColor = .clear
-        
-        return cell
-    }
-}
-
-// MARK: - UITableViewDelegate
-extension CategoriesListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let category = categoriesList[indexPath.row]
-        
-        viewModel?.onSelectTrackerCategory(categoryTitle: category.title)
+// MARK: - OptionTableViewDelegate Methods
+extension CategoriesListViewController: OptionTableViewDelegate {
+    func onSelectOption(option: String) {
+        viewModel?.onSelectTrackerCategory(categoryTitle: option)
     }
 }
