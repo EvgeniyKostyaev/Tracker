@@ -245,6 +245,7 @@ final class TrackersViewController: UIViewController {
         configurationTrackerViewController.trackerEmoji = tracker.emoji
         configurationTrackerViewController.trackerColor = tracker.color
         configurationTrackerViewController.activeDate = activeDate
+        configurationTrackerViewController.completedDaysCount = tracker.completedDaysCount(from: trackerRecordDataProvider.trackerRecords)
         
         configurationTrackerViewController.onEdit = { [weak self] (tracker, trackerCategory) in
             self?.editTracker(tracker, toCategory: trackerCategory)

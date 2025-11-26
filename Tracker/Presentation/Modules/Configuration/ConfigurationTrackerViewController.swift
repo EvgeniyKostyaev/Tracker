@@ -15,17 +15,22 @@ enum ConfigurationType {
 private enum Theme {
     static let warningLabelFontSize: CGFloat = 17.0
     
+    static let scrollViewBottomConstraint: CGFloat = -20.0
+    
     static let configurationDescriptionLabelTrailingConstraint: CGFloat = -36.0
     static let configurationDisclosureIndicatorTrailingConstraint: CGFloat = -16.0
     
     static let sheetPresentationCornerRadius: CGFloat = 16.0
+    
+    static let completedDaysLabelFontSize: CGFloat = 32.0
     
     static let allDaysOfWeekCount: Int = 7
     
     static let alphaComponent: CGFloat = 0.3
     
     enum ConfigurationStackView {
-        static let stackViewSpacing: CGFloat = 8.0
+        static let topStackViewSpacing: CGFloat = 40.0
+        static let nameStackViewSpacing: CGFloat = 8.0
         static let stackViewTopConstraint: CGFloat = 24.0
         static let stackViewLeadingConstraint: CGFloat = 16.0
         static let stackViewTrailingConstraint: CGFloat = -16.0
@@ -106,6 +111,8 @@ final class ConfigurationTrackerViewController: UIViewController {
     var trackerColor: UIColor = .clear
     
     var activeDate: Date = Date()
+    
+    var completedDaysCount: Int = 0
 
     // MARK: - Private properties
     private let emojies: [String] = [
@@ -130,6 +137,16 @@ final class ConfigurationTrackerViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }()
+    
+    private lazy var completedDaysLabel: UILabel = {
+        let label = UILabel()
+        label.text = getCompletedDaysRepresentation(completedDaysCount)
+        label.font = UIFont.boldSystemFont(ofSize: Theme.completedDaysLabelFontSize)
+        label.textAlignment = .center
+        label.textColor = .label
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private lazy var nameTextField: UITextField = {
@@ -161,7 +178,16 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var nameStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [nameTextField, warningLabel])
         stackView.axis = .vertical
-        stackView.spacing = Theme.ConfigurationStackView.stackViewSpacing
+        stackView.spacing = Theme.ConfigurationStackView.nameStackViewSpacing
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var topStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [completedDaysLabel, nameStackView])
+        stackView.axis = .vertical
+        stackView.spacing = Theme.ConfigurationStackView.topStackViewSpacing
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -357,6 +383,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         setupConfigurationButtonsState()
         setupTapGesture()
         
+        updateCompletedDaysLabelState()
         updateActionButtonsState()
     }
     
@@ -416,12 +443,21 @@ final class ConfigurationTrackerViewController: UIViewController {
         return activeDaysWeeksRepresentation
     }
     
+    private func getCompletedDaysRepresentation(_ dayCount: Int) -> String {
+        let daysString = String.localizedStringWithFormat(
+            NSLocalizedString("numberOfDays", comment: String()),
+            dayCount
+        )
+        
+        return daysString
+    }
+    
     private func setupLayout() {
         view.addSubview(scrollView)
         
         scrollView.addSubview(contentView)
         
-        contentView.addSubview(nameStackView)
+        contentView.addSubview(topStackView)
         
         contentView.addSubview(configurationStackView)
         contentView.addSubview(separatorView)
@@ -443,7 +479,7 @@ final class ConfigurationTrackerViewController: UIViewController {
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: -20.0),
+            scrollView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: Theme.scrollViewBottomConstraint),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -451,17 +487,17 @@ final class ConfigurationTrackerViewController: UIViewController {
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            nameStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.ConfigurationStackView.stackViewTopConstraint),
-            nameStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.ConfigurationStackView.stackViewLeadingConstraint),
-            nameStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Theme.ConfigurationStackView.stackViewTrailingConstraint),
+            topStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.ConfigurationStackView.stackViewTopConstraint),
+            topStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.ConfigurationStackView.stackViewLeadingConstraint),
+            topStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Theme.ConfigurationStackView.stackViewTrailingConstraint),
             
             nameTextField.heightAnchor.constraint(equalToConstant: Theme.NameTextField.nameTextFieldHeightConstraint),
-            nameTextField.leadingAnchor.constraint(equalTo: nameStackView.leadingAnchor),
-            nameTextField.trailingAnchor.constraint(equalTo: nameStackView.trailingAnchor),
+            nameTextField.leadingAnchor.constraint(equalTo: topStackView.leadingAnchor),
+            nameTextField.trailingAnchor.constraint(equalTo: topStackView.trailingAnchor),
             
             configurationStackView.topAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: Theme.ActionButtons.categoryButtonTopConstraint),
-            configurationStackView.leadingAnchor.constraint(equalTo: nameStackView.leadingAnchor),
-            configurationStackView.trailingAnchor.constraint(equalTo: nameStackView.trailingAnchor),
+            configurationStackView.leadingAnchor.constraint(equalTo: topStackView.leadingAnchor),
+            configurationStackView.trailingAnchor.constraint(equalTo: topStackView.trailingAnchor),
             
             categoryButton.heightAnchor.constraint(equalToConstant: Theme.ActionButtons.configurationButtonsHeightConstraint),
             
@@ -582,6 +618,13 @@ final class ConfigurationTrackerViewController: UIViewController {
         }
         
         present(navigationController, animated: true)
+    }
+    
+    private func updateCompletedDaysLabelState() {
+        switch configurationType {
+        case .create: completedDaysLabel.isHidden = true
+        case .edit: completedDaysLabel.isHidden = !(completedDaysCount > 0)
+        }
     }
     
     private func updateActionButtonsState() {
