@@ -7,8 +7,6 @@
 
 import Foundation
 
-typealias FiltersTuple = (filters: [Filter], currentFilter: Filter)
-
 enum Filter: String {
     case all = "filters_all"
     case allToday = "filters_all_today"
@@ -18,7 +16,19 @@ enum Filter: String {
     var localized: String {
         return rawValue.localized
     }
+    
+    init?(from string: String) {
+        switch string {
+        case Filter.all.localized: self = .all
+        case Filter.allToday.localized: self = .allToday
+        case Filter.completed.localized: self = .completed
+        case Filter.uncompleted.localized: self = .uncompleted
+        default: return nil
+        }
+    }
 }
+
+typealias FiltersTuple = (filters: [Filter], currentFilter: Filter)
 
 final class FiltersListViewModel {
     
@@ -36,7 +46,7 @@ final class FiltersListViewModel {
     }
     
     func onSelectFilterTitle(filterTitle: String) {
-        guard let filter = Filter(rawValue: filterTitle) else { return }
+        guard let filter = Filter.init(from: filterTitle) else { return }
         
         onSelectFilter?(filter)
         
