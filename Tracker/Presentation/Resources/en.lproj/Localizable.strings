@@ -6,6 +6,9 @@
   
 */
 
+"common_cancel" = "Cancel";
+"common_delete" = "Delete";
+
 "trackers_tab_bar_item_title" = "Trackers";
 "statistic_tab_bar_item_title" = "Statistic";
 
@@ -14,7 +17,7 @@
 "trackers_empty_search_satate_title" = "Nothing found";
 "trackers_search_placeholder" = "Search";
 "trackers_edit" = "Edit";
-"trackers_delete" = "Delete";
+"trackers_delete_сonfirmation" = "Are you sure delete this tracker?";
 
 "onboarding_button_title" = "This is technology!";
 "onboarding_first_title" = "Track only what you want";
@@ -61,7 +64,6 @@
 "configuration_text_field_placeholder" = "Enter tracker name";
 "configuration_category_button_title" = "Category";
 "configuration_schedule_button_title" = "Scedule";
-"configuration_cancel_button_title" = "Cancel";
 "configuration_create_button_title" = "Create";
 "configuration_save_button_title" = "Save";
 "configuration_warning_text" = "38 character limit";

@@ -335,7 +335,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("configuration_cancel_button_title".localized, for: .normal)
+        button.setTitle("common_cancel".localized, for: .normal)
         button.setTitleColor(.trackerRed, for: .normal)
         button.backgroundColor = .white
         button.layer.borderWidth = Theme.ActionButtons.cancellButtonBorderWidth

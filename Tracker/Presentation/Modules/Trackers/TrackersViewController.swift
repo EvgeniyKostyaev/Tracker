@@ -207,6 +207,12 @@ final class TrackersViewController: UIViewController {
         }
     }
     
+    private func deleteTracker(_ tracker: Tracker) {
+        let trackerStore = TrackerStore()
+        
+        trackerStore.deleteTracker(by: tracker.id)
+    }
+    
     private func isTrackerCompleted(for tracker: Tracker, from completedTrackers: [TrackerRecord]) -> Bool {
         completedTrackers.contains(where: { trackerRecord in
             return trackerRecord.trackerId == tracker.id && trackerRecord.date.isSameDayAs(activeDate)
@@ -263,6 +269,33 @@ final class TrackersViewController: UIViewController {
         }
         
         present(navigationController, animated: true)
+    }
+    
+    private func showDeleteConfirmation(onConfirm: @escaping () -> Void) {
+        let alert = UIAlertController(
+            title: "trackers_delete_сonfirmation".localized,
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+
+        let deleteAction = UIAlertAction(title: "common_delete".localized, style: .destructive) { _ in
+            onConfirm()
+        }
+
+        let cancelAction = UIAlertAction(title: "common_cancel".localized, style: .cancel)
+
+        alert.addAction(deleteAction)
+        alert.addAction(cancelAction)
+
+        if let popover = alert.popoverPresentationController {
+            popover.sourceView = self.view
+            popover.sourceRect = CGRect(x: self.view.bounds.midX,
+                                        y: self.view.bounds.maxY,
+                                        width: 0, height: 0)
+            popover.permittedArrowDirections = []
+        }
+
+        present(alert, animated: true)
     }
 }
 
@@ -348,10 +381,13 @@ extension TrackersViewController: UICollectionViewDelegate {
                         self?.presentConfigurationTrackerAsSheet(tracker: tracker, trackerCategory: trackerCategory)
                     },
                     UIAction(
-                        title: "trackers_delete".localized,
+                        title: "common_delete".localized,
                         attributes: .destructive
                     ) { [weak self] _ in
-                        
+                        self?.showDeleteConfirmation(onConfirm: {
+                            self?.deleteTracker(tracker)
+                            self?.updateTrackersUI()
+                        })
                     }
                 ])
             }
