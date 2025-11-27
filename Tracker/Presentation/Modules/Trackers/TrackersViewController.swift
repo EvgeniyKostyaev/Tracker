@@ -206,13 +206,19 @@ final class TrackersViewController: UIViewController {
             collectionView.isHidden = false
             emptyMainStateView.isHidden = true
             emptyFilterStateView.isHidden = true
+            
+            filtersButton.isHidden = false
         } else {
             if (searchKeyword.isEmpty && !isActiveFilter()) {
                 emptyMainStateView.isHidden = false
                 emptyFilterStateView.isHidden = true
+                
+                filtersButton.isHidden = true
             } else {
                 emptyFilterStateView.isHidden = false
                 emptyMainStateView.isHidden = true
+                
+                filtersButton.isHidden = false
             }
             
             collectionView.isHidden = true
