@@ -258,6 +258,10 @@ final class TrackersViewController: UIViewController {
         })
     }
     
+    private func isActiveFilter() -> Bool {
+        return filter == .completed || filter == .uncompleted
+    }
+    
     private func presentCreatingTrackerAsSheet() {
         let creatingTrackerViewController = CreatingTrackerViewController()
         creatingTrackerViewController.activeDate = activeDate
