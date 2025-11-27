@@ -37,7 +37,7 @@ final class FiltersListViewController: UIViewController {
     private let navigationBarAppearance: UINavigationBarAppearance = {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = .white
+        appearance.backgroundColor = .trackerWhite
         appearance.shadowColor = .clear
         return appearance
     }()
@@ -80,7 +80,7 @@ final class FiltersListViewController: UIViewController {
     }
 
     private func setupView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .trackerWhite
         title = "filters_title".localized
     }
 

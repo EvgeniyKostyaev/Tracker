@@ -51,8 +51,8 @@ final class CategoriesListViewController: UIViewController {
     private lazy var addButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("categories_add_button_title".localized, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitleColor(.trackerWhite, for: .normal)
+        button.backgroundColor = .trackerBlack
         button.layer.cornerRadius = Theme.AddButton.addButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
@@ -62,7 +62,7 @@ final class CategoriesListViewController: UIViewController {
     private let navigationBarAppearance: UINavigationBarAppearance = {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = .white
+        appearance.backgroundColor = .trackerWhite
         appearance.shadowColor = .clear
         return appearance
     }()
@@ -121,7 +121,7 @@ final class CategoriesListViewController: UIViewController {
     }
 
     private func setupView() {
-        view.backgroundColor = .white
+        view.backgroundColor = .trackerWhite
         title = "categories_title".localized
     }
 

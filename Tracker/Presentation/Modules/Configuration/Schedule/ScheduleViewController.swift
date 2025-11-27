@@ -58,8 +58,8 @@ final class ScheduleViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("schedule_done_button_title".localized, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitleColor(.trackerWhite, for: .normal)
+        button.backgroundColor = .trackerBlack
         button.layer.cornerRadius = Theme.DoneButton.doneButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(doneTapped), for: .touchUpInside)
@@ -69,7 +69,7 @@ final class ScheduleViewController: UIViewController {
     private let navigationBarAppearance: UINavigationBarAppearance = {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = .white
+        appearance.backgroundColor = .trackerWhite
         appearance.shadowColor = .clear
         return appearance
     }()
@@ -78,7 +78,7 @@ final class ScheduleViewController: UIViewController {
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .trackerWhite
         title = "schedule_tite".localized
         
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance

@@ -53,8 +53,8 @@ final class NewCategoryViewController: UIViewController {
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("new_category_done_button_title".localized, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitleColor(.trackerWhite, for: .normal)
+        button.backgroundColor = .trackerBlack
         button.layer.cornerRadius = Theme.DoneButton.doneButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(doneTapped), for: .touchUpInside)
@@ -64,7 +64,7 @@ final class NewCategoryViewController: UIViewController {
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .trackerWhite
         title = "new_category_title".localized
         
         updateDoneButtonState()
@@ -122,7 +122,7 @@ final class NewCategoryViewController: UIViewController {
     
     private func enableDoneButton() {
         doneButton.isEnabled = true
-        doneButton.backgroundColor = .black
+        doneButton.backgroundColor = .trackerBlack
     }
     
     private func disableDoneButton() {

@@ -84,7 +84,7 @@ final class TrackersViewController: UIViewController {
     private lazy var filtersButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("trackers_filters".localized, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.trackerWhite, for: .normal)
         button.backgroundColor = .trackerBlue
         button.titleLabel?.font = UIFont.systemFont(ofSize: Theme.FiltersButton.filtersButtonFontSise, weight: .medium)
         button.layer.cornerRadius = Theme.FiltersButton.filtersButtonCornerRadius

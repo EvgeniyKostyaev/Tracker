@@ -23,14 +23,14 @@ final class EmptyStateView: UIView {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .lightGray
+        imageView.tintColor = .trackerLightGray
         return imageView
     }()
     
     private let label: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .black
+        label.textColor = .trackerBlack
         label.font = UIFont.systemFont(ofSize: Theme.fontSizeLabel, weight: .medium)
         label.numberOfLines = Theme.numberOfLinesLabel
         return label

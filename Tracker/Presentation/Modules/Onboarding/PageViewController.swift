@@ -31,7 +31,7 @@ final class PageViewController: UIViewController {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: Theme.labelFontSize)
         label.textAlignment = .center
-        label.textColor = .black
+        label.textColor = .trackerBlack
         label.numberOfLines = Theme.labelNumberLines
         label.translatesAutoresizingMaskIntoConstraints = false
         

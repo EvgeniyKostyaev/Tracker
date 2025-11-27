@@ -80,7 +80,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = .trackerWhite
         label.font = UIFont.systemFont(ofSize: Theme.titleLabelFontSize, weight: .medium)
         label.textAlignment = .left
         label.numberOfLines = Theme.titleLabelNumberOfLines
@@ -98,7 +98,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private lazy var plusButton: UIButton = {
         let button = UIButton(type: .system)
-        button.tintColor = .white
+        button.tintColor = .trackerWhite
         button.layer.cornerRadius = Theme.plusButtonCornerRadius
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false

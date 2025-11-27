@@ -33,8 +33,8 @@ final class CreatingTrackerViewController: UIViewController {
     private lazy var habitButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("creating_habit_button_title".localized, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitleColor(.trackerWhite, for: .normal)
+        button.backgroundColor = .trackerBlack
         button.titleLabel?.font = UIFont.systemFont(ofSize: Theme.ActionButton.actionButtonFontSise, weight: .medium)
         button.layer.cornerRadius = Theme.ActionButton.actionButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -45,8 +45,8 @@ final class CreatingTrackerViewController: UIViewController {
     private lazy var irregularEventButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("creating_irregular_event_button_title".localized, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitleColor(.trackerWhite, for: .normal)
+        button.backgroundColor = .trackerBlack
         button.titleLabel?.font = UIFont.systemFont(ofSize: Theme.ActionButton.actionButtonFontSise, weight: .medium)
         button.layer.cornerRadius = Theme.ActionButton.actionButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -65,7 +65,7 @@ final class CreatingTrackerViewController: UIViewController {
     // MARK: - Overrides methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .trackerWhite
         title = "creating_title".localized
         
         setupLayout()

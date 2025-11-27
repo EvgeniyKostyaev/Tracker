@@ -75,7 +75,7 @@ private enum Theme {
     enum Separator {
         static let separatorLeadingConstraint: CGFloat = 16.0
         static let separatorTrailingConstraint: CGFloat = -16.0
-        static let separatorHeightConstraint: CGFloat = 1.0
+        static let separatorHeightConstraint: CGFloat = 0.5
     }
     
     enum CollectionView {
@@ -224,7 +224,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var categoryTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "configuration_category_button_title".localized
-        label.textColor = .black
+        label.textColor = .trackerBlack
         label.font = UIFont.systemFont(ofSize: Theme.ActionButtons.configurationTitleLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -262,7 +262,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var scheduleTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "configuration_schedule_button_title".localized
-        label.textColor = .black
+        label.textColor = .trackerBlack
         label.font = UIFont.systemFont(ofSize: Theme.ActionButtons.configurationTitleLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -337,9 +337,9 @@ final class ConfigurationTrackerViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("common_cancel".localized, for: .normal)
         button.setTitleColor(.trackerRed, for: .normal)
-        button.backgroundColor = .white
+        button.backgroundColor = .trackerWhite
         button.layer.borderWidth = Theme.ActionButtons.cancellButtonBorderWidth
-        button.layer.borderColor = UIColor.red.cgColor
+        button.layer.borderColor = UIColor.trackerRed.cgColor
         button.layer.cornerRadius = Theme.ActionButtons.actionButtonsCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
@@ -349,7 +349,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var createButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("configuration_create_button_title".localized, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.trackerWhite, for: .normal)
         button.backgroundColor = .trackerGray
         button.layer.cornerRadius = Theme.ActionButtons.actionButtonsCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -361,7 +361,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var editButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("configuration_save_button_title".localized, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.trackerWhite, for: .normal)
         button.backgroundColor = .trackerGray
         button.layer.cornerRadius = Theme.ActionButtons.actionButtonsCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -373,7 +373,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     // MARK: - Overrides methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .trackerWhite
         title = getTitle()
         
         _ = emojiCollectionController
@@ -651,7 +651,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private func enableCreateButton() {
         createButton.isEnabled = true
-        createButton.backgroundColor = .black
+        createButton.backgroundColor = .trackerBlack
     }
     
     private func disableCreateButton() {
@@ -661,7 +661,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private func enableEditButton() {
         editButton.isEnabled = true
-        editButton.backgroundColor = .black
+        editButton.backgroundColor = .trackerBlack
     }
     
     private func disableEditButton() {
