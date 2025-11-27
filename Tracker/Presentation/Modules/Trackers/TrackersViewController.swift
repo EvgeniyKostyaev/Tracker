@@ -224,7 +224,13 @@ final class TrackersViewController: UIViewController {
             collectionView.isHidden = true
         }
         
+        updateFilterButtonState()
+        
         collectionView.reloadData()
+    }
+    
+    private func updateFilterButtonState() {
+        filtersButton.backgroundColor = isActiveFilter() ? .trackerRed : .trackerBlue
     }
     
     private func getCompletedDaysCount(for tracker: Tracker, from completedTrackers: [TrackerRecord]) -> Int {
