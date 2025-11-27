@@ -74,8 +74,8 @@ final class TrackersViewController: UIViewController {
         return emptyMainStateView
     }()
     
-    private lazy var emptySearchStateView: EmptyStateView = {
-        let emptySearchStateView = EmptyStateView(image: UIImage(resource: .nothingFound), text: "trackers_empty_search_satate_title".localized)
+    private lazy var emptyFilterStateView: EmptyStateView = {
+        let emptySearchStateView = EmptyStateView(image: UIImage(resource: .nothingFound), text: "trackers_empty_filter_satate_title".localized)
         emptySearchStateView.translatesAutoresizingMaskIntoConstraints = false
         
         return emptySearchStateView
@@ -170,7 +170,7 @@ final class TrackersViewController: UIViewController {
     private func setupLayout() {
         view.addSubview(collectionView)
         view.addSubview(emptyMainStateView)
-        view.addSubview(emptySearchStateView)
+        view.addSubview(emptyFilterStateView)
         view.addSubview(filtersButton)
         
         NSLayoutConstraint.activate([
@@ -185,11 +185,11 @@ final class TrackersViewController: UIViewController {
             emptyMainStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.EmptyStateView.emptyStateViewLeadingConstraint),
             emptyMainStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.EmptyStateView.emptyStateViewTrailingConstraint),
             
-            emptySearchStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            emptySearchStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyFilterStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyFilterStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            emptySearchStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.EmptyStateView.emptyStateViewLeadingConstraint),
-            emptySearchStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.EmptyStateView.emptyStateViewTrailingConstraint),
+            emptyFilterStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.EmptyStateView.emptyStateViewLeadingConstraint),
+            emptyFilterStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.EmptyStateView.emptyStateViewTrailingConstraint),
             
             filtersButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: Theme.FiltersButton.filtersButtonBottomConstraint),
             filtersButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -205,13 +205,13 @@ final class TrackersViewController: UIViewController {
         if trackerCategories.count > 0 {
             collectionView.isHidden = false
             emptyMainStateView.isHidden = true
-            emptySearchStateView.isHidden = true
+            emptyFilterStateView.isHidden = true
         } else {
             if (searchKeyword.isEmpty && !isActiveFilter()) {
                 emptyMainStateView.isHidden = false
-                emptySearchStateView.isHidden = true
+                emptyFilterStateView.isHidden = true
             } else {
-                emptySearchStateView.isHidden = false
+                emptyFilterStateView.isHidden = false
                 emptyMainStateView.isHidden = true
             }
             
