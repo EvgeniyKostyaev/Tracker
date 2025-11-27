@@ -9,12 +9,16 @@ import Foundation
 
 class FilterTrackersUseCase {
     
+    // MARK: - Private Properties
+    private let trackerRecordDataProvider = TrackerRecordDataProvider()
+    
     // MARK: - Public methods
-    func filterTrackerCategoriesList(_ trackerCategories: [TrackerCategory], date: Date, searchKeyword: String) -> [TrackerCategory] {
+    func filterTrackerCategoriesList(_ trackerCategories: [TrackerCategory], date: Date, searchKeyword: String, filter: Filter) -> [TrackerCategory] {
         var trackerCategoriesList: [TrackerCategory] = []
         
         trackerCategories.forEach { trackerCategory in
-            let filteredTrackersByKeyword = filterTrackersListBySearchKeyword(trackerCategory.trackers, searchKeyword: searchKeyword)
+            let filteredTrackersByFilter = filterTrackersListByFilter(trackerCategory.trackers, date: date, filter: filter)
+            let filteredTrackersByKeyword = filterTrackersListBySearchKeyword(filteredTrackersByFilter, searchKeyword: searchKeyword)
             
             let filteredTrackers = filterTrackersListByDate(filteredTrackersByKeyword, date: date)
             if (!filteredTrackers.isEmpty) {
@@ -26,6 +30,26 @@ class FilterTrackersUseCase {
     }
     
     // MARK: - Private methods
+    private func filterTrackersListByFilter(_ trackers: [Tracker], date: Date, filter: Filter) -> [Tracker] {
+        switch filter {
+        case .all, .allToday: return trackers
+        case .completed: return filterTrackersListByFilterCompleted(trackers, date: date)
+        case .uncompleted: return filterTrackersListByFilterUncompleted(trackers, date: date)
+        }
+    }
+    
+    private func filterTrackersListByFilterCompleted(_ trackers: [Tracker], date: Date) -> [Tracker] {
+        return trackers.filter { tracker in
+            return tracker.isCompleted(on: date, from: trackerRecordDataProvider.trackerRecords)
+        }
+    }
+    
+    private func filterTrackersListByFilterUncompleted(_ trackers: [Tracker], date: Date) -> [Tracker] {
+        return trackers.filter { tracker in
+            return !tracker.isCompleted(on: date, from: trackerRecordDataProvider.trackerRecords)
+        }
+    }
+    
     private func filterTrackersListBySearchKeyword(_ trackers: [Tracker], searchKeyword: String) -> [Tracker] {
         if (searchKeyword.isEmpty) {
             return trackers

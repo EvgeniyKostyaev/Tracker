@@ -93,6 +93,16 @@ final class TrackersViewController: UIViewController {
         return button
     }()
     
+    private lazy var datePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .compact
+        
+        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
+        
+        return datePicker
+    }()
+    
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,7 +114,6 @@ final class TrackersViewController: UIViewController {
         setupSearchController()
         setupAddBarButton()
         setupDatePicker()
-        
         setupLayout()
         
         updateTrackersUI()
@@ -155,12 +164,6 @@ final class TrackersViewController: UIViewController {
     }
     
     private func setupDatePicker() {
-        let datePicker = UIDatePicker()
-        datePicker.datePickerMode = .date
-        datePicker.preferredDatePickerStyle = .compact
-        
-        datePicker.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
-        
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: datePicker)
     }
     
@@ -197,7 +200,7 @@ final class TrackersViewController: UIViewController {
     
     private func updateTrackersUI() {
         let sourceTrackerCategories = trackerCategoryDataProvider.trackerCategories
-        trackerCategories = filterTrackersUseCase.filterTrackerCategoriesList(sourceTrackerCategories, date: activeDate, searchKeyword: searchKeyword)
+        trackerCategories = filterTrackersUseCase.filterTrackerCategoriesList(sourceTrackerCategories, date: activeDate, searchKeyword: searchKeyword, filter: filter)
         
         if trackerCategories.count > 0 {
             collectionView.isHidden = false
@@ -312,6 +315,12 @@ final class TrackersViewController: UIViewController {
         filtersListViewModel.currentFilter = filter
         filtersListViewModel.onSelectFilter = { [weak self] selectedFilter in
             self?.filter = selectedFilter
+            
+            if ( self?.filter == .allToday) {
+                self?.activeDate = Date()
+                
+                self?.datePicker.date = Date()
+            }
             
             self?.updateTrackersUI()
         }
