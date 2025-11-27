@@ -207,7 +207,7 @@ final class TrackersViewController: UIViewController {
             emptyMainStateView.isHidden = true
             emptySearchStateView.isHidden = true
         } else {
-            if (searchKeyword.isEmpty) {
+            if (searchKeyword.isEmpty && !isActiveFilter()) {
                 emptyMainStateView.isHidden = false
                 emptySearchStateView.isHidden = true
             } else {
