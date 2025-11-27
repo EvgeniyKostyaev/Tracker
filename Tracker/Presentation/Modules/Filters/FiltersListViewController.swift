@@ -66,7 +66,11 @@ final class FiltersListViewController: UIViewController {
             let (filtersList, currentFilter) = data
             
             self?.tableView.optionsList = filtersList.map({ $0.localized })
-            self?.tableView.currentOption = currentFilter.localized
+            
+            if (currentFilter == .completed || currentFilter == .uncompleted) {
+                self?.tableView.currentOption = currentFilter.localized
+            }
+            
             self?.tableView.reloadData()
         }
         
