@@ -41,6 +41,8 @@ private enum Theme {
 final class TrackersViewController: UIViewController {
     
     // MARK: - Private Properties
+    private var analyticsService = AnalyticsService.shared
+    
     private let filterTrackersUseCase = FilterTrackersUseCase()
     
     private let trackerCategoryDataProvider = TrackerCategoryDataProvider()
@@ -104,6 +106,18 @@ final class TrackersViewController: UIViewController {
     }()
     
     // MARK: - Overrides Methods
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        logOpenCloseEvent(AnalyticsConstants.Value.open)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        logOpenCloseEvent(AnalyticsConstants.Value.close)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -121,11 +135,15 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Action Methods
     @objc private func addButtonTapped() {
+        logClickEvent(AnalyticsConstants.Value.addTrack)
+        
         presentCreatingTrackerAsSheet()
     }
     
     // MARK: - Actions
     @objc private func filtersButtonTaped() {
+        logClickEvent(AnalyticsConstants.Value.filter)
+        
         presentFiltersListAsSheet(filter: filter)
     }
     
@@ -381,6 +399,28 @@ final class TrackersViewController: UIViewController {
 
         present(alert, animated: true)
     }
+    
+    private func logOpenCloseEvent(_ value: String) {
+        analyticsService.logEvent(
+            name: AnalyticsConstants.event,
+            params: [
+                AnalyticsConstants.Key.event: value,
+                AnalyticsConstants.Key.screen: AnalyticsConstants.Value.main
+            ]
+        )
+    }
+    
+    private func logClickEvent(_ value: String) {
+        analyticsService.logEvent(
+            name: AnalyticsConstants.event,
+            params: [
+                AnalyticsConstants.Key.event: AnalyticsConstants.Value.click,
+                AnalyticsConstants.Key.screen: AnalyticsConstants.Value.main,
+                AnalyticsConstants.Key.item: value
+            ]
+        )
+    }
+    
 }
 
 // MARK: - UICollectionViewDataSource Methods
@@ -462,12 +502,14 @@ extension TrackersViewController: UICollectionViewDelegate {
             }) { _ in
                 return UIMenu(children: [
                     UIAction(title: "trackers_edit".localized) { [weak self] _ in
+                        self?.logClickEvent(AnalyticsConstants.Value.edit)
                         self?.presentConfigurationTrackerAsSheet(tracker: tracker, trackerCategory: trackerCategory)
                     },
                     UIAction(
                         title: "common_delete".localized,
                         attributes: .destructive
                     ) { [weak self] _ in
+                        self?.logClickEvent(AnalyticsConstants.Value.delete)
                         self?.showDeleteConfirmation(onConfirm: {
                             self?.deleteTracker(tracker)
                             self?.updateTrackersUI()
@@ -517,6 +559,8 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
 extension TrackersViewController: TrackerCollectionViewCellDelegate {
     func trackerCell(_ cell: TrackerCollectionViewCell, onClickPlusButton indexPath: IndexPath?) {
         guard let indexPath else { return }
+        
+        logClickEvent(AnalyticsConstants.Value.track)
             
         let tracker = trackerCategories[indexPath.section].trackers[indexPath.row]
         
