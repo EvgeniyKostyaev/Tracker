@@ -75,7 +75,7 @@ private enum Theme {
     enum Separator {
         static let separatorLeadingConstraint: CGFloat = 16.0
         static let separatorTrailingConstraint: CGFloat = -16.0
-        static let separatorHeightConstraint: CGFloat = 0.5
+        static let separatorHeightConstraint: CGFloat = 0.8
     }
     
     enum CollectionView {
