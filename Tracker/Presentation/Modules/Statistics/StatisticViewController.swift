@@ -33,8 +33,10 @@ private enum Theme {
 final class StatisticViewController: UIViewController {
     
     // MARK: - Private Properties
+    private let trackerRecordDataProvider = TrackerRecordDataProvider.shared
+    
     private lazy var emptyStateView: EmptyStateView = {
-        let emptyStateView = EmptyStateView(image: UIImage(resource: .nothingAnalize), text: "statystic_empty_satate_title".localized)
+        let emptyStateView = EmptyStateView(image: UIImage(resource: .nothingAnalize), text: "statistic_empty_satate_title".localized)
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         return emptyStateView
     }()
@@ -55,7 +57,7 @@ final class StatisticViewController: UIViewController {
     
     private lazy var infoValueLabel: UILabel = {
         let label = UILabel()
-        label.text = "7"
+        label.text = String(trackersComplitedCount())
         label.textColor = .trackerBlack
         label.font = UIFont.systemFont(ofSize: Theme.infoValueFontSizeLabel, weight: .bold)
         label.numberOfLines = Theme.numberOfLinesLabel
@@ -64,7 +66,7 @@ final class StatisticViewController: UIViewController {
     
     private lazy var infoTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Test"
+        label.text = "statistic_trackers_complited".localized
         label.textColor = .trackerBlack
         label.font = UIFont.systemFont(ofSize: Theme.infoTitleFontSizeLabel, weight: .medium)
         label.numberOfLines = Theme.numberOfLinesLabel
@@ -75,8 +77,12 @@ final class StatisticViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupNotifications()
+        
         setupTitle()
         setupLayout()
+        
+        updateStatisticUI()
     }
     
     override func viewDidLayoutSubviews() {
@@ -84,13 +90,17 @@ final class StatisticViewController: UIViewController {
         
         infoContainerView.setGradientBorder(
             colors: [
-                .trackerColorCollection3,
+                .trackerColorCollection1,
                 .trackerColorCollection9,
-                .trackerColorCollection1
+                .trackerColorCollection3
             ],
             lineWidth: Theme.InfoContainerView.infoViewGradientBorderLineWidth,
             cornerRadius: Theme.InfoContainerView.infoViewGradientBorderCornerRadius
         )
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Private Methods
@@ -122,5 +132,35 @@ final class StatisticViewController: UIViewController {
             infoStackView.trailingAnchor.constraint(equalTo: infoContainerView.trailingAnchor, constant: -Theme.infoStackViewConstraint),
             infoStackView.bottomAnchor.constraint(equalTo: infoContainerView.bottomAnchor, constant: -Theme.infoStackViewConstraint)
         ])
+    }
+    
+    private func updateStatisticUI() {
+        let trackersComplitedCount = trackersComplitedCount()
+        
+        if (trackersComplitedCount > 0) {
+            infoContainerView.isHidden = false
+            emptyStateView.isHidden = true
+        } else {
+            emptyStateView.isHidden = false
+            infoContainerView.isHidden = true
+        }
+    }
+    
+    private func trackersComplitedCount() -> Int {
+        return trackerRecordDataProvider.trackerRecords.count
+    }
+    
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleRecordsUpdate),
+            name: TrackerRecordDataProvider.recordsDidChangeNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func handleRecordsUpdate() {
+        print("TEST_222: didUpdateRecords")
+        updateStatisticUI()
     }
 }

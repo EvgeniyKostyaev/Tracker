@@ -10,7 +10,7 @@ import Foundation
 class FilterTrackersUseCase {
     
     // MARK: - Private Properties
-    private let trackerRecordDataProvider = TrackerRecordDataProvider()
+    private let trackerRecordDataProvider = TrackerRecordDataProvider.shared
     
     // MARK: - Public methods
     func filterTrackerCategoriesList(_ trackerCategories: [TrackerCategory], date: Date, searchKeyword: String, filter: Filter) -> [TrackerCategory] {

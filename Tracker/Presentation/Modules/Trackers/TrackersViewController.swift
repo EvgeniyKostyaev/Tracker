@@ -46,7 +46,7 @@ final class TrackersViewController: UIViewController {
     private let filterTrackersUseCase = FilterTrackersUseCase()
     
     private let trackerCategoryDataProvider = TrackerCategoryDataProvider()
-    private let trackerRecordDataProvider = TrackerRecordDataProvider()
+    private let trackerRecordDataProvider = TrackerRecordDataProvider.shared
     
     private var trackerCategories: [TrackerCategory] = []
     private var activeDate: Date = Date()
@@ -122,7 +122,7 @@ final class TrackersViewController: UIViewController {
         super.viewDidLoad()
         
         trackerCategoryDataProvider.delegate = self
-        trackerRecordDataProvider.delegate = self
+        setupNotifications()
         
         setupTitle()
         setupSearchController()
@@ -131,6 +131,10 @@ final class TrackersViewController: UIViewController {
         setupLayout()
         
         updateTrackersUI()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Action Methods
@@ -421,6 +425,19 @@ final class TrackersViewController: UIViewController {
         )
     }
     
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleRecordsUpdate),
+            name: TrackerRecordDataProvider.recordsDidChangeNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func handleRecordsUpdate() {
+        print("TEST_111: didUpdateRecords")
+        collectionView.reloadData()
+    }
 }
 
 // MARK: - UICollectionViewDataSource Methods
@@ -599,12 +616,5 @@ extension TrackersViewController: UISearchBarDelegate {
 extension TrackersViewController: TrackerCategoryDataProviderDelegate {
     func didUpdateCategories() {
         updateTrackersUI()
-    }
-}
-
-// MARK: - TrackerRecordDataProviderDelegate Methods
-extension TrackersViewController: TrackerRecordDataProviderDelegate {
-    func didUpdateRecords() {
-        collectionView.reloadData()
     }
 }
