@@ -6,13 +6,12 @@
   
 */
 
+"common_trackers" = "Трекеры";
+"common_statistic" = "Статистика";
+
 "common_cancel" = "Отменить";
 "common_delete" = "Удалить";
 
-"trackers_tab_bar_item_title" = "Трекеры";
-"statistic_tab_bar_item_title" = "Статистика";
-
-"trackers_title" = "Трекеры";
 "trackers_empty_main_satate_title" = "Что будем отслеживать?";
 "trackers_empty_filter_satate_title" = "Ничего не найдено";
 "trackers_search_placeholder" = "Поиск";

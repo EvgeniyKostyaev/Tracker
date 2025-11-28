@@ -155,7 +155,7 @@ final class TrackersViewController: UIViewController {
     
     // MARK: - Private Methods
     private func setupTitle() {
-        title = "trackers_title".localized
+        title = "common_trackers".localized
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
     }

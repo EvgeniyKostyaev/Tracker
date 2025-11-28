@@ -6,13 +6,12 @@
   
 */
 
+"common_trackers" = "Trackers";
+"common_statistic" = "Statistic";
+
 "common_cancel" = "Cancel";
 "common_delete" = "Delete";
 
-"trackers_tab_bar_item_title" = "Trackers";
-"statistic_tab_bar_item_title" = "Statistic";
-
-"trackers_title" = "Trackers";
 "trackers_empty_main_satate_title" = "What will we track?";
 "trackers_empty_filter_satate_title" = "Nothing found";
 "trackers_search_placeholder" = "Search";

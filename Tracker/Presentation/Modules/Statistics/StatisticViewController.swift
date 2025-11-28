@@ -13,6 +13,13 @@ final class StatisticViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        setupTitle()
+    }
+    
+    // MARK: - Private Methods
+    private func setupTitle() {
+        title = "common_statistic".localized
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
     }
 }

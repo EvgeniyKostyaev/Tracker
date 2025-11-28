@@ -21,7 +21,7 @@ final class MainTabBarController: UITabBarController {
     private func setupViewControllers() {
         let trackersViewController = TrackersViewController()
         trackersViewController.tabBarItem = UITabBarItem(
-            title: "trackers_tab_bar_item_title".localized,
+            title: "common_trackers".localized,
             image: UIImage(resource: .tabTrackers),
             selectedImage: nil
         )
@@ -30,12 +30,14 @@ final class MainTabBarController: UITabBarController {
         
         let statisticViewController = StatisticViewController()
         statisticViewController.tabBarItem = UITabBarItem(
-            title: "statistic_tab_bar_item_title".localized,
+            title: "common_statistic".localized,
             image: UIImage(resource: .tabStatistic),
             selectedImage: nil
         )
         
-        self.viewControllers = [trackersNavigationController, statisticViewController]
+        let statisticNavigationController = UINavigationController.init(rootViewController: statisticViewController)
+        
+        self.viewControllers = [trackersNavigationController, statisticNavigationController]
     }
     
     private func setupTopSeparator() {
