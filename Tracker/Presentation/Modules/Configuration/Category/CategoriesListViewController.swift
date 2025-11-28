@@ -97,7 +97,7 @@ final class CategoriesListViewController: UIViewController {
     
     // MARK: - Private Methods
     private func bind() {
-        guard let viewModel = viewModel else { return }
+        guard let viewModel else { return }
         
         viewModel.showCategoriesList = { [weak self] data in
             let (categoriesList, currentCategory) = data

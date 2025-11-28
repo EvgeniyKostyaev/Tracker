@@ -7,7 +7,7 @@
 
 import Foundation
 
-class FilterTrackersUseCase {
+final class FilterTrackersUseCase {
     
     // MARK: - Private Properties
     private let trackerRecordDataProvider = TrackerRecordDataProvider.shared
@@ -51,7 +51,7 @@ class FilterTrackersUseCase {
     }
     
     private func filterTrackersListBySearchKeyword(_ trackers: [Tracker], searchKeyword: String) -> [Tracker] {
-        if (searchKeyword.isEmpty) {
+        if searchKeyword.isEmpty {
             return trackers
         }
         

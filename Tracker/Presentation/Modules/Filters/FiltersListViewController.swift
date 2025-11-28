@@ -60,7 +60,7 @@ final class FiltersListViewController: UIViewController {
     
     // MARK: - Private Methods
     private func bind() {
-        guard let viewModel = viewModel else { return }
+        guard let viewModel else { return }
         
         viewModel.showFiltersList = { [weak self] data in
             let (filtersList, currentFilter) = data

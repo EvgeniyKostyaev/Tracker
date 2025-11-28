@@ -12,7 +12,7 @@
 "common_cancel" = "Отменить";
 "common_delete" = "Удалить";
 
-"trackers_empty_main_satate_title" = "Что будем отслеживать?";
+"trackers_empty_main_state_title" = "Что будем отслеживать?";
 "trackers_empty_filter_satate_title" = "Ничего не найдено";
 "trackers_search_placeholder" = "Поиск";
 "trackers_edit" = "Редактировать";

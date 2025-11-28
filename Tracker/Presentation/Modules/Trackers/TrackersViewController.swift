@@ -70,7 +70,7 @@ final class TrackersViewController: UIViewController {
     }()
     
     private lazy var emptyMainStateView: EmptyStateView = {
-        let emptyMainStateView = EmptyStateView(image: UIImage(resource: .noItems), text: "trackers_empty_main_satate_title".localized)
+        let emptyMainStateView = EmptyStateView(image: UIImage(resource: .noItems), text: "trackers_empty_main_state_title".localized)
         emptyMainStateView.translatesAutoresizingMaskIntoConstraints = false
         
         return emptyMainStateView
