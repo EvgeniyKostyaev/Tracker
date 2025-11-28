@@ -57,7 +57,6 @@ final class StatisticViewController: UIViewController {
     
     private lazy var infoValueLabel: UILabel = {
         let label = UILabel()
-        label.text = String(trackersComplitedCount())
         label.textColor = .trackerBlack
         label.font = UIFont.systemFont(ofSize: Theme.infoValueFontSizeLabel, weight: .bold)
         label.numberOfLines = Theme.numberOfLinesLabel
@@ -139,6 +138,8 @@ final class StatisticViewController: UIViewController {
         
         if (trackersComplitedCount > 0) {
             infoContainerView.isHidden = false
+            infoValueLabel.text = String(trackersComplitedCount)
+            
             emptyStateView.isHidden = true
         } else {
             emptyStateView.isHidden = false
@@ -160,7 +161,6 @@ final class StatisticViewController: UIViewController {
     }
     
     @objc private func handleRecordsUpdate() {
-        print("TEST_222: didUpdateRecords")
         updateStatisticUI()
     }
 }

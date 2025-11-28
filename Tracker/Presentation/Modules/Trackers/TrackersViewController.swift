@@ -435,7 +435,6 @@ final class TrackersViewController: UIViewController {
     }
     
     @objc private func handleRecordsUpdate() {
-        print("TEST_111: didUpdateRecords")
         collectionView.reloadData()
     }
 }
