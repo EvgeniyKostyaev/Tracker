@@ -74,3 +74,5 @@
 "configuration_save_button_title" = "Сохранить";
 "configuration_warning_text" = "Ограничение 38 символов";
 "configuration_every_day_representation" = "Каждый день";
+
+"statystic_empty_satate_title" = "Анализировать пока нечего";

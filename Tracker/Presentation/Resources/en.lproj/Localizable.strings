@@ -74,3 +74,5 @@
 "configuration_save_button_title" = "Save";
 "configuration_warning_text" = "38 character limit";
 "configuration_every_day_representation" = "Every day";
+
+"statystic_empty_satate_title" = "There is nothing to analyze yet";

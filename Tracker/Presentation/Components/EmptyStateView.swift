@@ -10,7 +10,7 @@ import UIKit
 private enum Theme {
     static let numberOfLinesLabel: Int = 0
     static let fontSizeLabel: CGFloat = 16
-    static let spacingStackView: CGFloat = 16
+    static let spacingStackView: CGFloat = 12
     static let heightImageView: CGFloat = 80
     static let widthImageView: CGFloat = 80
     static let stackViewLeadingConstraint: CGFloat = 16.0
