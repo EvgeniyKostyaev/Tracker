@@ -8,9 +8,25 @@
 import UIKit
 
 private enum Theme {
+    static let spacingStackView: CGFloat = 10.0
+    static let infoValueFontSizeLabel: CGFloat = 34.0
+    static let infoTitleFontSizeLabel: CGFloat = 16.0
+    static let numberOfLinesLabel: Int = 1
+    static let infoStackViewConstraint: CGFloat = 14.0
+    
     enum EmptyStateView {
         static let emptyStateViewLeadingConstraint: CGFloat = 16.0
         static let emptyStateViewTrailingConstraint: CGFloat = -16.0
+    }
+    
+    enum InfoContainerView {
+        static let infoViewTopConstraint: CGFloat = 40.0
+        static let infoViewLeadingConstraint: CGFloat = 16.0
+        static let infoViewTrailingConstraint: CGFloat = -16.0
+        static let infoViewHeightConstraint: CGFloat = 90.0
+        
+        static let infoViewGradientBorderLineWidth: CGFloat = 1.0
+        static let infoViewGradientBorderCornerRadius: CGFloat = 16.0
     }
 }
 
@@ -20,8 +36,39 @@ final class StatisticViewController: UIViewController {
     private lazy var emptyStateView: EmptyStateView = {
         let emptyStateView = EmptyStateView(image: UIImage(resource: .nothingAnalize), text: "statystic_empty_satate_title".localized)
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
-        
         return emptyStateView
+    }()
+    
+    private lazy var infoContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var infoStackView: UIStackView = {
+        let stackView  = UIStackView(arrangedSubviews: [infoValueLabel, infoTitleLabel])
+        stackView.axis = .vertical
+        stackView.spacing = Theme.spacingStackView
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var infoValueLabel: UILabel = {
+        let label = UILabel()
+        label.text = "7"
+        label.textColor = .trackerBlack
+        label.font = UIFont.systemFont(ofSize: Theme.infoValueFontSizeLabel, weight: .bold)
+        label.numberOfLines = Theme.numberOfLinesLabel
+        return label
+    }()
+    
+    private lazy var infoTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Test"
+        label.textColor = .trackerBlack
+        label.font = UIFont.systemFont(ofSize: Theme.infoTitleFontSizeLabel, weight: .medium)
+        label.numberOfLines = Theme.numberOfLinesLabel
+        return label
     }()
     
     // MARK: - Override Methods
@@ -30,6 +77,20 @@ final class StatisticViewController: UIViewController {
         
         setupTitle()
         setupLayout()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        infoContainerView.setGradientBorder(
+            colors: [
+                .trackerColorCollection3,
+                .trackerColorCollection9,
+                .trackerColorCollection1
+            ],
+            lineWidth: Theme.InfoContainerView.infoViewGradientBorderLineWidth,
+            cornerRadius: Theme.InfoContainerView.infoViewGradientBorderCornerRadius
+        )
     }
     
     // MARK: - Private Methods
@@ -41,13 +102,25 @@ final class StatisticViewController: UIViewController {
     
     private func setupLayout() {
         view.addSubview(emptyStateView)
+        view.addSubview(infoContainerView)
+        infoContainerView.addSubview(infoStackView)
         
         NSLayoutConstraint.activate([
             emptyStateView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             emptyStateView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
             emptyStateView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.EmptyStateView.emptyStateViewLeadingConstraint),
-            emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.EmptyStateView.emptyStateViewTrailingConstraint)
+            emptyStateView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.EmptyStateView.emptyStateViewTrailingConstraint),
+            
+            infoContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Theme.InfoContainerView.infoViewTopConstraint),
+            infoContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Theme.InfoContainerView.infoViewLeadingConstraint),
+            infoContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.InfoContainerView.infoViewTrailingConstraint),
+            infoContainerView.heightAnchor.constraint(equalToConstant: Theme.InfoContainerView.infoViewHeightConstraint),
+            
+            infoStackView.topAnchor.constraint(equalTo: infoContainerView.topAnchor, constant: Theme.infoStackViewConstraint),
+            infoStackView.leadingAnchor.constraint(equalTo: infoContainerView.leadingAnchor, constant: Theme.infoStackViewConstraint),
+            infoStackView.trailingAnchor.constraint(equalTo: infoContainerView.trailingAnchor, constant: -Theme.infoStackViewConstraint),
+            infoStackView.bottomAnchor.constraint(equalTo: infoContainerView.bottomAnchor, constant: -Theme.infoStackViewConstraint)
         ])
     }
 }
