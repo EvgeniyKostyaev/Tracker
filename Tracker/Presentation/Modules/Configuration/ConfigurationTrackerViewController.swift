@@ -7,30 +7,30 @@
 
 import UIKit
 
+enum ConfigurationType {
+    case create
+    case edit
+}
+
 private enum Theme {
-    static let habitTitle: String = "Новая привычка"
-    static let irregularTitle: String = "Новое нерегулярное событие"
-    static let textFieldPlaceholder: String = "Введите название трекера"
-    static let categoryButtonTitle: String = "Категория"
-    static let scheduleButtonTitle: String = "Расписание"
-    static let cancelButtonTitle: String = "Отменить"
-    static let createButtonTitle: String = "Создать"
-    static let warningText: String = "Ограничение 38 символов"
-    static let everyDayRepresentation: String = "Каждый день"
-    
     static let warningLabelFontSize: CGFloat = 17.0
+    
+    static let scrollViewBottomConstraint: CGFloat = -20.0
     
     static let configurationDescriptionLabelTrailingConstraint: CGFloat = -36.0
     static let configurationDisclosureIndicatorTrailingConstraint: CGFloat = -16.0
     
     static let sheetPresentationCornerRadius: CGFloat = 16.0
     
+    static let completedDaysLabelFontSize: CGFloat = 32.0
+    
     static let allDaysOfWeekCount: Int = 7
     
     static let alphaComponent: CGFloat = 0.3
     
     enum ConfigurationStackView {
-        static let stackViewSpacing: CGFloat = 8.0
+        static let topStackViewSpacing: CGFloat = 40.0
+        static let nameStackViewSpacing: CGFloat = 8.0
         static let stackViewTopConstraint: CGFloat = 24.0
         static let stackViewLeadingConstraint: CGFloat = 16.0
         static let stackViewTrailingConstraint: CGFloat = -16.0
@@ -69,12 +69,13 @@ private enum Theme {
         static let cancelButtonWidthConstraintMultiplier: CGFloat = 0.44
         
         static let createButtonTrailingConstraint: CGFloat = -20.0
+        static let editButtonTrailingConstraint: CGFloat = -20.0
     }
     
     enum Separator {
         static let separatorLeadingConstraint: CGFloat = 16.0
         static let separatorTrailingConstraint: CGFloat = -16.0
-        static let separatorHeightConstraint: CGFloat = 1.0
+        static let separatorHeightConstraint: CGFloat = 0.8
     }
     
     enum CollectionView {
@@ -97,16 +98,23 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     // MARK: - Public properties
     var onCreate: ((Tracker, String) -> Void)?
+    var onEdit: ((Tracker, String) -> Void)?
+    
+    var configurationType: ConfigurationType = .create
+    
+    var trackerId: UUID = UUID()
     var trackerType: TrackerType = .habit
+    var trackerName: String = String()
+    var trackerCategory: String = String()
+    var trackerActiveDaysWeeks: [DayWeeks] = []
+    var trackerEmoji: String = String()
+    var trackerColor: UIColor = .clear
+    
     var activeDate: Date = Date()
     
+    var completedDaysCount: Int = 0
+
     // MARK: - Private properties
-    private var trackerName: String = String()
-    private var trackerCategory: String = String()
-    private var trackerActiveDaysWeeks: [DayWeeks] = []
-    private var trackerEmoji: String = String()
-    private var trackerColor: UIColor = .clear
-    
     private let emojies: [String] = [
         "🙂", "😻", "🌺", "🐶", "❤️", "😱",
         "😇", "😡", "🥶", "🤔", "🙌", "🍔",
@@ -131,10 +139,21 @@ final class ConfigurationTrackerViewController: UIViewController {
         return view
     }()
     
+    private lazy var completedDaysLabel: UILabel = {
+        let label = UILabel()
+        label.text = getCompletedDaysRepresentation(completedDaysCount)
+        label.font = UIFont.boldSystemFont(ofSize: Theme.completedDaysLabelFontSize)
+        label.textAlignment = .center
+        label.textColor = .label
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
+        textField.text = trackerName
         textField.delegate = self
-        textField.placeholder = Theme.textFieldPlaceholder
+        textField.placeholder = "configuration_text_field_placeholder".localized
         textField.backgroundColor = .trackerLightGray.withAlphaComponent(Theme.alphaComponent)
         textField.layer.cornerRadius = Theme.NameTextField.nameTextFieldCornerRadius
         textField.font = .systemFont(ofSize: Theme.NameTextField.nameTextFieldFontSize)
@@ -148,7 +167,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private let warningLabel: UILabel = {
         let label = UILabel()
-        label.text = Theme.warningText
+        label.text = "configuration_warning_text".localized
         label.font = .systemFont(ofSize: Theme.warningLabelFontSize)
         label.textAlignment = .center
         label.textColor = .trackerRed
@@ -159,7 +178,16 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var nameStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [nameTextField, warningLabel])
         stackView.axis = .vertical
-        stackView.spacing = Theme.ConfigurationStackView.stackViewSpacing
+        stackView.spacing = Theme.ConfigurationStackView.nameStackViewSpacing
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var topStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [completedDaysLabel, nameStackView])
+        stackView.axis = .vertical
+        stackView.spacing = Theme.ConfigurationStackView.topStackViewSpacing
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -195,8 +223,8 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var categoryTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = Theme.categoryButtonTitle
-        label.textColor = .black
+        label.text = "configuration_category_button_title".localized
+        label.textColor = .trackerBlack
         label.font = UIFont.systemFont(ofSize: Theme.ActionButtons.configurationTitleLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -204,7 +232,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var categoryDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = getCategoryRepresentation()
+        label.text = trackerCategory
         label.textColor = .trackerGray
         label.font = UIFont.systemFont(ofSize: Theme.ActionButtons.configurationDescriptionLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -233,8 +261,8 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var scheduleTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = Theme.scheduleButtonTitle
-        label.textColor = .black
+        label.text = "configuration_schedule_button_title".localized
+        label.textColor = .trackerBlack
         label.font = UIFont.systemFont(ofSize: Theme.ActionButtons.configurationTitleLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -278,9 +306,10 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var emojiCollectionController: EmojiCollectionController = {
         let emojiCollectionController = EmojiCollectionController.init(collectionView: emojiCollectionView)
         emojiCollectionController.emojies = emojies
+        emojiCollectionController.selectedEmoji = trackerEmoji
         emojiCollectionController.onSelectEmoji = { [weak self] selectedEmoji in
             self?.trackerEmoji = selectedEmoji
-            self?.updateCreateButtonState()
+            self?.updateActionButtonsState()
         }
         
         return emojiCollectionController
@@ -295,9 +324,10 @@ final class ConfigurationTrackerViewController: UIViewController {
     private lazy var colorCollectionController: ColorCollectionController = {
         let colorCollectionController = ColorCollectionController.init(collectionView: colorCollectionView)
         colorCollectionController.colors = colors
+        colorCollectionController.selectedColor = trackerColor
         colorCollectionController.onSelectColor = { [weak self] selectedColor in
             self?.trackerColor = selectedColor
-            self?.updateCreateButtonState()
+            self?.updateActionButtonsState()
         }
         
         return colorCollectionController
@@ -305,11 +335,11 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.cancelButtonTitle, for: .normal)
+        button.setTitle("common_cancel".localized, for: .normal)
         button.setTitleColor(.trackerRed, for: .normal)
-        button.backgroundColor = .white
+        button.backgroundColor = .trackerWhite
         button.layer.borderWidth = Theme.ActionButtons.cancellButtonBorderWidth
-        button.layer.borderColor = UIColor.red.cgColor
+        button.layer.borderColor = UIColor.trackerRed.cgColor
         button.layer.cornerRadius = Theme.ActionButtons.actionButtonsCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
@@ -318,8 +348,8 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private lazy var createButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.createButtonTitle, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitle("configuration_create_button_title".localized, for: .normal)
+        button.setTitleColor(.trackerWhite, for: .normal)
         button.backgroundColor = .trackerGray
         button.layer.cornerRadius = Theme.ActionButtons.actionButtonsCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -328,10 +358,22 @@ final class ConfigurationTrackerViewController: UIViewController {
         return button
     }()
     
+    private lazy var editButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("configuration_save_button_title".localized, for: .normal)
+        button.setTitleColor(.trackerWhite, for: .normal)
+        button.backgroundColor = .trackerGray
+        button.layer.cornerRadius = Theme.ActionButtons.actionButtonsCornerRadius
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
+        button.isEnabled = true
+        return button
+    }()
+    
     // MARK: - Overrides methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .trackerWhite
         title = getTitle()
         
         _ = emojiCollectionController
@@ -341,7 +383,8 @@ final class ConfigurationTrackerViewController: UIViewController {
         setupConfigurationButtonsState()
         setupTapGesture()
         
-        updateCreateButtonState()
+        updateCompletedDaysLabelState()
+        updateActionButtonsState()
     }
     
     // MARK: - Action methods
@@ -350,7 +393,13 @@ final class ConfigurationTrackerViewController: UIViewController {
     }
     
     @objc private func createTapped() {
-        onCreate?(getNewTracker(), trackerCategory)
+        onCreate?(getTracker(), trackerCategory)
+        
+        dismiss(animated: true)
+    }
+    
+    @objc private func editTapped() {
+        onEdit?(getTracker(), trackerCategory)
         
         dismiss(animated: true)
     }
@@ -365,21 +414,25 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     // MARK: - Private methods
     private func getTitle() -> String {
-        switch trackerType {
-        case .habit: return Theme.habitTitle
-        case .irregular: return Theme.irregularTitle
+        switch configurationType {
+        case .create:
+            switch trackerType {
+            case .habit: return "configuration_creating_habit_title".localized
+            case .irregular: return "configuration_creating_irregular_title".localized
+            }
+        case .edit:
+            switch trackerType {
+            case .habit: return "configuration_editing_habit_title".localized
+            case .irregular: return "configuration_editing_irregular_title".localized
+            }
         }
-    }
-    
-    private func getCategoryRepresentation() -> String {
-        return trackerCategory
     }
     
     private func getActiveDaysWeeksRepresentation() -> String {
         var activeDaysWeeksRepresentation = String()
         
         if (trackerActiveDaysWeeks.count == Theme.allDaysOfWeekCount) {
-            activeDaysWeeksRepresentation = Theme.everyDayRepresentation
+            activeDaysWeeksRepresentation = "configuration_every_day_representation".localized
         } else {
             trackerActiveDaysWeeks.enumerated().forEach { (index, activeDayWeeks) in
                 let activeDayWeeksRepresentation = (index == trackerActiveDaysWeeks.count - 1) ? activeDayWeeks.shortRepresentation : activeDayWeeks.shortRepresentation + ", "
@@ -390,8 +443,13 @@ final class ConfigurationTrackerViewController: UIViewController {
         return activeDaysWeeksRepresentation
     }
     
-    private func setupEmojiCollectionController() {
+    private func getCompletedDaysRepresentation(_ dayCount: Int) -> String {
+        let daysString = String.localizedStringWithFormat(
+            NSLocalizedString("numberOfDays", comment: String()),
+            dayCount
+        )
         
+        return daysString
     }
     
     private func setupLayout() {
@@ -399,7 +457,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         
         scrollView.addSubview(contentView)
         
-        contentView.addSubview(nameStackView)
+        contentView.addSubview(topStackView)
         
         contentView.addSubview(configurationStackView)
         contentView.addSubview(separatorView)
@@ -415,12 +473,13 @@ final class ConfigurationTrackerViewController: UIViewController {
         
         view.addSubview(cancelButton)
         view.addSubview(createButton)
+        view.addSubview(editButton)
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: createButton.topAnchor, constant: -20.0),
+            scrollView.bottomAnchor.constraint(equalTo: cancelButton.topAnchor, constant: Theme.scrollViewBottomConstraint),
             
             contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -428,17 +487,17 @@ final class ConfigurationTrackerViewController: UIViewController {
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             
-            nameStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.ConfigurationStackView.stackViewTopConstraint),
-            nameStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.ConfigurationStackView.stackViewLeadingConstraint),
-            nameStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Theme.ConfigurationStackView.stackViewTrailingConstraint),
+            topStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: Theme.ConfigurationStackView.stackViewTopConstraint),
+            topStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.ConfigurationStackView.stackViewLeadingConstraint),
+            topStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Theme.ConfigurationStackView.stackViewTrailingConstraint),
             
             nameTextField.heightAnchor.constraint(equalToConstant: Theme.NameTextField.nameTextFieldHeightConstraint),
-            nameTextField.leadingAnchor.constraint(equalTo: nameStackView.leadingAnchor),
-            nameTextField.trailingAnchor.constraint(equalTo: nameStackView.trailingAnchor),
+            nameTextField.leadingAnchor.constraint(equalTo: topStackView.leadingAnchor),
+            nameTextField.trailingAnchor.constraint(equalTo: topStackView.trailingAnchor),
             
             configurationStackView.topAnchor.constraint(equalTo: warningLabel.bottomAnchor, constant: Theme.ActionButtons.categoryButtonTopConstraint),
-            configurationStackView.leadingAnchor.constraint(equalTo: nameStackView.leadingAnchor),
-            configurationStackView.trailingAnchor.constraint(equalTo: nameStackView.trailingAnchor),
+            configurationStackView.leadingAnchor.constraint(equalTo: topStackView.leadingAnchor),
+            configurationStackView.trailingAnchor.constraint(equalTo: topStackView.trailingAnchor),
             
             categoryButton.heightAnchor.constraint(equalToConstant: Theme.ActionButtons.configurationButtonsHeightConstraint),
             
@@ -484,7 +543,12 @@ final class ConfigurationTrackerViewController: UIViewController {
             createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.ActionButtons.createButtonTrailingConstraint),
             createButton.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor),
             createButton.heightAnchor.constraint(equalTo: cancelButton.heightAnchor),
-            createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor)
+            createButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor),
+            
+            editButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: Theme.ActionButtons.editButtonTrailingConstraint),
+            editButton.bottomAnchor.constraint(equalTo: cancelButton.bottomAnchor),
+            editButton.heightAnchor.constraint(equalTo: cancelButton.heightAnchor),
+            editButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor)
         ])
     }
     
@@ -515,9 +579,9 @@ final class ConfigurationTrackerViewController: UIViewController {
         categoriesListViewModel.currentCategory = trackerCategory
         categoriesListViewModel.onSelectTrackerCategory = { [weak self] newTrackerCategory in
             self?.trackerCategory = newTrackerCategory
-            self?.categoryDescriptionLabel.text = self?.getCategoryRepresentation()
+            self?.categoryDescriptionLabel.text = self?.trackerCategory
             
-            self?.updateCreateButtonState()
+            self?.updateActionButtonsState()
         }
         
         let categoriesListViewController = CategoriesListViewController()
@@ -542,7 +606,7 @@ final class ConfigurationTrackerViewController: UIViewController {
             self?.trackerActiveDaysWeeks = newActiveDays
             self?.scheduleDescriptionLabel.text = self?.getActiveDaysWeeksRepresentation()
             
-            self?.updateCreateButtonState()
+            self?.updateActionButtonsState()
         }
         
         let navigationController = UINavigationController(rootViewController: scheduleViewController)
@@ -556,11 +620,23 @@ final class ConfigurationTrackerViewController: UIViewController {
         present(navigationController, animated: true)
     }
     
-    private func updateCreateButtonState() {
-        if (isValidateConfiguration()) {
-            enableCreateButton()
-        } else {
-            disableCreateButton()
+    private func updateCompletedDaysLabelState() {
+        switch configurationType {
+        case .create: completedDaysLabel.isHidden = true
+        case .edit: completedDaysLabel.isHidden = !(completedDaysCount > 0)
+        }
+    }
+    
+    private func updateActionButtonsState() {
+        switch configurationType {
+        case .create:
+            editButton.isHidden = true
+            createButton.isHidden = false
+            isValidateConfiguration() ? enableCreateButton(): disableCreateButton()
+        case .edit:
+            createButton.isHidden = true
+            editButton.isHidden = false
+            isValidateConfiguration() ? enableEditButton(): disableEditButton()
         }
     }
     
@@ -575,7 +651,7 @@ final class ConfigurationTrackerViewController: UIViewController {
     
     private func enableCreateButton() {
         createButton.isEnabled = true
-        createButton.backgroundColor = .black
+        createButton.backgroundColor = .trackerBlack
     }
     
     private func disableCreateButton() {
@@ -583,7 +659,17 @@ final class ConfigurationTrackerViewController: UIViewController {
         createButton.backgroundColor = .trackerGray
     }
     
-    private func getNewTracker() -> Tracker {
+    private func enableEditButton() {
+        editButton.isEnabled = true
+        editButton.backgroundColor = .trackerBlack
+    }
+    
+    private func disableEditButton() {
+        editButton.isEnabled = false
+        editButton.backgroundColor = .trackerGray
+    }
+    
+    private func getTracker() -> Tracker {
         
         let schedule: Schedule
         
@@ -595,7 +681,7 @@ final class ConfigurationTrackerViewController: UIViewController {
         }
         
         let tracker = Tracker(
-            id: UUID(),
+            id: trackerId,
             title: trackerName,
             color: trackerColor,
             emoji: trackerEmoji,
@@ -623,7 +709,7 @@ extension ConfigurationTrackerViewController: UITextFieldDelegate {
         
         trackerName = updatedText.trimmingCharacters(in: .whitespaces)
         
-        updateCreateButtonState()
+        updateActionButtonsState()
         
         return true
     }
@@ -633,7 +719,7 @@ extension ConfigurationTrackerViewController: UITextFieldDelegate {
         
         trackerName = String()
         
-        updateCreateButtonState()
+        updateActionButtonsState()
         
         return true
     }

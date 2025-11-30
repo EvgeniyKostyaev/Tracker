@@ -8,10 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let title: String = "Категория"
-    static let addButtonTitle: String = "Добавить категорию"
-    static let emptySatateTitle: String = "Привычки и события можно объединить по смыслу"
-    
     static let containerViewCornerRadius: CGFloat = 16.0
     static let tableViewSeparatorInset: CGFloat = 16.0
     static let sheetPresentationCornerRadius: CGFloat = 16.0
@@ -43,29 +39,20 @@ final class CategoriesListViewController: UIViewController {
     // MARK: - Private Properties
     private var viewModel: CategoriesListViewModel?
     
-    private var categoriesList: [TrackerCategory] = []
-    private var currentCategory: String = String()
-    
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
+    private lazy var tableView: OptionTableView = {
+        let tableView = OptionTableView(style: .plain)
+        tableView.optionTableViewDelegate = self
+        
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(
-            CategoryTableViewCell.self,
-            forCellReuseIdentifier: CategoryTableViewCell.identifier
-        )
-        tableView.backgroundColor = .clear
-        tableView.allowsSelection = true
-        tableView.isScrollEnabled = true
-        tableView.showsVerticalScrollIndicator = false
-        tableView.separatorStyle = .none
+        
         return tableView
     }()
     
     private lazy var addButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.addButtonTitle, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitle("categories_add_button_title".localized, for: .normal)
+        button.setTitleColor(.trackerWhite, for: .normal)
+        button.backgroundColor = .trackerBlack
         button.layer.cornerRadius = Theme.AddButton.addButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
@@ -75,13 +62,13 @@ final class CategoriesListViewController: UIViewController {
     private let navigationBarAppearance: UINavigationBarAppearance = {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = .white
+        appearance.backgroundColor = .trackerWhite
         appearance.shadowColor = .clear
         return appearance
     }()
     
     private lazy var emptyStateView: EmptyStateView = {
-        let emptyStateView = EmptyStateView(image: UIImage(resource: .noItems), text: Theme.emptySatateTitle)
+        let emptyStateView = EmptyStateView(image: UIImage(resource: .noItems), text: "categories_empty_satate_title".localized)
         emptyStateView.translatesAutoresizingMaskIntoConstraints = false
         
         return emptyStateView
@@ -93,7 +80,6 @@ final class CategoriesListViewController: UIViewController {
         
         setupView()
         setupNavigationBar()
-        setupTableView()
         setupLayout()
         bindViewModel()
     }
@@ -111,13 +97,13 @@ final class CategoriesListViewController: UIViewController {
     
     // MARK: - Private Methods
     private func bind() {
-        guard let viewModel = viewModel else { return }
+        guard let viewModel else { return }
         
         viewModel.showCategoriesList = { [weak self] data in
             let (categoriesList, currentCategory) = data
             
-            self?.categoriesList = categoriesList
-            self?.currentCategory = currentCategory
+            self?.tableView.optionsList = categoriesList.map({ $0.title })
+            self?.tableView.currentOption = currentCategory
             self?.tableView.reloadData()
             
             self?.tableView.isHidden = false
@@ -135,18 +121,13 @@ final class CategoriesListViewController: UIViewController {
     }
 
     private func setupView() {
-        view.backgroundColor = .white
-        title = Theme.title
+        view.backgroundColor = .trackerWhite
+        title = "categories_title".localized
     }
 
     private func setupNavigationBar() {
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-    }
-
-    private func setupTableView() {
-        tableView.dataSource = self
-        tableView.delegate = self
     }
     
     private func setupLayout() {
@@ -197,33 +178,9 @@ final class CategoriesListViewController: UIViewController {
     }
 }
 
-// MARK: - UITableViewDataSource
-extension CategoriesListViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categoriesList.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.identifier, for: indexPath) as? CategoryTableViewCell else { return UITableViewCell()}
-        
-        let category = categoriesList[indexPath.row]
-        let isActive = category.title == currentCategory
-        let isFirstCell = indexPath.row == 0
-        let isLastCell = indexPath.row == categoriesList.count - 1
-        cell.configure(with: category.title, isActive: isActive, isFirstCell: isFirstCell, isLastCell: isLastCell)
-        
-        cell.backgroundColor = .clear
-        
-        return cell
-    }
-}
-
-// MARK: - UITableViewDelegate
-extension CategoriesListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let category = categoriesList[indexPath.row]
-        
-        viewModel?.onSelectTrackerCategory(categoryTitle: category.title)
+// MARK: - OptionTableViewDelegate Methods
+extension CategoriesListViewController: OptionTableViewDelegate {
+    func onSelectOption(option: String) {
+        viewModel?.onSelectTrackerCategory(categoryTitle: option)
     }
 }

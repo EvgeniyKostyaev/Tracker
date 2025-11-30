@@ -1,32 +1,32 @@
 //
-//  CategoryTableViewCell.swift
+//  OptionTableViewCell.swift
 //  Tracker
 //
-//  Created by Evgeniy Kostyaev on 02.10.2025.
+//  Created by Evgeniy Kostyaev on 26.11.2025.
 //
 
 import UIKit
 
 private enum Theme {
-    static let categoryLabelFontSize: CGFloat = 17.0
-    static let categoryLabelLeadingConstraint: CGFloat = 16.0
+    static let titleLabelFontSize: CGFloat = 17.0
+    static let titleLabelLeadingConstraint: CGFloat = 16.0
     static let checkmarkImageViewTrailingConstraint: CGFloat = -16.0
     static let contentViewHeightConstraint: CGFloat = 75.0
     static let tableViewSeparatorInset: CGFloat = 16.0
-    static let separatorViewHeightConstraint: CGFloat = 1
+    static let separatorViewHeightConstraint: CGFloat = 0.8
     static let alphaComponent: CGFloat = 0.3
     static let cornerRadius: CGFloat = 16.0
 }
 
-final class CategoryTableViewCell: UITableViewCell {
+final class OptionTableViewCell: UITableViewCell {
     
     // MARK: - Public Properties
-    static let identifier = "CategotyCell"
+    static let identifier = "OptionCell"
     
     // MARK: - Private Properties
-    private let categoryLabel: UILabel = {
+    private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: Theme.categoryLabelFontSize)
+        label.font = UIFont.systemFont(ofSize: Theme.titleLabelFontSize)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -59,8 +59,8 @@ final class CategoryTableViewCell: UITableViewCell {
     }
     
     // MARK: - Public Methods
-    func configure(with category: String, isActive: Bool, isFirstCell: Bool, isLastCell: Bool) {
-        categoryLabel.text = category
+    func configure(with title: String, isActive: Bool, isFirstCell: Bool, isLastCell: Bool) {
+        titleLabel.text = title
         checkmarkImageView.image = isActive ? .check : nil
         separatorView.isHidden = isLastCell
         
@@ -69,13 +69,13 @@ final class CategoryTableViewCell: UITableViewCell {
     
     // MARK: - Private Methods
     private func setupLayout() {
-        contentView.addSubview(categoryLabel)
+        contentView.addSubview(titleLabel)
         contentView.addSubview(checkmarkImageView)
         contentView.addSubview(separatorView)
         
         NSLayoutConstraint.activate([
-            categoryLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.categoryLabelLeadingConstraint),
-            categoryLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: Theme.titleLabelLeadingConstraint),
+            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
             checkmarkImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Theme.checkmarkImageViewTrailingConstraint),
             checkmarkImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),

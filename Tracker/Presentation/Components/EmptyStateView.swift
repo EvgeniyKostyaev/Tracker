@@ -10,7 +10,7 @@ import UIKit
 private enum Theme {
     static let numberOfLinesLabel: Int = 0
     static let fontSizeLabel: CGFloat = 16
-    static let spacingStackView: CGFloat = 16
+    static let spacingStackView: CGFloat = 12
     static let heightImageView: CGFloat = 80
     static let widthImageView: CGFloat = 80
     static let stackViewLeadingConstraint: CGFloat = 16.0
@@ -23,14 +23,14 @@ final class EmptyStateView: UIView {
     private let imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .lightGray
+        imageView.tintColor = .trackerLightGray
         return imageView
     }()
     
     private let label: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .black
+        label.textColor = .trackerBlack
         label.font = UIFont.systemFont(ofSize: Theme.fontSizeLabel, weight: .medium)
         label.numberOfLines = Theme.numberOfLinesLabel
         return label

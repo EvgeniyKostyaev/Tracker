@@ -21,31 +21,31 @@ enum DayWeeks: Int {
 extension DayWeeks {
     var shortRepresentation: String {
         switch self {
-        case .monday: return "Пн"
-        case .tuesday: return "Вт"
-        case .wednesday: return "Ср"
-        case .thursday: return "Чт"
-        case .friday: return "Пт"
-        case .saturday: return "Сб"
-        case .sunday: return "Вс"
+        case .monday: "schedule_monday_short".localized
+        case .tuesday: "schedule_tuesday_short".localized
+        case .wednesday: "schedule_wednesday_short".localized
+        case .thursday: "schedule_thursday_short".localized
+        case .friday: "schedule_friday_short".localized
+        case .saturday: "schedule_saturday_short".localized
+        case .sunday: "schedule_sunday_short".localized
         }
     }
     
     var fullRepresentation: String {
         switch self {
-        case .monday: return "Понедельник"
-        case .tuesday: return "Вторник"
-        case .wednesday: return "Среда"
-        case .thursday: return "Четверг"
-        case .friday: return "Пятница"
-        case .saturday: return "Суббота"
-        case .sunday: return "Воскресенье"
+        case .monday: "schedule_monday".localized
+        case .tuesday: "schedule_tuesday".localized
+        case .wednesday: "schedule_wednesday".localized
+        case .thursday: "schedule_thursday".localized
+        case .friday: "schedule_friday".localized
+        case .saturday: "schedule_saturday".localized
+        case .sunday: "schedule_sunday".localized
         }
     }
 }
 
 struct Schedule {
-    let daysWeeks: [DayWeeks?]?
+    let daysWeeks: [DayWeeks]?
     let date: Date?
 }
 
@@ -78,10 +78,9 @@ struct Tracker {
 }
 
 // MARK: - DayWeeks
-extension Array where Element == DayWeeks? {
+extension Array where Element == DayWeeks {
     func toMask() -> Int16 {
         reduce(0) { acc, day in
-            guard let day else { return acc }
             return acc | (1 << day.rawValue)
         }
     }

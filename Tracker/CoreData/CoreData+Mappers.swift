@@ -43,6 +43,20 @@ extension TrackerEntity {
     }
 }
 
+extension TrackerEntity {
+    func update(from tracker: Tracker, category: TrackerCategoryEntity) {
+        self.id = tracker.id
+        self.title = tracker.title
+        self.colorHex = tracker.color.hexString
+        self.emoji = tracker.emoji
+        self.type = tracker.type.rawValue
+        self.scheduleKind = tracker.schedule == nil ? 0 : 1
+        self.scheduleDaysMask = tracker.schedule?.daysWeeks?.toMask() ?? 0
+        self.scheduleDate = tracker.schedule?.date
+        self.category = category
+    }
+}
+
 // MARK: - TrackerCategory ↔ TrackerCategoryEntity
 extension TrackerCategory {
     func toEntity(in context: NSManagedObjectContext) -> TrackerCategoryEntity {

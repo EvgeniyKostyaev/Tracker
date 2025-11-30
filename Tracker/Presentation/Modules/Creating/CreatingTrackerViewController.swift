@@ -8,10 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let title: String = "Создание трекера"
-    static let habitButtonTitle: String = "Привычка"
-    static let irregularEventButtonTitle: String = "Нерегулярное событие"
-    
     static let sheetPresentationCornerRadius: CGFloat = 16.0
     
     enum ActionButton {
@@ -36,9 +32,9 @@ final class CreatingTrackerViewController: UIViewController {
     // MARK: - Private properties
     private lazy var habitButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.habitButtonTitle, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitle("creating_habit_button_title".localized, for: .normal)
+        button.setTitleColor(.trackerWhite, for: .normal)
+        button.backgroundColor = .trackerBlack
         button.titleLabel?.font = UIFont.systemFont(ofSize: Theme.ActionButton.actionButtonFontSise, weight: .medium)
         button.layer.cornerRadius = Theme.ActionButton.actionButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -48,9 +44,9 @@ final class CreatingTrackerViewController: UIViewController {
     
     private lazy var irregularEventButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.irregularEventButtonTitle, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitle("creating_irregular_event_button_title".localized, for: .normal)
+        button.setTitleColor(.trackerWhite, for: .normal)
+        button.backgroundColor = .trackerBlack
         button.titleLabel?.font = UIFont.systemFont(ofSize: Theme.ActionButton.actionButtonFontSise, weight: .medium)
         button.layer.cornerRadius = Theme.ActionButton.actionButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -69,8 +65,8 @@ final class CreatingTrackerViewController: UIViewController {
     // MARK: - Overrides methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        title = Theme.title
+        view.backgroundColor = .trackerWhite
+        title = "creating_title".localized
         
         setupLayout()
     }
@@ -99,6 +95,7 @@ final class CreatingTrackerViewController: UIViewController {
     
     private func presentConfigurationTrackerAsSheet(trackerType: TrackerType) {
         let configurationTrackerViewController = ConfigurationTrackerViewController()
+        configurationTrackerViewController.configurationType = .create
         configurationTrackerViewController.trackerType = trackerType
         configurationTrackerViewController.activeDate = activeDate
         

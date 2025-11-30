@@ -13,7 +13,7 @@ private enum Theme {
     static let daySwitchTrailingConstraint: CGFloat = -16.0
     static let contentViewHeightConstraint: CGFloat = 75.0
     static let tableViewSeparatorInset: CGFloat = 16.0
-    static let separatorViewHeightConstraint: CGFloat = 1
+    static let separatorViewHeightConstraint: CGFloat = 0.8
     static let alphaComponent: CGFloat = 0.3
     static let cornerRadius: CGFloat = 16.0
 }

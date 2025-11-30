@@ -1,0 +1,79 @@
+/* 
+  Localizable.strings
+  Tracker
+
+  Created by Evgeniy Kostyaev on 14.11.2025.
+  
+*/
+
+"common_trackers" = "Trackers";
+"common_statistic" = "Statistic";
+
+"common_cancel" = "Cancel";
+"common_delete" = "Delete";
+
+"trackers_empty_main_state_title" = "What will we track?";
+"trackers_empty_filter_satate_title" = "Nothing found";
+"trackers_search_placeholder" = "Search";
+"trackers_edit" = "Edit";
+"trackers_filters" = "Filters";
+"trackers_delete_сonfirmation" = "Are you sure delete this tracker?";
+
+"filters_title" = "Filters";
+"filters_all" = "All trackers";
+"filters_all_today" = "Trackers for today";
+"filters_complited" = "Complited";
+"filters_uncompleted" = "Uncompleted";
+
+"onboarding_button_title" = "This is technology!";
+"onboarding_first_title" = "Track only what you want";
+"onboarding_second_title" = "Even if it's not liters of water and yoga";
+
+"creating_title" = "Creating a tracker";
+"creating_habit_button_title" = "Habit";
+"creating_irregular_event_button_title" = "Irregular event";
+
+"categories_title" = "Category";
+"categories_add_button_title" = "Add category";
+"categories_empty_satate_title" = "Habits and events can be combined by meaningу";
+
+"new_category_title" = "New category";
+"new_category_done_button_title" = "Done";
+"new_category_text_field_placeholder" = "Enter category name";
+
+"color_header_title" = "Color";
+"emoji_header_title" = "Emoji";
+
+"schedule_tite" = "Schedule";
+"schedule_done_button_title" = "Done";
+
+"schedule_monday" = "Monday";
+"schedule_tuesday" = "Tuesday";
+"schedule_wednesday" = "Wednesday";
+"schedule_thursday" = "Thursday";
+"schedule_friday" = "Friday";
+"schedule_saturday" = "Saturday";
+"schedule_sunday" = "Sunday";
+
+"schedule_monday_short" = "Mon";
+"schedule_tuesday_short" = "Tue";
+"schedule_wednesday_short" = "Wed";
+"schedule_thursday_short" = "Thu";
+"schedule_friday_short" = "Fri";
+"schedule_saturday_short" = "Sat";
+"schedule_sunday_short" = "Sun";
+
+"configuration_creating_habit_title" = "New habit";
+"configuration_creating_irregular_title" = "New irregular event";
+"configuration_editing_habit_title" = "Editing habit";
+"configuration_editing_irregular_title" = "Editing irregular event";
+"configuration_text_field_placeholder" = "Enter tracker name";
+"configuration_category_button_title" = "Category";
+"configuration_schedule_button_title" = "Schedule";
+"configuration_create_button_title" = "Create";
+"configuration_save_button_title" = "Save";
+"configuration_warning_text" = "38 character limit";
+"configuration_every_day_representation" = "Every day";
+
+"statistic_empty_satate_title" = "There is nothing to analyze yet";
+"statistic_trackers_complited" = "Trackers complited";

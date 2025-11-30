@@ -8,10 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let title: String = "Новая категория"
-    static let doneButtonTitle: String = "Готово"
-    static let textFieldPlaceholder: String = "Введите название категории"
-    
     enum NameTextField {
         static let nameTextFieldCornerRadius: CGFloat = 16.0
         static let nameTextFieldLimit: Int = 30
@@ -42,7 +38,7 @@ final class NewCategoryViewController: UIViewController {
     private lazy var nameTextField: UITextField = {
         let textField = UITextField()
         textField.delegate = self
-        textField.placeholder = Theme.textFieldPlaceholder
+        textField.placeholder = "new_category_text_field_placeholder".localized
         textField.backgroundColor = .trackerLightGray.withAlphaComponent(Theme.alphaComponent)
         textField.layer.cornerRadius = Theme.NameTextField.nameTextFieldCornerRadius
         textField.font = .systemFont(ofSize: Theme.NameTextField.nameTextFieldFontSize)
@@ -56,9 +52,9 @@ final class NewCategoryViewController: UIViewController {
     
     private lazy var doneButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(Theme.doneButtonTitle, for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.setTitle("new_category_done_button_title".localized, for: .normal)
+        button.setTitleColor(.trackerWhite, for: .normal)
+        button.backgroundColor = .trackerBlack
         button.layer.cornerRadius = Theme.DoneButton.doneButtonCornerRadius
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(doneTapped), for: .touchUpInside)
@@ -68,8 +64,8 @@ final class NewCategoryViewController: UIViewController {
     // MARK: - Overrides Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        title = Theme.title
+        view.backgroundColor = .trackerWhite
+        title = "new_category_title".localized
         
         updateDoneButtonState()
         
@@ -126,7 +122,7 @@ final class NewCategoryViewController: UIViewController {
     
     private func enableDoneButton() {
         doneButton.isEnabled = true
-        doneButton.backgroundColor = .black
+        doneButton.backgroundColor = .trackerBlack
     }
     
     private func disableDoneButton() {

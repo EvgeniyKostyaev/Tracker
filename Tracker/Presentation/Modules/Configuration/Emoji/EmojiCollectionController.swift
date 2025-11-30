@@ -8,8 +8,6 @@
 import UIKit
 
 private enum Theme {
-    static let headerTitle: String = "Emoji"
-    
     enum CollectionView {
         static let collectionViewHeaderHeight: CGFloat = 44.0
         static let collectionViewCellHeight: CGFloat = 52.0
@@ -76,7 +74,7 @@ extension EmojiCollectionController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
 
-        header.titleLabel.text = Theme.headerTitle
+        header.titleLabel.text = "emoji_header_title".localized
 
         return header
     }
@@ -85,6 +83,12 @@ extension EmojiCollectionController: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCollectionViewCell.identifier, for: indexPath) as? EmojiCollectionViewCell else { return UICollectionViewCell() }
         
         cell.titleLabel.text = emojies[indexPath.row]
+        
+        if (selectedEmoji == emojies[indexPath.row]) {
+            cell.backgroundColor = .trackerLightGray
+        } else {
+            cell.backgroundColor = .clear
+        }
         
         return cell
     }
@@ -125,18 +129,10 @@ extension EmojiCollectionController: UICollectionViewDelegateFlowLayout {
 // MARK: - UICollectionViewDelegate Methods
 extension EmojiCollectionController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell
         
+        selectedEmoji = emojies[indexPath.row]
         
-        if (selectedEmoji == emojies[indexPath.item]) {
-            cell?.backgroundColor = .clear
-            
-            selectedEmoji = String()
-        } else {
-            cell?.backgroundColor = .trackerLightGray
-            
-            selectedEmoji = emojies[indexPath.item]
-        }
+        collectionView.reloadData()
         
         onSelectEmoji?(selectedEmoji)
     }

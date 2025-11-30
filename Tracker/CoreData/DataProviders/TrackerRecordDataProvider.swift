@@ -8,17 +8,14 @@
 import Foundation
 import CoreData
 
-protocol TrackerRecordDataProviderDelegate: AnyObject {
-    func didUpdateRecords()
-}
-
 final class TrackerRecordDataProvider: NSObject {
+    static let shared = TrackerRecordDataProvider()
+    static let recordsDidChangeNotification = Notification.Name("TrackerRecordsDidChange")
+    
     private let context = CoreDataManager.shared.context
     private var fetchedResultsController: NSFetchedResultsController<TrackerRecordEntity>?
     
-    weak var delegate: TrackerRecordDataProviderDelegate?
-    
-    override init() {
+    private override init() {
         super.init()
         
         let request: NSFetchRequest<TrackerRecordEntity> = TrackerRecordEntity.fetchRequest()
@@ -44,6 +41,9 @@ final class TrackerRecordDataProvider: NSObject {
 // MARK: - NSFetchedResultsControllerDelegate
 extension TrackerRecordDataProvider: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        delegate?.didUpdateRecords()
+        NotificationCenter.default.post(
+            name: TrackerRecordDataProvider.recordsDidChangeNotification,
+            object: nil
+        )
     }
 }

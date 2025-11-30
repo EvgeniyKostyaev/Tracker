@@ -8,6 +8,7 @@
 import UIKit
 
 private enum Theme {
+    static let cellCornerRadius: CGFloat = 16.0
     static let cardViewCornerRadius: CGFloat = 16.0
     static let cardViewHeightConstraint: CGFloat = 90.0
     
@@ -53,14 +54,14 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     var indexPath: IndexPath?
     
-    // MARK: - Private Properties
-    private let cardView: UIView = {
+    let cardView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = Theme.cardViewCornerRadius
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
+    // MARK: - Private Properties
     private let emojiCircleView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(white: 1.0, alpha: 0.3)
@@ -79,7 +80,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = .trackerWhite
         label.font = UIFont.systemFont(ofSize: Theme.titleLabelFontSize, weight: .medium)
         label.textAlignment = .left
         label.numberOfLines = Theme.titleLabelNumberOfLines
@@ -97,7 +98,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     private lazy var plusButton: UIButton = {
         let button = UIButton(type: .system)
-        button.tintColor = .white
+        button.tintColor = .trackerWhite
         button.layer.cornerRadius = Theme.plusButtonCornerRadius
         button.layer.masksToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -109,6 +110,9 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     // MARK: - Overrides Methods
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        layer.cornerRadius = Theme.cellCornerRadius
+        layer.masksToBounds = true
         
         setupLayout()
     }
@@ -168,11 +172,12 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     }
     
     private func getDaysRepresentation(_ dayCount: Int) -> String {
-        switch dayCount {
-        case 1: return "\(dayCount) день"
-        case 2...4: return "\(dayCount) дня"
-        default: return "\(dayCount) дней"
-        }
+        let daysString = String.localizedStringWithFormat(
+            NSLocalizedString("numberOfDays", comment: String()),
+            dayCount
+        )
+        
+        return daysString
     }
     
     private func getPlusButtonImage(_ isCompleted: Bool) -> UIImage? {
